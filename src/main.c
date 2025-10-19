@@ -1,3 +1,4 @@
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,6 +19,33 @@
 #ifndef PROJECT_VERSION
 #error PROJECT_VERSION IS NOT DEFINED
 #endif /* ifndef PROJECT_VERSION */
+
+void print_info(void);
+void run_game(void);
+void sigint_handler(int code) {
+  printf("\n");
+  print_info();
+  exit(code);
+}
+
+// int main(int argc, char *argv[]) {
+int main(void) {
+  signal(SIGINT, sigint_handler);
+
+  run_game();
+
+  print_info();
+
+  return 0;
+}
+
+void print_info(void) {
+  printf("\n-----< %s %s >-----\n", PROJECT_NAME, PROJECT_VERSION);
+  printf(
+      "Repository: https://github.com/KN13KOMETA/c_text_rpg\n"
+      "Discord: https://discord.gg/ADGTqPrYr8\n"
+      "Personal Discord: https://discord.gg/d4rKqZs\n");
+}
 
 void run_game(void) {
   char select = 0;
@@ -65,17 +93,4 @@ void run_game(void) {
   printf("\n-----< ADVENTURE END >-----\n");
 
   print_player(&player, &story);
-}
-
-// int main(int argc, char *argv[]) {
-int main(void) {
-  run_game();
-
-  printf("\n-----< %s %s >-----\n", PROJECT_NAME, PROJECT_VERSION);
-  printf(
-      "Repository: https://github.com/KN13KOMETA/c_text_rpg\n"
-      "Discord: https://discord.gg/ADGTqPrYr8\n"
-      "Personal Discord: https://discord.gg/d4rKqZs\n");
-
-  return 0;
 }
