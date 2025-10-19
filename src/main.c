@@ -19,8 +19,7 @@
 #error PROJECT_VERSION IS NOT DEFINED
 #endif /* ifndef PROJECT_VERSION */
 
-// int main(int argc, char *argv[]) {
-int main(void) {
+void run_game(void) {
   char select = 0;
   struct Character player;
   struct Story story = get_story();
@@ -31,14 +30,14 @@ int main(void) {
 
   printf(STORY_DISCLAIMER);
 
-  if (getchar_clear(&select) == EOF) return 0;
+  if (getchar_clear(&select) == EOF) return;
 
   switch (select) {
     case 'y':
       break;
     default: {
       printf("Consent not received, exiting the game.\n");
-      return 0;
+      return;
     }
   }
 
@@ -47,7 +46,7 @@ int main(void) {
       "Enter your name(%u): ",
       CHARACTER_NAME_LENGTH - 1);
 
-  if (getchars_clear(player.name, CHARACTER_NAME_LENGTH) == EOF) return 0;
+  if (getchars_clear(player.name, CHARACTER_NAME_LENGTH) == EOF) return;
 
   // Init seed using nick
   {
@@ -65,15 +64,18 @@ int main(void) {
 
   printf("\n-----< ADVENTURE END >-----\n");
 
-  // Print game details
-  {
-    print_player(&player, &story);
-    printf("\n-----< %s %s >-----\n", PROJECT_NAME, PROJECT_VERSION);
-    printf(
-        "Repository: https://github.com/KN13KOMETA/c_text_rpg\n"
-        "Discord: https://discord.gg/ADGTqPrYr8\n"
-        "Personal Discord: https://discord.gg/d4rKqZs\n");
-  }
+  print_player(&player, &story);
+}
+
+// int main(int argc, char *argv[]) {
+int main(void) {
+  run_game();
+
+  printf("\n-----< %s %s >-----\n", PROJECT_NAME, PROJECT_VERSION);
+  printf(
+      "Repository: https://github.com/KN13KOMETA/c_text_rpg\n"
+      "Discord: https://discord.gg/ADGTqPrYr8\n"
+      "Personal Discord: https://discord.gg/d4rKqZs\n");
 
   return 0;
 }
