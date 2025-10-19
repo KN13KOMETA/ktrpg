@@ -8,8 +8,8 @@
 
 struct Weapon generate_weapon(void) {
   struct Weapon weapon;
-  unsigned short base_attack;
-  unsigned int base_cost;
+  unsigned short base_attack = 1;
+  unsigned int base_cost = 1;
   float attack_modifier = 1;
   float cost_modifier = 1;
   char reforge[10];
