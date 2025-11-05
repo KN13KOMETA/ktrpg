@@ -25,11 +25,6 @@ set(CMAKE_C_EXTENSIONS OFF)
 add_executable(
   ${PROJECT_NAME}
   src/main.c
-  src/functions.c
-  src/location/location.c
-  src/character/character.c
-  src/character/weapon.c
-  src/story/story.c
 )
 
 set_target_properties(
