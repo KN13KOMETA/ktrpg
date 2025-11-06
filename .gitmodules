@@ -1,0 +1,3 @@
+[submodule "libs/pico_headers"]
+	path = libs/pico_headers
+	url = https://github.com/empyreanx/pico_headers
