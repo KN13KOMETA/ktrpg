@@ -2,7 +2,7 @@
 # You should set major.minor.patch in root file project
 
 # Setting prerelease
-set(PROJECT_VERSION_PRERELEASE "beta")
+set(PROJECT_VERSION_PRERELEASE "alpha")
 
 # Getting git short hash
 execute_process(
