@@ -1,6 +1,43 @@
-#include <stdio.h>
+#include <stddef.h>
+
+#include "game/ecs/components.h"
+#include "game/ecs/systems.h"
+
+#define PICO_ECS_IMPLEMENTATION
+#include <pico_ecs.h>
 
 int main(void) {
-  printf("Hello World!");
+  ecs_t *ecs = ecs_new(64, NULL);
+
+  register_components(ecs);
+  register_systems(ecs);
+
+  ecs_entity_t player = ecs_create(ecs);
+
+  debug_comp *player_debug = ecs_add(ecs, player, DEBUG_COMP, NULL);
+  *player_debug = 1;
+
+  character_name_comp *player_name =
+      ecs_add(ecs, player, CHARACTER_NAME_COMP, NULL);
+  *player_name = "asd";
+
+  character_health_comp *player_health =
+      ecs_add(ecs, player, CHARACTER_HEALTH_COMP, NULL);
+  player_health->max = 20;
+  player_health->current = 10;
+
+  weapon_name_comp *weapon_name = ecs_add(ecs, player, WEAPON_NAME_COMP, NULL);
+  *weapon_name = "sex";
+
+  weapon_damage_comp *weapon_damage =
+      ecs_add(ecs, player, WEAPON_DAMAGE_COMP, NULL);
+  *weapon_damage = 66;
+
+  for (size_t i = 0; i < 16; i++) {
+    ecs_run_systems(ecs, 0);
+  }
+
+  ecs_free(ecs);
+
   return 0;
 }

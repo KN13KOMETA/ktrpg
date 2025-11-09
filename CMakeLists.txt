@@ -22,7 +22,12 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
-add_executable(${PROJECT_NAME} src/main.c)
+add_executable(
+  ${PROJECT_NAME}
+  src/main.c
+  src/game/ecs/components.c
+  src/game/ecs/systems.c
+)
 
 add_library(pico_headers INTERFACE)
 target_include_directories(pico_headers INTERFACE libs/pico_headers)
