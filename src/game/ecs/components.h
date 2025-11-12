@@ -1,11 +1,11 @@
 #pragma once
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#ifndef GAME_ECS_COMPONENTS_H
+#define GAME_ECS_COMPONENTS_H
 
 #include <pico_ecs.h>
 #include <stdint.h>
 
-#include "../game_constants.h"
+#include "../constants.h"
 
 /* PRINCIPLES FOR COMPONENTS
  * Every component must have a typedef (name_comp)
@@ -33,7 +33,7 @@ void debug_comp_debug(debug_comp* comp);
 
 void register_components(ecs_t* ecs);
 
-#endif  // !COMPONENT_H
+#endif  // !GAME_ECS_COMPONENTS_H
 
 // Component debug functionds implementation
 #ifdef COMPONENTS_DEBUG_IMPLEMENTATION
