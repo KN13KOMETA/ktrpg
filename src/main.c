@@ -1,5 +1,8 @@
 #include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
 
+#include "functions.h"
 #include "game/ecs/components.h"
 #include "game/ecs/systems.h"
 
@@ -19,7 +22,12 @@ int main(void) {
 
   character_name_comp *player_name =
       ecs_add(ecs, player, CHARACTER_NAME_COMP, NULL);
-  *player_name = "asd";
+  {
+    *player_name = malloc(MAX_NAME_LENGTH);
+
+    printf("Enter player name: ");
+    if (getchars_clear(*player_name, MAX_NAME_LENGTH) == EOF) return 1;
+  }
 
   character_health_comp *player_health =
       ecs_add(ecs, player, CHARACTER_HEALTH_COMP, NULL);
@@ -37,6 +45,7 @@ int main(void) {
     ecs_run_systems(ecs, 0);
   }
 
+  free(*player_name);
   ecs_free(ecs);
 
   return 0;
