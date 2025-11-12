@@ -9,7 +9,7 @@
 
 /* PRINCIPLES FOR COMPONENTS
  * Every component must have a typedef (name_comp)
- * Every_component must have extern ecs_comp_t (NAME_COMP)
+ * Every component must have extern ecs_comp_t (NAME_COMP)
  * Every component must have debug function
  */
 
