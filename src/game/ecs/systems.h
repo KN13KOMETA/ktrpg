@@ -1,6 +1,6 @@
 #pragma once
-#ifndef SYSTEMS_H
-#define SYSTEMS_H
+#ifndef GAME_ECS_SYSTEMS_H
+#define GAME_ECS_SYSTEMS_H
 
 #include <pico_ecs.h>
 
@@ -11,4 +11,4 @@ extern ecs_system_t DEBUG_SYSTEM;
 
 void register_systems(ecs_t* ecs);
 
-#endif  // !SYSTEMS_H
+#endif  // !GAME_ECS_SYSTEMS_H
