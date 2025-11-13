@@ -37,39 +37,7 @@ else()
   set(MAKE make)
 endif()
 
-# Add libs/luajit
-set(LUAJIT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/luajit)
-set(LUAJIT_LIB ${LUAJIT_DIR}/src/libluajit.a)
-
-# Check if luajit already built
-if(NOT EXISTS ${LUAJIT_LIB})
-  add_custom_command(
-    OUTPUT ${LUAJIT_LIB}
-    COMMAND ${MAKE} -C ${LUAJIT_DIR}
-    # COMMAND ${MAKE} all
-    WORKING_DIRECTORY ${LUAJIT_DIR}
-    COMMENT "Building LuaJIT"
-  )
-endif()
-
-add_custom_target(luajit_build ALL DEPENDS ${LUAJIT_LIB})
-
-add_library(luajit STATIC IMPORTED)
-set_target_properties(
-  luajit
-  PROPERTIES
-    IMPORTED_LOCATION ${LUAJIT_LIB}
-    INTERFACE_INCLUDE_DIRECTORIES ${LUAJIT_DIR}/src
-)
-
-add_dependencies(luajit luajit_build)
-
-# Add libs/pico_headers
-add_library(pico_headers INTERFACE)
-target_include_directories(pico_headers INTERFACE libs/pico_headers)
-
-# Link libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE pico_headers luajit m)
+include("cmake/libraries.cmake")
 
 set_target_properties(
   ${PROJECT_NAME}
