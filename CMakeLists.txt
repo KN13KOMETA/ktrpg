@@ -54,7 +54,6 @@ endif()
 
 add_custom_target(luajit_build ALL DEPENDS ${LUAJIT_LIB})
 
-# Импортируем библиотеку
 add_library(luajit STATIC IMPORTED)
 set_target_properties(
   luajit
@@ -70,7 +69,7 @@ add_library(pico_headers INTERFACE)
 target_include_directories(pico_headers INTERFACE libs/pico_headers)
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE pico_headers luajit)
+target_link_libraries(${PROJECT_NAME} PRIVATE pico_headers luajit m)
 
 set_target_properties(
   ${PROJECT_NAME}
