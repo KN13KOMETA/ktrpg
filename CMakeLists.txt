@@ -70,6 +70,6 @@ get_property(
   TARGET ${PROJECT_NAME}
   PROPERTY COMPILE_OPTIONS
 )
-message(STATUS "Compile options for my_target: ${TARGET_COMPILE_OPTS}")
+message(STATUS "Compile options for ${PROJECT_NAME}: ${TARGET_COMPILE_OPTS}")
 
 include("cmake/target/todo.cmake")
