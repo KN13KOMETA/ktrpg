@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
+cmake_path(SET SOURCE_FILES_DIR "${CMAKE_SOURCE_DIR}/src")
+
 # Always export compile commands (needs for clangd)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
