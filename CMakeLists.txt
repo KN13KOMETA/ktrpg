@@ -4,6 +4,8 @@ cmake_path(SET SOURCE_FILES_DIR "${CMAKE_SOURCE_DIR}/src")
 
 include("cmake/functions.cmake")
 
+generate_header_from_lua(${SOURCE_FILES_DIR}/lua/example.lua)
+
 # Always export compile commands (needs for clangd)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -29,6 +31,7 @@ set(CMAKE_C_EXTENSIONS OFF)
 add_executable(
   ${PROJECT_NAME}
   src/main.c
+  src/lt.c
   src/functions.c
   src/game/ecs/components.c
   src/game/ecs/systems.c
