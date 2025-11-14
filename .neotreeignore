@@ -1,2 +1,18 @@
-/.git
+# Ignore clangd cache
+/.cache/
+
+# Ignore build directories
+/build*/
+
+# Ignore generated lua headers
+/src/luah/
+
+# Ignore git and configs
+/.git/
+/.gersemirc
+/.gitignore
+/.gitmodules
+/.clang-format
+
+# Hide CMake toolchains
 /*.cmake
