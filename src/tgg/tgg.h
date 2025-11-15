@@ -6,5 +6,6 @@
 
 // The Great Generator
 ecs_t* tgg_init(void);
+void tgg_free(ecs_t* tgg_ecs);
 
 #endif  // !TGG_TGG_H
