@@ -13,6 +13,18 @@
 // WARN: TEST SHIT, I WILL REMOVE THIS A BIT LATER
 // TODO: understand what the fuck is going on here
 
+const char* lreader(lua_State* L, void* data, size_t* size) { return "asd"; }
+
+void sex(void) {
+  lua_State* L = luaL_newstate();
+  luaL_openlibs(L);
+
+  luaL_dostring(L, "print(100)");
+  // lua_load(L, lreader, NULL, "print(100)") || lua_pcall(L, 0, 0, 0);
+
+  lua_close(L);
+}
+
 int load_script(lua_State* L, const char* filename) {
   const char* possible_paths[] = {filename,
                                   // "./scripts/user_data.lua",
@@ -138,6 +150,7 @@ Weapon* load_weapons_from_lua(lua_State* L, const char* function_name,
 }
 
 void ltest(void) {
+  sex();
   lua_State* L = luaL_newstate();
   luaL_openlibs(L);
 
