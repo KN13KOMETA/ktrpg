@@ -13,6 +13,7 @@
 
 int main(void) {
   ltest();
+  return 0;
   ecs_t* ecs = ecs_new(64, NULL);
 
   register_components(ecs);

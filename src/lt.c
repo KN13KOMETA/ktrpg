@@ -15,11 +15,77 @@
 
 const char* lreader(lua_State* L, void* data, size_t* size) { return "asd"; }
 
+int ad(lua_State* L) {
+  lua_Number arg2 = lua_tonumber(L, -1);
+  lua_Number arg1 = lua_tonumber(L, -2);
+  printf("%f + %f = %f\n", arg1, arg2, arg1 + arg2);
+
+  // return
+  lua_pushnumber(L, arg1 + arg2);
+  // number of results
+  return 1;
+}
+
+int register_enemy(lua_State* L) {
+  // If arg is not table return an error
+  if (!lua_istable(L, -1)) luaL_typerror(L, -1, "table");
+
+  // Get table fields
+  {
+    lua_getfield(L, -1, "health");
+    lua_Number health = lua_tonumber(L, -1);
+
+    printf("health: %f\n", health);
+  }
+
+  {
+    lua_getfield(L, -2, "num");
+    lua_Number num = lua_tonumber(L, -1);
+
+    printf("num: %f\n", num);
+  }
+
+  {
+    lua_getfield(L, -3, "name");
+    const char* name = lua_tostring(L, -1);
+
+    printf("name: %s\n", name);
+    if (name == NULL) printf("amnull");
+  }
+
+  return 0;
+}
+
+int reg(lua_State* L) {
+  if (!lua_istable(L, -1)) luaL_typerror(L, -1, "table");
+
+  lua_getfield(L, -1, "somenum");
+  lua_Number f = lua_tonumber(L, -1);
+
+  printf("num: %f\n", f);
+
+  return 0;
+}
+
 void sex(void) {
   lua_State* L = luaL_newstate();
   luaL_openlibs(L);
 
-  luaL_dostring(L, "print(100)");
+  lua_pushcfunction(L, ad);
+  lua_setglobal(L, "bruh");
+
+  lua_pushcfunction(L, reg);
+  lua_setglobal(L, "reg");
+
+  lua_pushcfunction(L, register_enemy);
+  lua_setglobal(L, "register_enemy");
+
+  if (luaL_dostring(L, init_lua) != LUA_OK) {
+    printf("ERROR AT LUA\n");
+    printf("error itself: %s\n", lua_tostring(L, -1));
+  }
+
+  printf("AMONGUS\n");
   // lua_load(L, lreader, NULL, "print(100)") || lua_pcall(L, 0, 0, 0);
 
   lua_close(L);
