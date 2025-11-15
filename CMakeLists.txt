@@ -6,6 +6,10 @@ include("cmake/functions.cmake")
 
 generate_header_from_lua(${SOURCE_FILES_DIR}/lua/init.lua)
 
+set(GENERATED_HEADERS ${LUAH_SOURCE_DIR}/init.h)
+
+add_custom_target(generated_files ALL DEPENDS ${GENERATED_HEADERS})
+
 # Always export compile commands (needs for clangd)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -36,6 +40,9 @@ add_executable(
   src/game/ecs/components.c
   src/game/ecs/systems.c
 )
+
+# Generated files will be regenarated
+add_dependencies(${PROJECT_NAME} generated_files)
 
 # Detect make
 if(CMAKE_HOST_WIN32)
