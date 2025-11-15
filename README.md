@@ -74,6 +74,7 @@ If you avoid spoilers, do not open next files.
 - [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) (C Formatter, built in `clangd`)
 - [cmake-language-server](https://github.com/regen100/cmake-language-server) (CMake LSP)
 - [gersemi](https://github.com/BlankSpruce/gersemi) (CMake Formatter)
+- [StyLua](https://github.com/JohnnyMorganz/StyLua) (Lua Formatter)
 
 ## Additional info
 
