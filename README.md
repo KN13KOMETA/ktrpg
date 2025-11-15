@@ -1,6 +1,7 @@
 # SPOILER ALERT
 
 If you avoid spoilers, do not open next files.
+
 - story.c
 - story.h
 - location.c
@@ -14,7 +15,8 @@ If you avoid spoilers, do not open next files.
 
 ## Requirements
 
-- CMake (3.15+)
+- CMake (3.20+)
+- Make (required for LuaJIT building)
 - Build system (Make, Ninja or other)
 - C compiler (Zig required for cross-compiling)
 
@@ -24,12 +26,12 @@ If you avoid spoilers, do not open next files.
    ```bash
    cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
    ```
-      _Note: For debug build use `-DCMAKE_BUILD_TYPE=Debug`_
+   _Note: For debug build use `-DCMAKE_BUILD_TYPE=Debug`_
 2. Build project:
    ```bash
    cmake --build build --parallel
    ```
-    _Flag `--parallel` speed ups building by using paralleling_
+   _Flag `--parallel` speed ups building by using paralleling_
 3. In result there will be an executable in `build` directory
 
 ## Cross-compiling
@@ -48,21 +50,21 @@ If you avoid spoilers, do not open next files.
 ## Additional options
 
 - Generate build directory using Ninja build system:
-   ```bash
-   cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
-   ```
+  ```bash
+  cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+  ```
 - List available targets:
-   ```bash
-   cmake --build build --target help
-   ```
+  ```bash
+  cmake --build build --target help
+  ```
 - Clean build directory:
-   ```bash
-   cmake --build build --target clean
-   ```
+  ```bash
+  cmake --build build --target clean
+  ```
 - Print todo comments:
-   ```bash
-   cmake --build build --target todo
-   ```
+  ```bash
+  cmake --build build --target todo
+  ```
 
 # DEVELOPING
 
