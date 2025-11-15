@@ -47,18 +47,20 @@ function(generate_header_from_lua input_file)
   string(REPLACE "\"" "\\\"" FILE_CONTENT "${FILE_CONTENT}")
   string(REPLACE "\n" "\\n\"\n\"" FILE_CONTENT "${FILE_CONTENT}")
 
-  file(
-    WRITE ${output_file}
-    "\
-#pragma once
-#ifndef ${HEADER_GUARD}
-#define ${HEADER_GUARD}
-
-const char* ${VARIABLE_NAME} = \"${FILE_CONTENT}\";
-
-#endif // !${HEADER_GUARD}
-"
+  # Add command instead of writing file here
+  add_custom_command(
+    OUTPUT ${output_file}
+    COMMAND
+      ${CMAKE_COMMAND} -DINPUT_FILE=${input_file} -DOUTPUT_FILE=${output_file}
+      -DHEADER_GUARD=${HEADER_GUARD} -DVARIABLE_NAME=${VARIABLE_NAME} -P
+      ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/write_lua_header.cmake
+    DEPENDS ${input_file}
+    COMMENT "Generating ${output_file} from ${input_file}"
+    VERBATIM
   )
 
-  message(STATUS "Generated ${output_file}")
+  # Add file to GENERATED so "clean" works
+  set_source_files_properties(${output_file} PROPERTIES GENERATED TRUE)
+
+  message(STATUS "Registered dependency: ${input_file} -> ${output_file}")
 endfunction()
