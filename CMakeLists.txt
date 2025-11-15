@@ -4,6 +4,7 @@ cmake_path(SET SOURCE_FILES_DIR "${CMAKE_SOURCE_DIR}/src")
 
 include("cmake/functions.cmake")
 
+# TODO: fix variables are init at headers
 generate_header_from_lua(${SOURCE_FILES_DIR}/lua/init.lua)
 
 set(GENERATED_HEADERS ${LUAH_SOURCE_DIR}/init.h)

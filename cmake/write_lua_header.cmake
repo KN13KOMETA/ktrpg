@@ -13,7 +13,7 @@ file(
 #ifndef ${HEADER_GUARD}
 #define ${HEADER_GUARD}
 
-const char* ${VARIABLE_NAME} = \"${FILE_CONTENT}\";
+static const char* ${VARIABLE_NAME} = \"${FILE_CONTENT}\";
 
 #endif // !${HEADER_GUARD}
 "
