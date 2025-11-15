@@ -5,6 +5,7 @@
 #include "functions.h"
 #include "game/ecs/components.h"
 #include "game/ecs/systems.h"
+#include "tgg/tgg.h"
 
 #define PICO_ECS_IMPLEMENTATION
 #include <pico_ecs.h>
@@ -13,6 +14,14 @@
 
 int main(void) {
   ltest();
+  ecs_t* tgg_ecs = tgg_init();
+
+  for (size_t i = 0; i < 2; i++) {
+    ecs_run_systems(tgg_ecs, 0);
+  }
+
+  tgg_free(tgg_ecs);
+
   return 0;
   ecs_t* ecs = ecs_new(64, NULL);
 
