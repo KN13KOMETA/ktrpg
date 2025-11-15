@@ -8,7 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "luah/example.h"
+#include "luah/init.h"
 
 // WARN: TEST SHIT, I WILL REMOVE THIS A BIT LATER
 // TODO: understand what the fuck is going on here
@@ -28,7 +28,7 @@ int load_script(lua_State* L, const char* filename) {
 
   // If not found script give example
   printf("User script not found, using built-in script\n");
-  return luaL_loadstring(L, example_lua) || lua_pcall(L, 0, 0, 0);
+  return luaL_loadstring(L, init_lua) || lua_pcall(L, 0, 0, 0);
 }
 
 int* load_int_array_from_lua(lua_State* L, const char* function_name,
