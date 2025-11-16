@@ -53,7 +53,6 @@ int tgg_load_content(ecs_t* tgg_ecs, bool force_internal) {
   lua_pushlightuserdata(L, tgg_ecs);
 
   lua_pushcclosure(L, tgg_register_character, 1);
-  // lua_pushcfunction(L, tgg_register_character);
   lua_setglobal(L, "tgg_register_character");
 
   // Load internal scripts in case if forced internal or init.lua does'n exists
