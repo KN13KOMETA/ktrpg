@@ -1,3 +1,10 @@
+# Detect make
+if(CMAKE_HOST_WIN32)
+  set(MAKE mingw32-make)
+else()
+  set(MAKE make)
+endif()
+
 # Library LuaJIT
 set(LUAJIT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/luajit)
 set(LUAJIT_LIB ${LUAJIT_DIR}/src/libluajit.a)

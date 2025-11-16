@@ -48,13 +48,6 @@ add_executable(
 # Generated files will be regenarated
 add_dependencies(${PROJECT_NAME} generated_files)
 
-# Detect make
-if(CMAKE_HOST_WIN32)
-  set(MAKE mingw32-make)
-else()
-  set(MAKE make)
-endif()
-
 include("cmake/libraries.cmake")
 
 set_target_properties(
