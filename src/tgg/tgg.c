@@ -101,7 +101,7 @@ int tgg_register_character(lua_State* L) {
     lua_getfield(L, -2, "min_health");
     lua_Number field = lua_tonumber(L, -1);
 
-    if (lua_isnil(L, -1)) {
+    if (!lua_isnil(L, -1)) {
       tgg_character_min_health_comp* min_health =
           ecs_add(tgg_ecs, character, TGG_CHARACTER_MIN_HEALTH_COMP, NULL);
 
