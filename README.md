@@ -78,7 +78,8 @@ If you avoid spoilers, do not open next files.
 
 ## Additional info
 
-Create build directory with `build` name. It will generate `build/compile_commands.json` file as well which is auto-detected by `clangd`.
+Create build directory with `build` name. It will generate `build/compile_commands.json` file as well which is auto-detected by `clangd`.<br>
+Use `git clone --recurse-submodules ...` to clone with submodules. Run `git submodule update` to update submodules.
 
 # RESOURCES
 
