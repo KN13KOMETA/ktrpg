@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,8 +14,9 @@
 #include "lt.h"
 
 int main(void) {
-  ltest();
   ecs_t* tgg_ecs = tgg_init();
+
+  tgg_load_content(tgg_ecs, true);
 
   for (size_t i = 0; i < 2; i++) {
     ecs_run_systems(tgg_ecs, 0);
@@ -22,6 +24,7 @@ int main(void) {
 
   tgg_free(tgg_ecs);
 
+  ltest();
   return 0;
   ecs_t* ecs = ecs_new(64, NULL);
 
