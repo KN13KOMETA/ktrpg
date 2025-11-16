@@ -99,10 +99,27 @@ int tgg_register_character(lua_State* L) {
   }
 
   {
-    lua_getfield(L, -2, "health");
-    lua_Number health = lua_tonumber(L, -1);
+    lua_getfield(L, -2, "min_health");
+    lua_Number field = lua_tonumber(L, -1);
 
-    printf("health: %f\n", health);
+    if (lua_isnil(L, -1)) {
+      tgg_character_min_health_comp* min_health =
+          ecs_add(tgg_ecs, character, TGG_CHARACTER_MIN_HEALTH_COMP, NULL);
+
+      *min_health = field;
+    }
+  }
+
+  {
+    lua_getfield(L, -3, "max_health");
+    lua_Number field = lua_tonumber(L, -1);
+
+    if (!lua_isnil(L, -1)) {
+      tgg_character_max_health_comp* max_health =
+          ecs_add(tgg_ecs, character, TGG_CHARACTER_MAX_HEALTH_COMP, NULL);
+
+      *max_health = field;
+    }
   }
 
   // We don't return anything

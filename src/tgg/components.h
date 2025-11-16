@@ -35,7 +35,7 @@ void tgg_register_components(ecs_t* ecs);
 #include <stdio.h>
 
 void tgg_character_name_comp_debug(tgg_character_name_comp* comp) {
-  printf("character_name_comp: %s\n", *comp);
+  printf("tgg_character_name_comp: %s\n", *comp);
 }
 void tgg_character_min_health_comp_debug(tgg_character_min_health_comp* comp) {
   printf("tgg_character_min_health_comp: %f\n", *comp);
