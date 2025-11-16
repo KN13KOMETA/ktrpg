@@ -6,6 +6,7 @@ set(
   .cache
   --exclude-dir
   build
+  --exclude-dir libs
 )
 
 # TODO: Somehow make it crossplatform
