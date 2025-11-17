@@ -16,7 +16,6 @@ If you avoid spoilers, do not open next files.
 ## Requirements
 
 - CMake (3.20+)
-- Make (required for LuaJIT building)
 - Build system (Make, Ninja or other)
 - C compiler (Zig required for cross-compiling)
 
