@@ -57,10 +57,17 @@ set_target_properties(
 )
 
 # Turning on every compiler checks
-target_compile_options(
-  ${PROJECT_NAME}
-  PUBLIC -xc -Wall -Wextra -Wpedantic $<$<CONFIG:RELEASE>:-Werror>
-)
+if(MSVC)
+  target_compile_options(
+    ${PROJECT_NAME}
+    PRIVATE /W4 /permissive- $<$<CONFIG:RELEASE>:/WX>
+  )
+else()
+  target_compile_options(
+    ${PROJECT_NAME}
+    PRIVATE -xc -Wall -Wextra -Wpedantic $<$<CONFIG:RELEASE>:-Werror>
+  )
+endif()
 
 target_compile_definitions(
   ${PROJECT_NAME}
