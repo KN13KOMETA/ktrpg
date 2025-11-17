@@ -14,7 +14,7 @@
 #include <pico_ecs.h>
 
 int main(int argc, char* argv[]) {
-  prompt_options(argc, argv);
+  prompt_options(argc, (const char**)argv);
   printf("AMONGUS. START OF GAME.\n\n");
 
   ecs_t* tgg_ecs = tgg_init();
