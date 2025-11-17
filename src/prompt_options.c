@@ -7,8 +7,7 @@
 #include "argparse.h"
 
 static const char* const usages[] = {
-    "basic [options] [[--] args]",
-    "basic [options]",
+    PROJECT_NAME " [options]",
     NULL,
 };
 
