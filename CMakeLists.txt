@@ -35,11 +35,12 @@ set(CMAKE_C_EXTENSIONS OFF)
 
 add_executable(
   ${PROJECT_NAME}
+  src/functions.c
+  src/prompt_options.c
   src/main.c
   src/tgg/components.c
   src/tgg/systems.c
   src/tgg/tgg.c
-  src/functions.c
   src/game/ecs/components.c
   src/game/ecs/systems.c
 )
