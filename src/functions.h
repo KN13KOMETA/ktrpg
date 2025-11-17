@@ -10,9 +10,14 @@
 // Reads char from stdin and clears it's buffer.
 // Returns last char from input.
 int getchar_clear(char* c);
+
 // Reads string from stdin and clears it's buffer.
 // len is including '\0'.
 // Returns last char from input.
 int getchars_clear(char* str, size_t len);
+
+// Checks if file exists on path.
+// Returns 0 when file exists
+int file_exists(char* path);
 
 #endif  // !FUNCTIONS_H

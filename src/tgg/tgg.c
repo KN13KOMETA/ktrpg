@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
+#include "../functions.h"
 #include "../luah/init.h"
 #include "components.h"
 #include "systems.h"
@@ -47,7 +47,7 @@ int tgg_load_content(ecs_t* tgg_ecs, bool force_internal) {
   lua_setglobal(L, "tgg_register_character");
 
   // Load internal scripts in case if forced internal or init.lua does'n exists
-  if (force_internal || access("init.lua", F_OK) != 0) {
+  if (force_internal || file_exists("init.lua") != 0) {
     printf("Loading content using internal scripts\n");
 
     if (luaL_dostring(L, init_lua) != LUA_OK) {
