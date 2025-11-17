@@ -111,5 +111,5 @@ int main(int argc, char* argv[]) {
   free(*player_name);
   ecs_free(ecs);
 
-  return 0;
+  return EXIT_SUCCESS;
 }
