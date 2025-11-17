@@ -41,15 +41,6 @@ int tgg_load_content(ecs_t* tgg_ecs, bool force_internal) {
   // luaopen_ffi(L);
   // luaopen_string_buffer(L);
 
-  {
-    ecs_entity_t player = ecs_create(tgg_ecs);
-
-    tgg_character_name_comp* player_name =
-        ecs_add(tgg_ecs, player, TGG_CHARACTER_NAME_COMP, NULL);
-
-    *player_name = "Not";
-  }
-
   lua_pushlightuserdata(L, tgg_ecs);
 
   lua_pushcclosure(L, tgg_register_character, 1);
