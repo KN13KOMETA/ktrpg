@@ -36,7 +36,7 @@ int tgg_load_content(ecs_t* tgg_ecs, bool force_internal) {
   // luaopen_os(L);
   // luaopen_package(L);
   // luaopen_debug(L);
-  luaopen_bit(L);
+  // luaopen_bit(L);
   // luaopen_jit(L);
   // luaopen_ffi(L);
   // luaopen_string_buffer(L);
@@ -79,7 +79,7 @@ int tgg_register_character(lua_State* L) {
   ecs_entity_t character = ecs_create(tgg_ecs);
 
   // If arg is not table return an error
-  if (!lua_istable(L, -1)) luaL_typerror(L, -1, "table");
+  if (!lua_istable(L, -1)) luaL_typeerror(L, -1, "table");
 
   {
     lua_getfield(L, -1, "name");

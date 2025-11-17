@@ -1,6 +1,6 @@
 [submodule "libs/pico_headers"]
 	path = libs/pico_headers
 	url = https://github.com/empyreanx/pico_headers
-[submodule "libs/luajit"]
-	path = libs/luajit
-	url = https://luajit.org/git/luajit.git
+[submodule "libs/lua"]
+	path = libs/lua
+	url = https://github.com/walterschell/Lua
