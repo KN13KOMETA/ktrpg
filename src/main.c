@@ -25,8 +25,15 @@ static const char* const usages[] = {
 struct args {
   bool version;
 };
+int arg_version_cb(struct argparse* self,
+                   const struct argparse_option* option) {
+  (void)self;
+  (void)option;
+  printf("%s %s\n", PROJECT_NAME, PROJECT_FULL_VERSION);
+  exit(EXIT_SUCCESS);
+}
 
-int main(int argc, char* argv[]) {
+int main(int argc, const char* argv[]) {
   {
     int version = 0;
     int force = 0;
@@ -37,7 +44,8 @@ int main(int argc, char* argv[]) {
     int perms = 0;
     struct argparse_option options[] = {
 
-        // "prints program version\n"
+        // TODO: understand what OPT_NONEG does
+
         // "  -I, --internal              "
         // "load game with internal lua scripts\n"
         // "  -X [PATH], --extract [PATH] "
@@ -46,7 +54,8 @@ int main(int argc, char* argv[]) {
         // "path to lua script for custom content\n"
         OPT_HELP(),
         OPT_GROUP("Basic options"),
-        OPT_BOOLEAN('v', "version", &version, "shows version", NULL, 0, 0),
+        OPT_BOOLEAN('v', "version", NULL, "shows version", arg_version_cb, 0,
+                    0),
         OPT_BOOLEAN('f', "force", &force, "force to do", NULL, 0, 0),
         OPT_BOOLEAN('t', "test", &test, "test only", NULL, 0, 0),
         OPT_STRING('p', "path", &path, "path to read", NULL, 0, 0),
