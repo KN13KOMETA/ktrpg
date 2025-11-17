@@ -39,7 +39,6 @@ add_executable(
   src/tgg/components.c
   src/tgg/systems.c
   src/tgg/tgg.c
-  src/lt.c
   src/functions.c
   src/game/ecs/components.c
   src/game/ecs/systems.c
