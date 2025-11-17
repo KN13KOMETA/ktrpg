@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
 
   ecs_t* tgg_ecs = tgg_init();
 
-  tgg_load_content(tgg_ecs, true);
+  tgg_load_content(tgg_ecs, false);
 
   for (size_t i = 0; i < 2; i++) {
     ecs_run_systems(tgg_ecs, 0);
