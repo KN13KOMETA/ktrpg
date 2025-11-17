@@ -1,0 +1,91 @@
+#include "prompt_options.h"
+
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "argparse.h"
+
+static const char* const usages[] = {
+    "basic [options] [[--] args]",
+    "basic [options]",
+    NULL,
+};
+
+#define PERM_READ (1 << 0)
+#define PERM_WRITE (1 << 1)
+#define PERM_EXEC (1 << 2)
+
+struct args {
+  bool version;
+};
+int arg_version_cb(struct argparse* self,
+                   const struct argparse_option* option) {
+  (void)self;
+  (void)option;
+  printf("%s %s\n", PROJECT_NAME, PROJECT_FULL_VERSION);
+  exit(EXIT_SUCCESS);
+}
+
+int arg_export_cb(struct argparse* self, const struct argparse_option* option) {
+  (void)self;
+  (void)option;
+  printf("TODO: export lua scripts\n");
+  exit(EXIT_SUCCESS);
+}
+
+void prompt_options(int argc, const char* argv[]) {
+  int version = 0;
+  int force = 0;
+  int test = 0;
+  int int_num = 0;
+  float flt_num = 0.f;
+  const char* path = NULL;
+  int perms = 0;
+  struct argparse_option options[] = {
+
+      // TODO: understand what OPT_NONEG does
+
+      // "  -I, --internal              "
+      // "load game with internal lua scripts\n"
+      // "  -X [PATH], --extract [PATH] "
+      // "extracts internal lua scripts to given path\n"
+      // "  -L PATH, --lua PATH         "
+      // "path to lua script for custom content\n"
+      OPT_HELP(),
+      OPT_GROUP("Basic options"),
+      OPT_BOOLEAN('v', "version", NULL, "shows version", arg_version_cb, 0, 0),
+      OPT_GROUP("Cofig options"),
+      OPT_BOOLEAN('x', "export", NULL, "exports internal lua scripts",
+                  arg_export_cb, 0, 0),
+      OPT_STRING('p', "path", &path, "path to read", NULL, 0, 0),
+      // OPT_INTEGER('i', "int", &int_num, "selected integer", NULL, 0, 0),
+      OPT_FLOAT('s', "float", &flt_num, "selected float", NULL, 0, 0),
+      OPT_GROUP("Bits options"),
+      OPT_BIT(0, "read", &perms, "read perm", NULL, PERM_READ, OPT_NONEG),
+      OPT_BIT(0, "write", &perms, "write perm", NULL, PERM_WRITE, 0),
+      OPT_BIT(0, "exec", &perms, "exec perm", NULL, PERM_EXEC, 0),
+      OPT_END(),
+  };
+
+  struct argparse argparse;
+  argparse_init(&argparse, options, usages, 0);
+  argparse_describe(&argparse, "\n" PROJECT_DESCRIPTION,
+                    "\nHomepage: " PROJECT_HOMEPAGE_URL);
+  argc = argparse_parse(&argparse, argc, argv);
+  if (force != 0) printf("force: %d\n", force);
+  if (test != 0) printf("test: %d\n", test);
+  if (path != NULL) printf("path: %s\n", path);
+  if (int_num != 0) printf("int_num: %d\n", int_num);
+  if (flt_num != 0) printf("flt_num: %g\n", flt_num);
+  if (argc != 0) {
+    printf("argc: %d\n", argc);
+    int i;
+    for (i = 0; i < argc; i++) {
+      printf("argv[%d]: %s\n", i, *(argv + i));
+    }
+  }
+  if (perms) {
+    printf("perms: %d\n", perms);
+  }
+}
