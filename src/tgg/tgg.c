@@ -65,7 +65,14 @@ int tgg_load_content(ecs_t* tgg_ecs, bool force_internal) {
       return 1;
     }
   } else {
-    // TODO: user scripts load
+    printf("Loading content using user scripts\n");
+
+    // TODO: get path from option
+    if (luaL_dofile(L, "init.lua") != LUA_OK) {
+      printf("Error at user scripts: %s\n", lua_tostring(L, -1));
+
+      return 1;
+    }
   }
 
   lua_close(L);
