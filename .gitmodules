@@ -4,3 +4,6 @@
 [submodule "libs/lua"]
 	path = libs/lua
 	url = https://github.com/walterschell/Lua
+[submodule "libs/argparse"]
+	path = libs/argparse
+	url = https://github.com/cofyc/argparse
