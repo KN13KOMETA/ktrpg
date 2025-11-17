@@ -13,8 +13,6 @@
 #define PICO_ECS_IMPLEMENTATION
 #include <pico_ecs.h>
 
-#include "lt.h"
-
 int main(int argc, char* argv[]) {
   {
     // Do not print error
@@ -74,8 +72,6 @@ int main(int argc, char* argv[]) {
   }
 
   tgg_free(tgg_ecs);
-
-  ltest();
 
   ecs_t* ecs = ecs_new(64, NULL);
 
