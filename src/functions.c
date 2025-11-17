@@ -25,3 +25,13 @@ int getchars_clear(char* str, size_t len) {
 
   return c;
 }
+
+int file_exists(char* path) {
+  FILE* f = fopen(path, "r");
+
+  if (f == NULL) return 1;
+
+  fclose(f);
+
+  return 0;
+}
