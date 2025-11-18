@@ -34,8 +34,8 @@ project_options* prompt_project_options(int argc, const char* argv[]) {
       OPT_BOOLEAN('x', "export", NULL, "exports internal lua script",
                   export_opt_cb, 0, OPT_NONEG),
       OPT_STRING('u', "user", &__user,
-                 "use user script for content load by path", user_opt_cb, 0,
-                 OPT_NONEG),
+                 "use user script for content load by path", user_opt_cb,
+                 (intptr_t)poptions, OPT_NONEG),
       OPT_END(),
   };
 
@@ -67,7 +67,10 @@ int export_opt_cb(struct argparse* self, const struct argparse_option* option) {
 }
 int user_opt_cb(struct argparse* self, const struct argparse_option* option) {
   (void)self;
-  printf("sex : %d\n", option->data);
+  project_options* poptions = (project_options*)option->data;
+  // char* a = (char*)option->data;
+  printf("sex : %s\n", poptions->script_path);
+  // printf("sex : %s\n", a);
   use_user_script(*(char**)option->value);
   return EXIT_SUCCESS;
 }
