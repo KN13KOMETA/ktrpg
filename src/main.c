@@ -14,11 +14,11 @@ int main(int argc, char* argv[]) {
   printf("AMONGUS. START OF GAME.\n%s\n%s\n\n", poptions->script_path,
          poptions->save_path);
 
-  free_project_options(poptions);
-
   ecs_t* tgg_ecs = tgg_init();
 
-  tgg_load_content(tgg_ecs, false);
+  tgg_load_content(tgg_ecs, poptions->script_path);
+
+  free_project_options(poptions);
 
   for (size_t i = 0; i < 2; i++) {
     ecs_run_systems(tgg_ecs, 0);

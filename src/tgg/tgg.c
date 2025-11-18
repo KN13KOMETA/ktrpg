@@ -23,7 +23,7 @@ ecs_t* tgg_init(void) {
   return tgg_ecs;
 }
 
-int tgg_load_content(ecs_t* tgg_ecs, bool force_internal) {
+int tgg_load_content(ecs_t* tgg_ecs, char* script_path) {
   // TODO: Maybe somehow try to make it sandbox safe
   // NOTE: luaopen_package should be called later
   lua_State* L = luaL_newstate();
@@ -46,8 +46,8 @@ int tgg_load_content(ecs_t* tgg_ecs, bool force_internal) {
   lua_pushcclosure(L, tgg_register_character, 1);
   lua_setglobal(L, "tgg_register_character");
 
-  // Load internal scripts in case if forced internal or init.lua does'n exists
-  if (force_internal || file_exists("init.lua") != 0) {
+  // Load internal scripts in case if script_path doesn't exists
+  if (file_exists(script_path)) {
     printf("Loading content using internal scripts\n");
 
     if (luaL_dostring(L, init_lua) != LUA_OK) {
@@ -58,8 +58,7 @@ int tgg_load_content(ecs_t* tgg_ecs, bool force_internal) {
   } else {
     printf("Loading content using user scripts\n");
 
-    // TODO: get path from option
-    if (luaL_dofile(L, "init.lua") != LUA_OK) {
+    if (luaL_dofile(L, script_path) != LUA_OK) {
       printf("Error at user scripts: %s\n", lua_tostring(L, -1));
 
       return 1;
