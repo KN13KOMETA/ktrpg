@@ -32,20 +32,13 @@ int tgg_load_content(ecs_t* tgg_ecs, char* script_path) {
   luaopen_math(L);
   luaopen_string(L);
   luaopen_table(L);
-  // luaopen_io(L);
-  // luaopen_os(L);
-  // luaopen_package(L);
-  // luaopen_debug(L);
-  // luaopen_bit(L);
-  // luaopen_jit(L);
-  // luaopen_ffi(L);
-  // luaopen_string_buffer(L);
 
   lua_pushlightuserdata(L, tgg_ecs);
 
   lua_pushcclosure(L, tgg_register_character, 1);
   lua_setglobal(L, "tgg_register_character");
 
+  luaopen_package(L);
   // Load internal scripts in case if script_path doesn't exists
   if (file_exists(script_path)) {
     printf("Loading content using internal scripts\n");
