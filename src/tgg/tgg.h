@@ -8,7 +8,7 @@
 // The Great Generator
 ecs_t* tgg_init(void);
 
-int tgg_load_content(ecs_t* tgg_ecs, bool force_internal);
+int tgg_load_content(ecs_t* tgg_ecs, char* script_path);
 
 void tgg_free(ecs_t* tgg_ecs);
 
