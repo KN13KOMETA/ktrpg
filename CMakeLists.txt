@@ -36,7 +36,7 @@ set(CMAKE_C_EXTENSIONS OFF)
 add_executable(
   ${PROJECT_NAME}
   src/functions.c
-  src/prompt_options.c
+  src/project_options.c
   src/main.c
   src/tgg/components.c
   src/tgg/systems.c

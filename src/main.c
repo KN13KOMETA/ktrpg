@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "prompt_options.h"
+#include "project_options.h"
 #include "tgg/tgg.h"
 
 #define PICO_ECS_IMPLEMENTATION
