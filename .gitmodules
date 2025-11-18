@@ -1,9 +1,9 @@
 [submodule "libs/pico_headers"]
 	path = libs/pico_headers
 	url = https://github.com/empyreanx/pico_headers
-[submodule "libs/lua"]
-	path = libs/lua
-	url = https://github.com/walterschell/Lua
 [submodule "libs/argparse"]
 	path = libs/argparse
 	url = https://github.com/cofyc/argparse
+[submodule "libs/lua"]
+	path = libs/lua
+	url = https://github.com/marovira/lua

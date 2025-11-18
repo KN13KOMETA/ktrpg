@@ -12,5 +12,5 @@ target_include_directories(pico_headers INTERFACE libs/pico_headers)
 # Link libraries
 target_link_libraries(
   ${PROJECT_NAME}
-  PRIVATE argparse_static lua_static pico_headers m
+  PRIVATE argparse_static lua::lua pico_headers m
 )
