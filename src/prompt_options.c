@@ -24,6 +24,7 @@ int user_opt_cb(struct argparse* self, const struct argparse_option* option);
 project_options* prompt_project_options(int argc, const char* argv[]) {
   project_options* poptions = malloc(sizeof(project_options));
 
+  void* __export = NULL;
   void* __user = NULL;
 
   struct argparse_option options[] = {
@@ -32,8 +33,8 @@ project_options* prompt_project_options(int argc, const char* argv[]) {
       OPT_BOOLEAN('v', "version", NULL, "shows version", version_opt_cb, 0,
                   OPT_NONEG),
       OPT_GROUP("Lua scripts options"),
-      OPT_BOOLEAN('x', "export", NULL, "exports internal lua script",
-                  export_opt_cb, 0, OPT_NONEG),
+      OPT_STRING('x', "export", &__export, "exports internal lua script",
+                 export_opt_cb, (intptr_t)poptions, OPT_NONEG),
       OPT_STRING('u', "user", &__user,
                  "use user script for content load by path", user_opt_cb,
                  (intptr_t)poptions, OPT_NONEG),
@@ -53,7 +54,10 @@ void print_version(void) {
   printf("%s %s\n", PROJECT_NAME, PROJECT_FULL_VERSION);
   exit(EXIT_SUCCESS);
 }
-void export_scripts(char* path, project_options* poptions);
+void export_scripts(char* path, project_options* poptions) {
+  poptions->save_path = malloc(strlen(path) + 1);
+  strcpy(poptions->save_path, path);
+}
 void use_user_script(char* path, project_options* poptions) {
   poptions->script_path = malloc(strlen(path) + 1);
   strcpy(poptions->script_path, path);
@@ -67,6 +71,8 @@ int version_opt_cb(struct argparse* self,
   return EXIT_SUCCESS;
 }
 int export_opt_cb(struct argparse* self, const struct argparse_option* option) {
+  (void)self;
+  export_scripts(*(char**)option->value, (project_options*)option->data);
   return EXIT_SUCCESS;
 }
 int user_opt_cb(struct argparse* self, const struct argparse_option* option) {

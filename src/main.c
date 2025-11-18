@@ -11,7 +11,8 @@
 
 int main(int argc, char* argv[]) {
   project_options* poptions = prompt_project_options(argc, (const char**)argv);
-  printf("AMONGUS. START OF GAME.\n%s\n\n", poptions->script_path);
+  printf("AMONGUS. START OF GAME.\n%s\n%s\n\n", poptions->script_path,
+         poptions->save_path);
 
   free_project_options(poptions);
 
