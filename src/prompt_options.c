@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "argparse.h"
 
@@ -13,8 +14,8 @@ static const char* const usages[] = {
 };
 
 void print_version(void);
-void export_scripts(char* path);
-void use_user_script(char* path);
+void export_scripts(char* path, project_options* poptions);
+void use_user_script(char* path, project_options* poptions);
 
 int version_opt_cb(struct argparse* self, const struct argparse_option* option);
 int export_opt_cb(struct argparse* self, const struct argparse_option* option);
@@ -52,8 +53,11 @@ void print_version(void) {
   printf("%s %s\n", PROJECT_NAME, PROJECT_FULL_VERSION);
   exit(EXIT_SUCCESS);
 }
-void export_scripts(char* path);
-void use_user_script(char* path) {}
+void export_scripts(char* path, project_options* poptions);
+void use_user_script(char* path, project_options* poptions) {
+  poptions->script_path = malloc(strlen(path) + 1);
+  strcpy(poptions->script_path, path);
+}
 
 int version_opt_cb(struct argparse* self,
                    const struct argparse_option* option) {
@@ -67,11 +71,7 @@ int export_opt_cb(struct argparse* self, const struct argparse_option* option) {
 }
 int user_opt_cb(struct argparse* self, const struct argparse_option* option) {
   (void)self;
-  project_options* poptions = (project_options*)option->data;
-  // char* a = (char*)option->data;
-  printf("sex : %s\n", poptions->script_path);
-  // printf("sex : %s\n", a);
-  use_user_script(*(char**)option->value);
+  use_user_script(*(char**)option->value, (project_options*)option->data);
   return EXIT_SUCCESS;
 }
 
