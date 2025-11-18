@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "constants.h"
 #include "project_options.h"
 #include "tgg/tgg.h"
 
@@ -11,6 +12,10 @@
 
 int main(int argc, char* argv[]) {
   project_options* poptions = prompt_project_options(argc, (const char**)argv);
+
+#ifdef DEBUG
+  printf(TITLE("DEBUG MODE") "\n");
+#endif /* ifdef DEBUG */
 
   printf("For help run with --help\n\n");
 
