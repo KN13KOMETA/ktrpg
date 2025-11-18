@@ -3,10 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "argparse.h"
-#include "functions.h"
-#include "game/ecs/components.h"
-#include "game/ecs/systems.h"
 #include "prompt_options.h"
 #include "tgg/tgg.h"
 
