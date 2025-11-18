@@ -20,9 +20,9 @@ int main(int argc, char* argv[]) {
 
   free_project_options(poptions);
 
-  for (size_t i = 0; i < 2; i++) {
-    ecs_run_systems(tgg_ecs, 0);
-  }
+#ifdef DEBUG
+  ecs_run_systems(tgg_ecs, 0);
+#endif /* ifdef DEBUG */
 
   tgg_free(tgg_ecs);
 
