@@ -14,10 +14,8 @@
 #include <pico_ecs.h>
 
 int main(int argc, char* argv[]) {
-  char* script_path = NULL;
-  char* save_path = NULL;
-  prompt_options(argc, (const char**)argv, script_path, save_path);
-  printf("AMONGUS. START OF GAME.\n%s\n\n", script_path);
+  project_options* options = prompt_options(argc, (const char**)argv);
+  printf("AMONGUS. START OF GAME.\n%s\n\n", options->script_path);
 
   ecs_t* tgg_ecs = tgg_init();
 
