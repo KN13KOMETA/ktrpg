@@ -20,8 +20,7 @@ int version_opt_cb(struct argparse* self, const struct argparse_option* option);
 int export_opt_cb(struct argparse* self, const struct argparse_option* option);
 int user_opt_cb(struct argparse* self, const struct argparse_option* option);
 
-void prompt_options(int argc, const char* argv[], char* script_path,
-                    char* save_path) {
+project_options* prompt_options(int argc, const char* argv[]) {
   void* __user = NULL;
   struct argparse_option options[] = {
       OPT_HELP(),
@@ -49,7 +48,7 @@ void print_version(void) {
   exit(EXIT_SUCCESS);
 }
 void export_scripts(char* path);
-void use_user_script(char* path) { printf("path %s\n", path); }
+void use_user_script(char* path) {}
 
 int version_opt_cb(struct argparse* self,
                    const struct argparse_option* option) {
@@ -63,6 +62,8 @@ int export_opt_cb(struct argparse* self, const struct argparse_option* option) {
 }
 int user_opt_cb(struct argparse* self, const struct argparse_option* option) {
   (void)self;
-  use_user_script(*(char**)option->value);
+  printf("sex : %d\n", option->data) use_user_script(*(char**)option->value);
   return EXIT_SUCCESS;
 }
+
+void free_project_options(project_options* options) {}
