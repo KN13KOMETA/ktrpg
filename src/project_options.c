@@ -1,4 +1,4 @@
-#include "prompt_options.h"
+#include "project_options.h"
 
 #include <stdbool.h>
 #include <stdio.h>
