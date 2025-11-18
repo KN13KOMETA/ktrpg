@@ -20,9 +20,11 @@ int version_opt_cb(struct argparse* self, const struct argparse_option* option);
 int export_opt_cb(struct argparse* self, const struct argparse_option* option);
 int user_opt_cb(struct argparse* self, const struct argparse_option* option);
 
-project_options* prompt_options(int argc, const char* argv[]) {
-  project_options poptions;
+project_options* prompt_project_options(int argc, const char* argv[]) {
+  project_options* poptions = malloc(sizeof(project_options));
+
   void* __user = NULL;
+
   struct argparse_option options[] = {
       OPT_HELP(),
       OPT_GROUP("Basic options"),
@@ -42,6 +44,8 @@ project_options* prompt_options(int argc, const char* argv[]) {
   argparse_describe(&argparse, "\n" PROJECT_DESCRIPTION,
                     "\nHomepage: " PROJECT_HOMEPAGE_URL);
   argc = argparse_parse(&argparse, argc, argv);
+
+  return poptions;
 }
 
 void print_version(void) {
@@ -63,8 +67,14 @@ int export_opt_cb(struct argparse* self, const struct argparse_option* option) {
 }
 int user_opt_cb(struct argparse* self, const struct argparse_option* option) {
   (void)self;
-  printf("sex : %d\n", option->data) use_user_script(*(char**)option->value);
+  printf("sex : %d\n", option->data);
+  use_user_script(*(char**)option->value);
   return EXIT_SUCCESS;
 }
 
-void free_project_options(project_options* options) {}
+void free_project_options(project_options* options) {
+  if (options->script_path) free(options->script_path);
+  if (options->save_path) free(options->save_path);
+
+  free(options);
+}

@@ -7,7 +7,7 @@ typedef struct {
   char* save_path;
 } project_options;
 
-project_options* prompt_options(int argc, const char* argv[]);
+project_options* prompt_project_options(int argc, const char* argv[]);
 
 void free_project_options(project_options* poptions);
 
