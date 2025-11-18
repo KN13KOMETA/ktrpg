@@ -9,6 +9,6 @@ typedef struct {
 
 project_options* prompt_options(int argc, const char* argv[]);
 
-void free_project_options(project_options* options);
+void free_project_options(project_options* poptions);
 
 #endif  // !PROMPT_OPTIONS

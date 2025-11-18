@@ -21,6 +21,7 @@ int export_opt_cb(struct argparse* self, const struct argparse_option* option);
 int user_opt_cb(struct argparse* self, const struct argparse_option* option);
 
 project_options* prompt_options(int argc, const char* argv[]) {
+  project_options poptions;
   void* __user = NULL;
   struct argparse_option options[] = {
       OPT_HELP(),
