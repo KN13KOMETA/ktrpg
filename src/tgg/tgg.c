@@ -81,7 +81,7 @@ int tgg_register_character(lua_State* L) {
       tgg_character_name_comp* name =
           ecs_add(tgg_ecs, character, TGG_CHARACTER_NAME_COMP, NULL);
 
-      *name = malloc(strlen(field));
+      *name = malloc(strlen(field) + 1);
 
       strcpy(*name, field);
     }
