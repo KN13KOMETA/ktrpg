@@ -15,17 +15,17 @@ function(generate_header_from_lua input_file)
     OUTPUT_VARIABLE relative_input_path
   )
 
-  # Set output_file
+  # Set header_file
   cmake_path(
     ABSOLUTE_PATH relative_input_path
     BASE_DIRECTORY ${LUAH_SOURCE_DIR}
-    OUTPUT_VARIABLE output_file
+    OUTPUT_VARIABLE header_file
   )
-  cmake_path(REPLACE_EXTENSION output_file "h" OUTPUT_VARIABLE output_file)
+  cmake_path(REPLACE_EXTENSION header_file "h" OUTPUT_VARIABLE header_file)
 
   # Set HEADER_GUARD
   cmake_path(
-    RELATIVE_PATH output_file
+    RELATIVE_PATH header_file
     BASE_DIRECTORY ${SOURCE_FILES_DIR}
     OUTPUT_VARIABLE HEADER_GUARD
   )
@@ -49,18 +49,18 @@ function(generate_header_from_lua input_file)
 
   # Add command instead of writing file here
   add_custom_command(
-    OUTPUT ${output_file}
+    OUTPUT ${header_file}
     COMMAND
-      ${CMAKE_COMMAND} -DINPUT_FILE=${input_file} -DOUTPUT_FILE=${output_file}
+      ${CMAKE_COMMAND} -DINPUT_FILE=${input_file} -DHEADER_FILE=${header_file}
       -DHEADER_GUARD=${HEADER_GUARD} -DVARIABLE_NAME=${VARIABLE_NAME} -P
       ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/write_lua_header.cmake
     DEPENDS ${input_file}
-    COMMENT "Generating ${output_file} from ${input_file}"
+    COMMENT "Generating ${header_file} from ${input_file}"
     VERBATIM
   )
 
   # Add file to GENERATED so "clean" works
-  set_source_files_properties(${output_file} PROPERTIES GENERATED TRUE)
+  set_source_files_properties(${header_file} PROPERTIES GENERATED TRUE)
 
-  message(STATUS "Registered dependency: ${input_file} -> ${output_file}")
+  message(STATUS "Registered dependency: ${input_file} -> ${header_file}")
 endfunction()
