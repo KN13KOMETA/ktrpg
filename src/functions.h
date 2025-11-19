@@ -4,6 +4,12 @@
 
 #include <stdlib.h>
 
+#ifdef DEBUG
+#define DEBUG_LOG(...) printf(__VA_ARGS__);
+#else
+#define DEBUG_LOG(...)
+#endif  // DEBUG
+
 #define RND_RANGE(max, min) rand() % (max + 1 - min) + min
 #define RND_MAX(max) RND_RANGE(max, 0)
 
