@@ -13,8 +13,17 @@ file(
 #ifndef ${HEADER_GUARD}
 #define ${HEADER_GUARD}
 
-static const char* ${VARIABLE_NAME} = \"${FILE_CONTENT}\";
+extern const char* ${VARIABLE_NAME};
 
 #endif // !${HEADER_GUARD}
+"
+)
+
+file(
+  WRITE ${C_FILE}
+  "\
+#include \"${HEADER_FILE}\"
+
+const char* ${VARIABLE_NAME} = \"${FILE_CONTENT}\";
 "
 )
