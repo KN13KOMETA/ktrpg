@@ -7,7 +7,7 @@ string(REPLACE "\"" "\\\"" FILE_CONTENT "${FILE_CONTENT}")
 string(REPLACE "\n" "\\n\"\n\"" FILE_CONTENT "${FILE_CONTENT}")
 
 file(
-  WRITE ${OUTPUT_FILE}
+  WRITE ${HEADER_FILE}
   "\
 #pragma once
 #ifndef ${HEADER_GUARD}
