@@ -33,11 +33,12 @@ project_options* prompt_project_options(int argc, const char* argv[]) {
       OPT_BOOLEAN('v', "version", NULL, "shows version and exit",
                   version_opt_cb, 0, OPT_NONEG),
       OPT_GROUP("Lua scripts options"),
-      OPT_STRING('x', "export", &__export, "exports internal lua script",
-                 export_opt_cb, (intptr_t)poptions, OPT_NONEG),
-      OPT_STRING('u', "user", &__user,
-                 "use user script for content load by path", user_opt_cb,
+      OPT_STRING('x', "export", &__export,
+                 "export internal scripts to specified path", export_opt_cb,
                  (intptr_t)poptions, OPT_NONEG),
+      OPT_STRING('u', "user", &__user,
+                 "loads game content using script by specified path",
+                 user_opt_cb, (intptr_t)poptions, OPT_NONEG),
       OPT_END(),
   };
 
