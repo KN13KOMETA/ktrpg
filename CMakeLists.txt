@@ -39,12 +39,12 @@ add_executable(
   ${GENERATED_C_FILES}
   src/functions.c
   src/project_options.c
-  src/main.c
   src/tgg/components.c
   src/tgg/systems.c
   src/tgg/tgg.c
   src/game/ecs/components.c
   src/game/ecs/systems.c
+  src/main.c
 )
 
 # Generated files will be regenarated
