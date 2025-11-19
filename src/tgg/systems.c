@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 
-#define TGG_COMPONENTS_DEBUG_IMPLEMENTATION
 #include "components.h"
 
 ecs_system_t TGG_DEBUG_SYSTEM;

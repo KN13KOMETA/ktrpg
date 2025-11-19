@@ -29,19 +29,3 @@ void tgg_character_max_health_comp_debug(tgg_character_max_health_comp* comp);
 void tgg_register_components(ecs_t* ecs);
 
 #endif  // !TGG_COMPONENTS_H
-
-#ifdef TGG_COMPONENTS_DEBUG_IMPLEMENTATION
-
-#include <stdio.h>
-
-void tgg_character_name_comp_debug(tgg_character_name_comp* comp) {
-  printf("tgg_character_name_comp: %s\n", *comp);
-}
-void tgg_character_min_health_comp_debug(tgg_character_min_health_comp* comp) {
-  printf("tgg_character_min_health_comp: %f\n", *comp);
-}
-void tgg_character_max_health_comp_debug(tgg_character_max_health_comp* comp) {
-  printf("tgg_character_max_health_comp: %f\n", *comp);
-}
-
-#endif  // TGG_COMPONENTS_DEBUG_IMPLEMENTATION
