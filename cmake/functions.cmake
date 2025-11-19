@@ -22,6 +22,7 @@ function(generate_header_from_lua input_file)
     OUTPUT_VARIABLE header_file
   )
   cmake_path(REPLACE_EXTENSION header_file "h" OUTPUT_VARIABLE header_file)
+  cmake_path(REPLACE_EXTENSION header_file "c" OUTPUT_VARIABLE c_file)
 
   # Set HEADER_GUARD
   cmake_path(
@@ -49,10 +50,11 @@ function(generate_header_from_lua input_file)
 
   # Add command instead of writing file here
   add_custom_command(
-    OUTPUT ${header_file}
+    OUTPUT ${header_file} ${c_file}
     COMMAND
       ${CMAKE_COMMAND} -DINPUT_FILE=${input_file} -DHEADER_FILE=${header_file}
-      -DHEADER_GUARD=${HEADER_GUARD} -DVARIABLE_NAME=${VARIABLE_NAME} -P
+      -DC_FILE=${c_file} -DHEADER_GUARD=${HEADER_GUARD}
+      -DVARIABLE_NAME=${VARIABLE_NAME} -P
       ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/write_lua_header.cmake
     DEPENDS ${input_file}
     COMMENT "Generating ${header_file} from ${input_file}"
@@ -60,7 +62,14 @@ function(generate_header_from_lua input_file)
   )
 
   # Add file to GENERATED so "clean" works
-  set_source_files_properties(${header_file} PROPERTIES GENERATED TRUE)
+  set_source_files_properties(
+    ${header_file}
+    ${c_file}
+    PROPERTIES GENERATED TRUE
+  )
+  set(GENERATED_HEADERS ${GENERATED_HEADERS} ${header_file} PARENT_SCOPE)
+  set(GENERATED_C_FILES ${GENERATED_HEADERS} ${c_file} PARENT_SCOPE)
 
   message(STATUS "Registered dependency: ${input_file} -> ${header_file}")
+  message(STATUS "Registered dependency: ${input_file} -> ${c_file}")
 endfunction()

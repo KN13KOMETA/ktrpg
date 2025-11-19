@@ -4,12 +4,13 @@ cmake_path(SET SOURCE_FILES_DIR "${CMAKE_SOURCE_DIR}/src")
 
 include("cmake/functions.cmake")
 
-# TODO: fix variables are init at headers
 generate_header_from_lua(${SOURCE_FILES_DIR}/lua/init.lua)
 
-set(GENERATED_HEADERS ${LUAH_SOURCE_DIR}/init.h)
-
-add_custom_target(generated_files ALL DEPENDS ${GENERATED_HEADERS})
+add_custom_target(
+  generated_files
+  ALL
+  DEPENDS ${GENERATED_HEADERS} ${GENERATED_C_FILES}
+)
 
 # Always export compile commands (needs for clangd)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -35,6 +36,7 @@ set(CMAKE_C_EXTENSIONS OFF)
 
 add_executable(
   ${PROJECT_NAME}
+  ${GENERATED_C_FILES}
   src/functions.c
   src/project_options.c
   src/main.c
