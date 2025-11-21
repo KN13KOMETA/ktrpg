@@ -8,7 +8,7 @@
 
 int luagg_tgg_module_register_character(lua_State* L);
 
-struct luaL_Reg luagg_tgg_module[] = {
+struct luaL_Reg tgg_lua_module[] = {
     {"register_character", luagg_tgg_module_register_character}, {NULL, NULL}};
 
 int luagg_tgg_module_register_character(lua_State* L) {

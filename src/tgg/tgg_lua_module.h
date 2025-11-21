@@ -2,9 +2,7 @@
 #ifndef TGG_TGG_LUA_MODULE_H
 
 #include "lauxlib.h"
-#include "lua.h"
-#include "tgg.h"
 
-extern struct luaL_Reg luagg_tgg_module[];
+extern struct luaL_Reg tgg_lua_module[];
 
 #endif  // !TGG_TGG_LUA_MODULE_H
