@@ -34,15 +34,15 @@ Since it's quite a big command here's explanation of what it's doing
 
 - `-S .` is required. It specifies source directory
 - `-B build-win` is required. It specifies build directory  
-  _For correct work of `clangd` it's required to be `build`_
+  _<span color="FF6">Note:</span> for correct work of `clangd` it's required to be `build`_
 - `-G Ninja` is optional. It specifies build system  
   _If not specified, CMake will decide which one to use_
 - `-DCMAKE_BUILD_TYPE=RELEASE` is optional. It specifies build type  
   _If not specified, `DEBUG` will be used as build type_
 - `--toolchain x86_64-windows-gnu.cmake` is optional. It specifies toolchain and target platform  
   _If not specified, target will be current platform_  
-  _Note: there's more toolchains in root directory (they ends with `.cmake`)_  
-  _Note: if you specify `--toolchain`, zig will be used as compiler_
+  _<span color="FF6">Note:</span> there's more toolchains in root directory (they ends with `.cmake`)_  
+  _<span color="FF6">Note:</span> if you specify `--toolchain`, zig will be used as compiler_
 
 ## Build
 
