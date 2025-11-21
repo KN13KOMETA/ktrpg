@@ -44,7 +44,7 @@ Since it's quite a big command here's explanation of what it's doing
   _<span color="FF6">Note:</span> there's more toolchains in root directory (they ends with `.cmake`)_  
   _<span color="FF6">Note:</span> if you specify `--toolchain`, zig will be used as compiler_
 
-## Build
+## Build and post-build
 
 - Build project:
   ```bash
