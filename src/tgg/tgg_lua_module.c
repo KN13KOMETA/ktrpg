@@ -1,4 +1,4 @@
-#include "tgg_lua.h"
+#include "tgg_lua_module.h"
 
 #include <stdlib.h>
 #include <string.h>

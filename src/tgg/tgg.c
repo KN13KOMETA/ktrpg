@@ -9,7 +9,7 @@
 #include "../luah/init.h"
 #include "components.h"
 #include "systems.h"
-#include "tgg_lua.h"
+#include "tgg_lua_module.h"
 
 ecs_t* tgg_init(void) {
   ecs_t* tgg_ecs = ecs_new(64, NULL);
