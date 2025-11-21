@@ -32,7 +32,7 @@ int tgg_load_content(ecs_t* tgg_ecs, char* script_path) {
 
   lua_newtable(L);
   lua_pushlightuserdata(L, tgg_ecs);
-  luaL_setfuncs(L, luagg_tgg_module, 1);
+  luaL_setfuncs(L, tgg_lua_module, 1);
   lua_setglobal(L, "tgg");
 
   luaopen_package(L);
