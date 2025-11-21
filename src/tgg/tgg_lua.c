@@ -4,24 +4,12 @@
 #include <string.h>
 
 #include "components.h"
+#include "lauxlib.h"
 
 int luagg_tgg_module_register_character(lua_State* L);
 
 struct luaL_Reg luagg_tgg_module[] = {
     {"register_character", luagg_tgg_module_register_character}, {NULL, NULL}};
-
-void luagg_register_module(lua_State* L, ecs_t* tgg_ecs, char* name,
-                           struct luaL_Reg methods[]) {
-  lua_newtable(L);
-
-  for (int i = 0; methods[i].name != NULL; i++) {
-    lua_pushlightuserdata(L, tgg_ecs);
-    lua_pushcclosure(L, methods[i].func, 1);
-    lua_setfield(L, -2, methods[i].name);
-  }
-
-  lua_setglobal(L, name);
-}
 
 int luagg_tgg_module_register_character(lua_State* L) {
   ecs_t* tgg_ecs = lua_touserdata(L, lua_upvalueindex(1));
