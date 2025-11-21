@@ -33,10 +33,22 @@ int tgg_load_content(ecs_t* tgg_ecs, char* script_path) {
   luaopen_string(L);
   luaopen_table(L);
 
-  lua_pushlightuserdata(L, tgg_ecs);
+  // Register tgg table
+  {
+    struct luaL_Reg tgg_methods[] = {
+        {"register_character", tgg_register_character}};
+    int tgg_method_count = sizeof(tgg_methods) / sizeof(struct luaL_Reg);
 
-  lua_pushcclosure(L, tgg_register_character, 1);
-  lua_setglobal(L, "tgg_register_character");
+    lua_newtable(L);
+
+    for (int i = 0; i < tgg_method_count; i++) {
+      lua_pushlightuserdata(L, tgg_ecs);
+      lua_pushcclosure(L, tgg_methods[i].func, 1);
+      lua_setfield(L, -2, tgg_methods[i].name);
+    }
+
+    lua_setglobal(L, "tgg");
+  }
 
   luaopen_package(L);
   // Load internal scripts in case if script_path doesn't exists
@@ -111,6 +123,6 @@ int tgg_register_character(lua_State* L) {
     }
   }
 
-  // We don't return anything
-  return 0;
+  lua_pushinteger(L, character.id);
+  return 1;
 }
