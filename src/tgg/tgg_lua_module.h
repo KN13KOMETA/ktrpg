@@ -1,5 +1,5 @@
 #pragma once
-#ifndef TGG_TGG_LUA_H
+#ifndef TGG_TGG_LUA_MODULE_H
 
 #include "lauxlib.h"
 #include "lua.h"
@@ -7,4 +7,4 @@
 
 extern struct luaL_Reg luagg_tgg_module[];
 
-#endif  // !TGG_TGG_LUA_H
+#endif  // !TGG_TGG_LUA_MODULE_H
