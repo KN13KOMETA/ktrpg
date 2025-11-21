@@ -30,7 +30,10 @@ int tgg_load_content(ecs_t* tgg_ecs, char* script_path) {
   luaopen_string(L);
   luaopen_table(L);
 
-  luagg_register_module(L, tgg_ecs, "tgg", luagg_tgg_module);
+  lua_newtable(L);
+  lua_pushlightuserdata(L, tgg_ecs);
+  luaL_setfuncs(L, luagg_tgg_module, 1);
+  lua_setglobal(L, "tgg");
 
   luaopen_package(L);
   // Load internal scripts in case if script_path doesn't exists
