@@ -24,39 +24,54 @@
    ```
    _This will install every required library as git submodules_
 
-## Creating build directory
+## Configuring and building
 
-```bash
-cmake -S . -B build-win -G Ninja -DCMAKE_BUILD_TYPE=RELEASE --toolchain x86_64-windows-gnu.cmake
-```
+### For current platform
 
-Since it's quite a big command here's explanation of what it's doing
+1. Configure:
+   ```bash
+   cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+   ```
+2. Build:
+   ```bash
+   cmake --build build --parallel
+   ```
 
-- `-S .` is required. It specifies source directory
-- `-B build-win` is required. It specifies build directory  
-  _<span color="FF6">Note:</span> for correct work of `clangd` it's required to be `build`_
-- `-G Ninja` is optional. It specifies build system  
+### For cross-compiling (e.g., to Windows)
+
+1. Configure:
+   ```bash
+   cmake -S . -B build-win --toolchain x86_64-windows-gnu.cmake -G Ninja -DCMAKE_BUILD_TYPE=Release
+   ```
+2. Build:
+   ```bash
+   cmake --build build-win --parallel
+   ```
+
+### Command explanation
+
+- `-S .` is required, specifies source directory
+- `-B <dir>` is required, specifies build directory
+- `-G Ninja` specifies the build system  
   _If not specified, CMake will decide which one to use_
-- `-DCMAKE_BUILD_TYPE=RELEASE` is optional. It specifies build type  
-  _If not specified, `DEBUG` will be used as build type_
-- `--toolchain x86_64-windows-gnu.cmake` is optional. It specifies toolchain and target platform  
-  _If not specified, target will be current platform_  
-  _<span color="FF6">Note:</span> there's more toolchains in root directory (they ends with `.cmake`)_  
-  _<span color="FF6">Note:</span> if you specify `--toolchain`, zig will be used as compiler_
+- `-DCMAKE_BUILD_TYPE=Release` specifies build type  
+  _If not specified, `Debug` will be used as build type_
+- `--toolchain <file>` specifies the toolchain and target platform  
+  _If not soecified, the target will be the current platform_
 
-## Build and post-build
+## Additional commands
 
-- Build project:
+- List all build targets:
   ```bash
-  cmake --build build-win --parallel
+  cmake --build build --target help
   ```
-- Clean build files:
+- Clean built files:
   ```bash
-  cmake --build build-win --parallel --target clean
+  cmake --build build --target clean
   ```
-- Print todo comments:
+- Print TODO comments (requires awk and grep):
   ```bash
-  cmake --build build-win --parallel --target todo
+  cmake --build build --target todo
   ```
 
 # DEVELOPING
