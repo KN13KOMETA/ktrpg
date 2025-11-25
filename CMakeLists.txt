@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
+# TODO: read about cmake presets
+
 cmake_path(SET SOURCE_FILES_DIR "${CMAKE_SOURCE_DIR}/src")
 
 include("cmake/functions.cmake")
@@ -60,8 +62,9 @@ set_target_properties(
       "${PROJECT_NAME}_${PROJECT_FULL_VERSION}$<$<CONFIG:DEBUG>:_debug>"
 )
 
-# Turning on every compiler checks
-if(MSVC)
+# Turning on a lot compiler checks
+# "В семье не без урода" MSVC flags differs from Clang/GCC
+if(CMAKE_C_COMPILER_ID MATCHES "MSVC")
   target_compile_options(
     ${PROJECT_NAME}
     PRIVATE /W4 /permissive- $<$<CONFIG:RELEASE>:/WX>
