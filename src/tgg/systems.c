@@ -4,7 +4,7 @@
 
 #include "components.h"
 
-ecs_system_t TGG_DEBUG_SYSTEM;
+static ecs_system_t TGG_DEBUG_SYSTEM;
 
 void tgg_register_systems(ecs_t* ecs) {
   TGG_DEBUG_SYSTEM =
