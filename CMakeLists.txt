@@ -36,7 +36,7 @@ add_executable(
   src/project_options.c
   src/tgg/components.c
   src/tgg/systems.c
-  src/tgg/tgg_lua.c
+  src/tgg/tgg_lua_module.c
   src/tgg/tgg.c
   src/game/ecs/components.c
   src/game/ecs/systems.c
