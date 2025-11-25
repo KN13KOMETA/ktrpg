@@ -7,7 +7,7 @@
 ecs_ret_t tgg_debug_system(ecs_t* ecs, ecs_entity_t* entities,
                            size_t entity_count, void* udata);
 
-extern ecs_system_t TGG_DEBUG_SYSTEM;
+static ecs_system_t TGG_DEBUG_SYSTEM;
 
 void tgg_register_systems(ecs_t* ecs);
 

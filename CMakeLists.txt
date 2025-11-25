@@ -72,7 +72,15 @@ if(CMAKE_C_COMPILER_ID MATCHES "MSVC")
 else()
   target_compile_options(
     ${PROJECT_NAME}
-    PRIVATE -xc -Wall -Wextra -Wpedantic $<$<CONFIG:RELEASE>:-Werror>
+    PRIVATE
+      -xc
+      -Wall
+      -Wextra
+      -Wpedantic
+      -Wconversion
+      -Wmissing-prototypes
+      -Wmissing-variable-declarations
+      $<$<CONFIG:RELEASE>:-Werror>
   )
 endif()
 

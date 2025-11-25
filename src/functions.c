@@ -1,9 +1,11 @@
+#include "functions.h"
+
 #include <stdio.h>
 
 int getchar_clear(char* ch) {
   int c = 0;
 
-  *ch = getchar();
+  *ch = (char)getchar();
 
   if (*ch != '\n')
     while ((c = getchar()) != '\n' && c != EOF);
@@ -17,7 +19,7 @@ int getchars_clear(char* str, size_t len) {
 
   while ((c = getchar()) != '\n' && c != EOF) {
     if (i != len - 1) {
-      str[i++] = c;
+      str[i++] = (char)c;
     }
   }
 

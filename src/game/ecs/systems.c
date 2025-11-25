@@ -5,7 +5,7 @@
 #define COMPONENTS_DEBUG_IMPLEMENTATION
 #include "components.h"
 
-ecs_system_t RENDER_SYSTEM;
+static ecs_system_t RENDER_SYSTEM;
 
 void register_systems(ecs_t* ecs) {
   RENDER_SYSTEM = ecs_define_system(ecs, 0, debug_system, NULL, NULL, NULL);
