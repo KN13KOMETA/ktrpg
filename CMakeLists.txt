@@ -73,6 +73,14 @@ else()
   )
 endif()
 
+option(ENABLE_WEVERYTHING "Enable Clang -Weverything" OFF)
+
+if(ENABLE_WEVERYTHING)
+  if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+    target_compile_options(${PROJECT_NAME} PRIVATE -Weverything)
+  endif()
+endif()
+
 target_compile_definitions(
   ${PROJECT_NAME}
   PUBLIC
