@@ -81,6 +81,7 @@ else()
       -Wmissing-prototypes
       -Wmissing-variable-declarations
       -Wreserved-identifier
+      -Wcast-qual
       $<$<CONFIG:RELEASE>:-Werror>
   )
 endif()

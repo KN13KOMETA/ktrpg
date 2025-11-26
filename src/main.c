@@ -12,7 +12,14 @@
 #include <pico_ecs.h>
 
 int main(int argc, char* argv[]) {
-  project_options* poptions = prompt_project_options(argc, (const char**)argv);
+  const char** temp_argv =
+      (const char**)malloc(((size_t)argc + 1) * sizeof(const char*));
+  project_options* poptions;
+
+  for (int i = 0; i < argc; i++) temp_argv[i] = argv[i];
+  temp_argv[argc] = NULL;
+
+  poptions = prompt_project_options(argc, temp_argv);
 
   DEBUG_LOG(TITLE("DEBUG MODE") "\n")
 
@@ -24,6 +31,7 @@ int main(int argc, char* argv[]) {
   tgg_load_content(tgg_ecs, poptions->script_path);
 
   free_project_options(poptions);
+  free(temp_argv);
 
 #ifdef DEBUG
   ecs_run_systems(tgg_ecs, 0);
