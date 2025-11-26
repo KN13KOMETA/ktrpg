@@ -24,8 +24,9 @@ int user_opt_cb(struct argparse* self, const struct argparse_option* option);
 project_options* prompt_project_options(int argc, const char* argv[]) {
   project_options* poptions = malloc(sizeof(project_options));
 
-  void* __export = NULL;
-  void* __user = NULL;
+  // NOTE: These two unused, but required for value in callback
+  void* export_value = NULL;
+  void* user_value = NULL;
 
   struct argparse_option options[] = {
       OPT_HELP(),
@@ -33,10 +34,10 @@ project_options* prompt_project_options(int argc, const char* argv[]) {
       OPT_BOOLEAN('v', "version", NULL, "shows version and exit",
                   version_opt_cb, 0, OPT_NONEG),
       OPT_GROUP("Lua scripts options"),
-      OPT_STRING('x', "export", &__export,
+      OPT_STRING('x', "export", &export_value,
                  "export internal scripts to specified path", export_opt_cb,
                  (intptr_t)poptions, OPT_NONEG),
-      OPT_STRING('u', "user", &__user,
+      OPT_STRING('u', "user", &user_value,
                  "loads game content using script by specified path",
                  user_opt_cb, (intptr_t)poptions, OPT_NONEG),
       OPT_END(),

@@ -80,6 +80,7 @@ else()
       -Wconversion
       -Wmissing-prototypes
       -Wmissing-variable-declarations
+      -Wreserved-identifier
       $<$<CONFIG:RELEASE>:-Werror>
   )
 endif()
