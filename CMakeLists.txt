@@ -88,7 +88,15 @@ option(ENABLE_WEVERYTHING "Enable Clang -Weverything" OFF)
 
 if(ENABLE_WEVERYTHING)
   if(CMAKE_C_COMPILER_ID MATCHES "Clang")
-    target_compile_options(${PROJECT_NAME} PRIVATE -Weverything)
+    target_compile_options(
+      ${PROJECT_NAME}
+      PRIVATE
+        -Weverything
+        # Used for c90 is lower
+        -Wno-declaration-after-statement
+        # Used for C++
+        -Wno-unsafe-buffer-usage
+    )
   endif()
 endif()
 
