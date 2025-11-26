@@ -56,6 +56,8 @@ int luagg_tgg_module_register_character(lua_State* L) {
     }
   }
 
-  lua_pushinteger(L, character.id);
+  // NOTE: we are converting big type to a lower one
+  // This will probably be fine since tgg doesnt need absurd amount of entities
+  lua_pushinteger(L, (lua_Integer)character.id);
   return 1;
 }
