@@ -74,14 +74,16 @@ else()
     ${PROJECT_NAME}
     PRIVATE
       -xc
+      # Main warning flags
       -Wall
       -Wextra
       -Wpedantic
+      # Additional warning flags
+      -Wcast-qual
       -Wconversion
       -Wmissing-prototypes
       -Wmissing-variable-declarations
       -Wreserved-identifier
-      -Wcast-qual
       $<$<CONFIG:RELEASE>:-Werror>
   )
 endif()
