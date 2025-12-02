@@ -6,6 +6,7 @@
 #include "constants.h"
 #include "functions.h"
 #include "project_options.h"
+#include "tgg/systems.h"
 #include "tgg/tgg.h"
 
 #define PICO_ECS_IMPLEMENTATION
@@ -34,7 +35,7 @@ int main(int argc, char* argv[]) {
   free(temp_argv);
 
 #ifdef DEBUG
-  ecs_run_systems(tgg_ecs, 0);
+  ecs_run_systems(tgg_ecs, TGG_DEBUG_FLAG);
 #endif /* ifdef DEBUG */
 
   tgg_free(tgg_ecs);

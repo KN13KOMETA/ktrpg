@@ -5,10 +5,13 @@
 #include "components.h"
 
 static ecs_system_t TGG_DEBUG_SYSTEM;
+static ecs_system_t TGG_VALIDATION_SYSTEM;
 
 void tgg_register_systems(ecs_t* ecs) {
-  TGG_DEBUG_SYSTEM =
-      ecs_define_system(ecs, 0, tgg_debug_system, NULL, NULL, NULL);
+  TGG_DEBUG_SYSTEM = ecs_define_system(ecs, TGG_DEBUG_FLAG, tgg_debug_system,
+                                       NULL, NULL, NULL);
+  TGG_VALIDATION_SYSTEM = ecs_define_system(
+      ecs, TGG_VALIDATION_FLAG, tgg_validation_system, NULL, NULL, NULL);
 
   // NOTE: in this case i decided currently not to add debug comp
   // ecs_require_component(ecs, DEBUG_SYSTEM, DEBUG_COMP);
@@ -44,3 +47,8 @@ ecs_ret_t tgg_debug_system(ecs_t* ecs, ecs_entity_t* entities,
 }
 
 #undef debug_comp
+
+ecs_ret_t tgg_validation_system(ecs_t* ecs, ecs_entity_t* entities,
+                                size_t entity_count, void* udata) {
+  return 0;
+}
