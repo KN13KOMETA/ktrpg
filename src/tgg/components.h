@@ -15,14 +15,17 @@ typedef double health_t;
  */
 
 typedef string_t tgg_character_name_comp;
+typedef uint8_t tgg_character_player_comp;
 typedef health_t tgg_character_min_health_comp;
 typedef health_t tgg_character_max_health_comp;
 
 extern ecs_comp_t TGG_CHARACTER_NAME_COMP;
+extern ecs_comp_t TGG_CHARACTER_PLAYER_COMP;
 extern ecs_comp_t TGG_CHARACTER_MIN_HEALTH_COMP;
 extern ecs_comp_t TGG_CHARACTER_MAX_HEALTH_COMP;
 
 void tgg_character_name_comp_debug(tgg_character_name_comp* comp);
+void tgg_character_player_comp_debug(tgg_character_player_comp* comp);
 void tgg_character_min_health_comp_debug(tgg_character_min_health_comp* comp);
 void tgg_character_max_health_comp_debug(tgg_character_max_health_comp* comp);
 
