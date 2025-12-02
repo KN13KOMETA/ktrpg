@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 
   ecs_t* tgg_ecs = tgg_init();
 
-  tgg_load_content(tgg_ecs, poptions->script_path);
+  if (tgg_load_content(tgg_ecs, poptions->script_path)) return EXIT_FAILURE;
 
   free_project_options(poptions);
   free(temp_argv);
