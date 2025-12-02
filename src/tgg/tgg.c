@@ -12,7 +12,7 @@
 #include "tgg_lua_module.h"
 
 ecs_t* tgg_init(void) {
-  ecs_t* tgg_ecs = ecs_new(64, NULL);
+  ecs_t* tgg_ecs = ecs_new(TGG_ENTITY_COUNT, NULL);
 
   tgg_register_components(tgg_ecs);
   tgg_register_systems(tgg_ecs);

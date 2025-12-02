@@ -5,6 +5,8 @@
 #include <pico_ecs.h>
 #include <stdbool.h>
 
+#define TGG_ENTITY_COUNT 64
+
 // The Great Generator
 ecs_t* tgg_init(void);
 
