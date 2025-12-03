@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 ecs_comp_t TGG_CHARACTER_NAME_COMP;
+ecs_comp_t TGG_CHARACTER_PLAYER_COMP;
 ecs_comp_t TGG_CHARACTER_MIN_HEALTH_COMP;
 ecs_comp_t TGG_CHARACTER_MAX_HEALTH_COMP;
 
