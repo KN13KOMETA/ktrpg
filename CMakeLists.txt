@@ -36,6 +36,7 @@ add_executable(
   ${GENERATED_C_FILES}
   src/functions.c
   src/project_options.c
+  src/ltest/ltest.c
   src/tgg/components.c
   src/tgg/systems.c
   src/tgg/tgg_lua_module.c

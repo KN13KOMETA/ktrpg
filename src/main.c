@@ -5,6 +5,7 @@
 
 #include "constants.h"
 #include "functions.h"
+#include "ltest/ltest.h"
 #include "project_options.h"
 #include "tgg/systems.h"
 #include "tgg/tgg.h"
@@ -27,18 +28,20 @@ int main(int argc, char* argv[]) {
   printf(TITLE("HELP"));
   printf("Run with --help for more info\n\n");
 
-  ecs_t* tgg_ecs = tgg_init();
+  ltest();
 
-  if (tgg_load_content(tgg_ecs, poptions->script_path)) return EXIT_FAILURE;
+  // ecs_t* tgg_ecs = tgg_init();
+
+  // if (tgg_load_content(tgg_ecs, poptions->script_path)) return EXIT_FAILURE;
 
   free_project_options(poptions);
   free(temp_argv);
 
-#ifdef DEBUG
-  ecs_run_systems(tgg_ecs, TGG_DEBUG_FLAG);
-#endif /* ifdef DEBUG */
+  // #ifdef DEBUG
+  //   ecs_run_systems(tgg_ecs, TGG_DEBUG_FLAG);
+  // #endif /* ifdef DEBUG */
 
-  tgg_free(tgg_ecs);
+  // tgg_free(tgg_ecs);
 
   return EXIT_SUCCESS;
 }
