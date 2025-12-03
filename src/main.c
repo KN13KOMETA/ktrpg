@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
   DEBUG_LOG(TITLE("DEBUG MODE") "\n")
 
   printf(TITLE("HELP"));
-  printf("Run with --help\n\n");
+  printf("Run with --help for more info\n\n");
 
   ecs_t* tgg_ecs = tgg_init();
 
