@@ -7,6 +7,29 @@ set_property(
   PROPERTY ADDITIONAL_CLEAN_FILES ${LUAH_SOURCE_DIR}
 )
 
+function(print_comments_target target_name comment_type)
+  set(
+    COMMENT_EXCLUDE
+    --exclude-dir
+    .git
+    --exclude-dir
+    .cache
+    --exclude-dir
+    build
+    --exclude-dir
+    libs
+  )
+
+  # TODO: Somehow make it crossplatform
+  add_custom_target(
+    ${target_name}
+    COMMAND
+      cd ${CMAKE_SOURCE_DIR} && grep -e "${comment_type}:" -Hnr .
+      ${COMMENT_EXCLUDE} | awk -f
+      ${CMAKE_SOURCE_DIR}/scripts/awk/print_comments.awk
+  )
+endfunction()
+
 function(generate_header_from_lua input_file)
   # Get relative path to LUA_SOURCE_DIR
   cmake_path(
