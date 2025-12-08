@@ -1,4 +1,4 @@
-[README RU](README_RU.md) \* [BUILDING](#building) \* [DEVELOPING](#developing) \* [RESOURCES](#resources)
+[README RU](README_RU.md) \* [SPOILER ALERT](SPOILER_ALERT.txt) \* [BUILDING](#building) \* [DEVELOPING](#developing) \* [RESOURCES](#resources)
 
 # PREVIEW
 
@@ -80,4 +80,22 @@
 
 # DEVELOPING
 
+## Language servers
+
+- C: [clangd](https://clangd.llvm.org)
+- Lua: [lua-language-server](https://github.com/LuaLS/lua-language-server)
+- CMake: [cmake-language-server](https://github.com/regen100/cmake-language-server)
+
+## Formatters
+
+- C: [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) (built in `clang`)
+- Lua: [StyLua](https://github.com/JohnnyMorganz/StyLua)
+- CMake: [gersemi](https://github.com/BlankSpruce/gersemi)
+
+## Additional notes
+
+- Build project atleast once (directory name should be `build`) for correct work of `clangd`
+
 # RESOURCES
+
+- CMake Zig toolchain stolen from https://github.com/mrexodia/zig-cross
