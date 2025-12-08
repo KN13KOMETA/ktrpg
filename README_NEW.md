@@ -1,4 +1,4 @@
-[README RU](README_RU.md) \* [SPOILER ALERT](SPOILER_ALERT.txt) \* [BUILDING](#building) \* [DEVELOPING](#developing) \* [RESOURCES](#resources)
+[README RU](README_RU.md) \* [SPOILER ALERT](SPOILER_ALERT.md) \* [BUILDING](#building) \* [DEVELOPING](#developing) \* [RESOURCES](#resources)
 
 # PREVIEW
 
