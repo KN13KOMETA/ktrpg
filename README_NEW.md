@@ -57,7 +57,7 @@
 - `-DCMAKE_BUILD_TYPE=Release` specifies build type  
   _If not specified, `Debug` will be used as build type_
 - `--toolchain <file>` specifies the toolchain and target platform  
-  _If not soecified, the target will be the current platform_
+  _If not specified, the target will be the current platform_
 
 ## Additional commands
 
