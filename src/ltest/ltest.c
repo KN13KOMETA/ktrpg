@@ -22,7 +22,7 @@ int m_register_system(lua_State* L);
 typedef struct {
   ecs_t* ecs;
   ecs_comp_t* comps;
-  size_t comp_count;
+  ecs_id_t comp_count;
 } udata;
 
 ecs_ret_t tgg_debug_system(ecs_t* ecs, ecs_entity_t* entities,
@@ -118,12 +118,13 @@ void ltest(void) {
 }
 
 // REGISTER COMPONENTS FROM LUA
-lua_Integer register_integer_component(udata* ud) {
-  ecs_comp_t comp = ecs_define_component(ud->ecs, 1, NULL, NULL);
+ecs_id_t register_integer_component(udata* ud) {
+  ecs_comp_t comp =
+      ecs_define_component(ud->ecs, sizeof(lua_Integer), NULL, NULL);
 
   ud->comps[ud->comp_count] = comp;
 
-  return (lua_Integer)ud->comp_count++;
+  return ud->comp_count++;
 }
 
 int m_register_integer_component(lua_State* L) {
@@ -134,25 +135,31 @@ int m_register_integer_component(lua_State* L) {
   return 1;
 }
 
-lua_Number register_number_component(udata* ud) {
-  ecs_comp_t comp = ecs_define_component(ud->ecs, 1, NULL, NULL);
+ecs_id_t register_number_component(udata* ud) {
+  ecs_comp_t comp =
+      ecs_define_component(ud->ecs, sizeof(lua_Number), NULL, NULL);
 
   ud->comps[ud->comp_count] = comp;
 
-  return (lua_Number)ud->comp_count++;
+  return ud->comp_count++;
 }
 
 int m_register_number_component(lua_State* L) {
   udata* ud = lua_touserdata(L, lua_upvalueindex(1));
-  lua_Number comp_id = register_number_component(ud);
+  lua_Integer comp_id = register_number_component(ud);
 
-  lua_pushnumber(L, comp_id);
+  lua_pushinteger(L, comp_id);
   return 1;
 }
 
-void register_system(void) { printf("TODO: REGISTER SYSTEM"); }
+// REGISTER SYSTEMS FROM LUA
+ecs_id_t register_system(void) {
+  printf("TODO: REGISTER SYSTEM");
+  return 0;
+}
 
 int m_register_system(lua_State* L) {
+  int n = lua_gettop(L);
   udata* ud = lua_touserdata(L, lua_upvalueindex(1));
 
   luaL_checktype(L, 1, LUA_TFUNCTION);
