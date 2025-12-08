@@ -122,4 +122,5 @@ get_property(
 )
 message(STATUS "Compile options for ${PROJECT_NAME}: ${TARGET_COMPILE_OPTS}")
 
-include("cmake/target/todo.cmake")
+print_comments_target("todo" "TODO")
+print_comments_target("note" "NOTE")

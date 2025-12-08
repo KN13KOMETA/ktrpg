@@ -73,6 +73,10 @@
   ```bash
   cmake --build build --target todo
   ```
+- Print NOTE comments (requires awk and grep):
+  ```bash
+  cmake --build build --target note
+  ```
 
 # DEVELOPING
 
