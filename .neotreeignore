@@ -16,3 +16,7 @@
 
 # Hide CMake toolchains
 /*.cmake
+
+# Hide zig bash and bat scripts
+/cmake/zig*
+!/cmake/zig-toolchain.cmake
