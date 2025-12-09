@@ -77,6 +77,10 @@
   ```bash
   cmake --build build --target note
   ```
+- Print WARN comments (requires awk and grep):
+  ```bash
+  cmake --build build --target warn
+  ```
 
 # DEVELOPING
 

@@ -124,3 +124,4 @@ message(STATUS "Compile options for ${PROJECT_NAME}: ${TARGET_COMPILE_OPTS}")
 
 print_comments_target("todo" "TODO")
 print_comments_target("note" "NOTE")
+print_comments_target("warn" "WARN")
