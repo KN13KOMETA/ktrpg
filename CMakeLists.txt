@@ -56,6 +56,7 @@ add_dependencies(${PROJECT_NAME} generated_files)
 
 include("cmake/libraries.cmake")
 
+# TODO: Add architectury in file name
 set_target_properties(
   ${PROJECT_NAME}
   PROPERTIES
