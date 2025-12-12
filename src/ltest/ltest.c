@@ -12,6 +12,7 @@
 
 #define LT_ENTITY_COUNT 64
 #define LT_COMP_COUNT 32
+#define LT_SYSTEM_COUNT 32
 
 // TODO: Rewrite this mega duper super ultra ugly code
 
@@ -23,7 +24,11 @@ typedef struct {
   ecs_t* ecs;
   ecs_comp_t* comps;
   ecs_id_t comp_count;
-} udata;
+  ecs_system_t* systems;
+  ecs_id_t system_count;
+  ecs_id_t system_index;
+  int* system_lua_ref;
+} udata_t;
 
 ecs_ret_t tgg_debug_system(ecs_t* ecs, ecs_entity_t* entities,
                            size_t entity_count, void* udata);
@@ -40,7 +45,7 @@ int lpanic(lua_State* L) {
   return 0;
 }
 
-int lal(udata ud) {
+int lal(udata_t ud) {
   lua_State* L = luaL_newstate();
 
   if (L == NULL) return 1;
@@ -63,13 +68,15 @@ int lal(udata ud) {
 }
 
 void ltest(void) {
-  udata ud;
+  udata_t ud;
 
   printf("AMONGUS\n\n");
 
   ud.ecs = ecs_new(LT_ENTITY_COUNT, NULL);
   ud.comps = malloc(sizeof(ecs_comp_t) * LT_COMP_COUNT);
   ud.comp_count = 0;
+  ud.systems = malloc(sizeof(ecs_system_t) * LT_SYSTEM_COUNT);
+  ud.system_index = ud.system_count = 0;
 
   lal(ud);
 
@@ -111,6 +118,13 @@ void ltest(void) {
       printf("deb id: %lu\n", comp.id);
     }
 
+    for (ud.system_index = 0; ud.system_index < ud.system_count;
+         ud.system_index++) {
+      lua_rawgeti(L, LUA_REGISTRYINDEX, ud.system_lua_ref[ud.system_index]);
+
+      lua_pcall(L, 0, 0, 1);
+    }
+
     lua_close(L);
   }
 
@@ -118,7 +132,7 @@ void ltest(void) {
 }
 
 // REGISTER COMPONENTS FROM LUA
-ecs_id_t register_integer_component(udata* ud) {
+ecs_id_t register_integer_component(udata_t* ud) {
   ecs_comp_t comp =
       ecs_define_component(ud->ecs, sizeof(lua_Integer), NULL, NULL);
 
@@ -128,14 +142,14 @@ ecs_id_t register_integer_component(udata* ud) {
 }
 
 int m_register_integer_component(lua_State* L) {
-  udata* ud = lua_touserdata(L, lua_upvalueindex(1));
+  udata_t* ud = lua_touserdata(L, lua_upvalueindex(1));
   lua_Integer comp_id = register_integer_component(ud);
 
   lua_pushinteger(L, comp_id);
   return 1;
 }
 
-ecs_id_t register_number_component(udata* ud) {
+ecs_id_t register_number_component(udata_t* ud) {
   ecs_comp_t comp =
       ecs_define_component(ud->ecs, sizeof(lua_Number), NULL, NULL);
 
@@ -145,12 +159,23 @@ ecs_id_t register_number_component(udata* ud) {
 }
 
 int m_register_number_component(lua_State* L) {
-  udata* ud = lua_touserdata(L, lua_upvalueindex(1));
+  udata_t* ud = lua_touserdata(L, lua_upvalueindex(1));
   lua_Integer comp_id = register_number_component(ud);
 
   lua_pushinteger(L, comp_id);
   return 1;
 }
+
+ecs_ret_t wrapper_system(ecs_t* ecs, ecs_entity_t* entities,
+                         size_t entity_count, void* udata) {
+  udata_t* ud = udata;
+
+  printf("WRAPPER SYSTEM ID: %lu\n", ud->system_index);
+
+  return 0;
+}
+
+void init_systems(void) {}
 
 // REGISTER SYSTEMS FROM LUA
 ecs_id_t register_system(void) {
@@ -158,13 +183,29 @@ ecs_id_t register_system(void) {
   return 0;
 }
 
+void call_systems(udata_t* ud) {
+  for (ud->system_index = 0; ud->system_index < ud->system_count;
+       ud->system_index++) {
+    ecs_run_system(ud->ecs, ud->systems[ud->system_index], 0);
+  }
+}
+
+// NOTE: DO NOT FUCKING FORGOT TO FREE LUA REFS AFTER THEY USED
+// WARN: asd
+
 int m_register_system(lua_State* L) {
-  int n = lua_gettop(L);
-  udata* ud = lua_touserdata(L, lua_upvalueindex(1));
+  udata_t* ud = lua_touserdata(L, lua_upvalueindex(1));
 
   luaL_checktype(L, 1, LUA_TFUNCTION);
+  // luaL_checktype(L, 2, LUA_TTABLE);
+  // luaL_checktype(L, 3, LUA_TTABLE);
 
-  lua_pcall(L, 0, 0, 1);
+  lua_pushvalue(L, 1);
+
+  ud->system_lua_ref[ud->system_count] = luaL_ref(L, LUA_REGISTRYINDEX);
+  ud->system_count++;
+
+  // lua_pcall(L, 0, 0, 1);
 
   return 0;
 }
