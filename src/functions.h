@@ -4,8 +4,11 @@
 
 #include <stdlib.h>
 
+// TODO: Make debug show short filenames
 #ifdef DEBUG
-#define DEBUG_LOG(...) printf(__VA_ARGS__)
+#define DEBUG_LOG(...)                \
+  printf(__FILE__ ":%d: ", __LINE__); \
+  printf(__VA_ARGS__)
 #else
 #define DEBUG_LOG(...)
 #endif  // DEBUG
