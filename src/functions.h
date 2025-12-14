@@ -8,7 +8,8 @@
 #ifdef DEBUG
 #define DEBUG_LOG(...)                \
   printf(__FILE__ ":%d: ", __LINE__); \
-  printf(__VA_ARGS__)
+  printf(__VA_ARGS__);                \
+  putchar('\n')
 #else
 #define DEBUG_LOG(...)
 #endif  // DEBUG
