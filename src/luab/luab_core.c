@@ -46,6 +46,7 @@ luab_state luab_init(void) {
 
   lb.L = L;
   lb.comps = malloc(sizeof(ecs_comp_t) * LUAB_MAX_COMP_COUNT);
+  lb.comp_types = malloc(sizeof(COMP_TYPE) * LUAB_MAX_COMP_COUNT);
   lb.systems = malloc(sizeof(ecs_system_t) * LUAB_MAX_SYSTEM_COUNT);
   lb.system_lua_refs = malloc(sizeof(int) * LUAB_MAX_SYSTEM_COUNT);
 
@@ -86,6 +87,9 @@ luab_state luab_init(void) {
     ecs_entity_t entity_b = ecs_create(ecs);
     int* entity_b_a = ecs_add(ecs, entity_b, A_COMP, NULL);
     *entity_b_a = 100;
+
+    int* d = ecs_add(lb.ecs, entity_a, lb.comps[0], NULL);
+    *d = 67;
 
     printf("asd %lu\n", entity_b.id);
 
@@ -145,15 +149,28 @@ ecs_ret_t luab_debug_system(ecs_t* ecs, ecs_entity_t* entities,
   DEBUG_LOG("Running debug system");
 
   for (size_t i = 0; i < entity_count; i++) {
+    ecs_entity_t entity = entities[i];
     printf("Entity %d {\n", i);
 
-    // TODO: Debug component based on its type
-    // for (ecs_id_t ci = 0; ci < lb->comp_count; ci++) {
-    //   if (ecs_has(lb->ecs, entities[i], lb->comps[i])) {
-    //     printf("  ");
-    //     printf("%d\n", ecs_get(ecs, entities[i], lb->comps[i]));
-    //   }
-    // }
+    for (ecs_id_t ci = 0; ci < lb->comp_count; ci++) {
+      ecs_comp_t comp = lb->comps[ci];
+      COMP_TYPE comp_type = lb->comp_types[ci];
+
+      if (ecs_has(lb->ecs, entity, comp)) {
+        printf("  ");
+        printf("%d ", ci);
+
+        switch (comp_type) {
+          case COMP_INTEGER:
+            printf("%d\n", *(lua_Integer*)ecs_get(ecs, entity, comp));
+            break;
+          case COMP_NUMBER:
+            break;
+          case COMP_STRING:
+            break;
+        }
+      }
+    }
 
     printf("}\n");
   }

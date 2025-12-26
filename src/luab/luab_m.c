@@ -13,9 +13,16 @@ struct luaL_Reg luab_m_l[] = {
     {"register_system", luab_m_register_system},
     {NULL, NULL}};
 
-int luab_m_register_integer_component(lua_State* L) { return 0; }
+int luab_m_register_integer_component(lua_State* L) {
+  luab_state* lb = lua_touserdata(L, lua_upvalueindex(1));
+
+  lua_pushinteger(L, luab_h_register_integer_component(lb));
+
+  return 1;
+}
 int luab_m_register_number_component(lua_State* L) { return 0; }
 int luab_m_register_string_component(lua_State* L) { return 0; }
+
 int luab_m_register_system(lua_State* L) {
   luab_state* lb = lua_touserdata(L, lua_upvalueindex(1));
 
