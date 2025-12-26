@@ -1,4 +1,4 @@
-game.register_system(function(entities, entity_count)
+local a = game.register_system(function(entities, entity_count)
   print("YO THIS IS SYSTEM FROM LUA")
   print(entity_count)
   for i = 1, entity_count do
@@ -6,8 +6,18 @@ game.register_system(function(entities, entity_count)
     print(string.format("entity id: %d", entity_id))
   end
 end)
+game.register_system(function(entities, entity_count)
+  print("YO THIS IS ANOTHER SYSTEM FROM LUA")
+  print(entity_count)
+  for i = 1, entity_count do
+    local entity_id = entities[i]
+    print(string.format("s entity id: %d", entity_id))
+  end
+end)
 game.register_string_component()
 
+print("GIGA SEX")
+print(a)
 -- local component = {
 --   health = lt.register_number_component(),
 --   damage = lt.register_number_component(),
