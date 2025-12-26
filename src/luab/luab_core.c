@@ -71,6 +71,10 @@ luab_state luab_init(void) {
     if (luaL_dostring(L, init_lua) != LUA_OK) {
       printf("Error at internal scripts: %s\n", lua_tostring(L, -1));
     }
+
+    lb.wrapper_system =
+        ecs_define_system(lb.ecs, 0, luab_system_wrapper, NULL, NULL, &lb);
+
     ecs_system_t DEBUG_SYSTEM =
         ecs_define_system(ecs, 0, a_debug_system, NULL, NULL, NULL);
 
@@ -83,7 +87,7 @@ luab_state luab_init(void) {
 
     printf("asd %lu\n", entity_b.id);
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 1; i++) {
       ecs_run_systems(ecs, 0);
     }
 
@@ -100,6 +104,9 @@ void luab_free(luab_state* lb) {
   free(lb->system_lua_refs);
 }
 
+// Since we can't register lua function directly in ecs
+// We register this function instead
+// which is calling lua functions
 ecs_ret_t luab_system_wrapper(ecs_t* ecs, ecs_entity_t* entities,
                               size_t entity_count, void* udata) {
   luab_state* lb = udata;
@@ -115,6 +122,7 @@ ecs_ret_t luab_system_wrapper(ecs_t* ecs, ecs_entity_t* entities,
 
     lua_rawgeti(lb->L, LUA_REGISTRYINDEX, lua_func_ref);
 
+    // Create lua table with entities id
     lua_createtable(lb->L, entity_count, 0);
     for (size_t ei = 0; ei < entity_count; ei++) {
       lua_pushinteger(lb->L, entities[ei].id);
