@@ -75,6 +75,8 @@ luab_state luab_init(void) {
     lb.wrapper_system =
         ecs_define_system(lb.ecs, 0, luab_system_wrapper, NULL, NULL, &lb);
 
+    ecs_define_system(lb.ecs, 0, luab_debug_system, NULL, NULL, &lb);
+
     ecs_system_t DEBUG_SYSTEM =
         ecs_define_system(ecs, 0, a_debug_system, NULL, NULL, NULL);
 
@@ -104,9 +106,6 @@ void luab_free(luab_state* lb) {
   free(lb->system_lua_refs);
 }
 
-// Since we can't register lua function directly in ecs
-// We register this function instead
-// which is calling lua functions
 ecs_ret_t luab_system_wrapper(ecs_t* ecs, ecs_entity_t* entities,
                               size_t entity_count, void* udata) {
   luab_state* lb = udata;
@@ -133,6 +132,51 @@ ecs_ret_t luab_system_wrapper(ecs_t* ecs, ecs_entity_t* entities,
 
     lua_pcall(lb->L, 2, 0, 1);
   }
+
+  return 0;
+}
+
+ecs_ret_t luab_debug_system(ecs_t* ecs, ecs_entity_t* entities,
+                            size_t entity_count, void* udata) {
+  luab_state* lb = udata;
+
+  (void)ecs;
+
+  DEBUG_LOG("Running debug system");
+
+  for (size_t i = 0; i < entity_count; i++) {
+    printf("Entity %d {\n", i);
+
+    // TODO: Debug component based on its type
+    // for (ecs_id_t ci = 0; ci < lb->comp_count; ci++) {
+    //   if (ecs_has(lb->ecs, entities[i], lb->comps[i])) {
+    //     printf("  ");
+    //     printf("%d\n", ecs_get(ecs, entities[i], lb->comps[i]));
+    //   }
+    // }
+
+    printf("}\n");
+  }
+
+  // for (ecs_id_t i = 0; i < lb->system_count; i++) {
+  //   int lua_func_ref = lb->system_lua_refs[i];
+  //
+  //   DEBUG_LOG("Wrapper running lua function with reference %d",
+  //   lua_func_ref);
+  //
+  //   lua_rawgeti(lb->L, LUA_REGISTRYINDEX, lua_func_ref);
+  //
+  //   // Create lua table with entities id
+  //   lua_createtable(lb->L, entity_count, 0);
+  //   for (size_t ei = 0; ei < entity_count; ei++) {
+  //     lua_pushinteger(lb->L, entities[ei].id);
+  //     lua_rawseti(lb->L, -2, ei + 1);
+  //   }
+  //
+  //   lua_pushinteger(lb->L, entity_count);
+  //
+  //   lua_pcall(lb->L, 2, 0, 1);
+  // }
 
   return 0;
 }

@@ -25,4 +25,7 @@ void luab_free(luab_state* luab_state);
 ecs_ret_t luab_system_wrapper(ecs_t* ecs, ecs_entity_t* entities,
                               size_t entity_count, void* udata);
 
+ecs_ret_t luab_debug_system(ecs_t* ecs, ecs_entity_t* entities,
+                            size_t entity_count, void* udata);
+
 #endif  // !LUAB_LUAB_CORE_H
