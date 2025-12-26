@@ -2,6 +2,18 @@
 
 #include "../functions.h"
 
+ecs_id_t luab_h_register_integer_component(luab_state* lb) {
+  ecs_comp_t comp =
+      ecs_define_component(lb->ecs, sizeof(lua_Integer), NULL, NULL);
+
+  lb->comps[lb->comp_count] = comp;
+  lb->comp_types[lb->comp_count] = COMP_INTEGER;
+
+  return lb->comp_count++;
+}
+ecs_id_t luab_h_register_number_component(luab_state* lb);
+ecs_id_t luab_h_register_string_component(luab_state* lb);
+
 ecs_id_t luab_h_register_system(luab_state* lb, int lua_func_ref) {
   lb->system_lua_refs[lb->system_count] = lua_func_ref;
 

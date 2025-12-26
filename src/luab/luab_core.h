@@ -5,11 +5,16 @@
 
 #include <pico_ecs.h>
 
+typedef enum { COMP_INTEGER, COMP_NUMBER, COMP_STRING } COMP_TYPE;
+
 typedef struct {
   lua_State* L;
   ecs_t* ecs;
+
   ecs_comp_t* comps;
+  COMP_TYPE* comp_types;
   ecs_id_t comp_count;
+
   ecs_system_t* systems;
   ecs_system_t wrapper_system;
   int* system_lua_refs;
