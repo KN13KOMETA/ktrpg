@@ -6,6 +6,7 @@
 #include "constants.h"
 #include "functions.h"
 #include "ltest/ltest.h"
+#include "luab/luab_core.h"
 #include "project_options.h"
 #include "tgg/systems.h"
 #include "tgg/tgg.h"
@@ -28,6 +29,9 @@ int main(int argc, char* argv[]) {
   printf(TITLE("HELP"));
   printf("Run with --help for more info\n\n");
 
+  printf(TITLE("RUNNING LUAB"));
+  luab_init();
+  printf(TITLE("END OF LUAB"));
   ltest();
 
   // ecs_t* tgg_ecs = tgg_init();

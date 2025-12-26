@@ -37,6 +37,9 @@ add_executable(
   src/functions.c
   src/project_options.c
   src/ltest/ltest.c
+  src/luab/luab_helper.c
+  src/luab/luab_m.c
+  src/luab/luab_core.c
   src/tgg/components.c
   src/tgg/systems.c
   src/tgg/tgg_lua_module.c
