@@ -46,13 +46,21 @@ luab_state luab_init(void) {
       printf("Error at internal scripts: %s\n", lua_tostring(L, -1));
     }
 
+    DEBUG_LOG("Comps registered %d", lb.comp_count);
+
     ecs_define_system(lb.ecs, 0, luab_debug_system, NULL, NULL, &lb);
 
     ecs_entity_t entity_a = ecs_create(ecs);
     ecs_entity_t entity_b = ecs_create(ecs);
 
-    int* d = ecs_add(lb.ecs, entity_a, lb.comps[0], NULL);
+    char** s = ecs_add(lb.ecs, entity_b, lb.comps[0], NULL);
+    *s = "yo string";
+
+    lua_Integer* d = ecs_add(lb.ecs, entity_a, lb.comps[1], NULL);
     *d = 67;
+
+    lua_Number* f = ecs_add(lb.ecs, entity_b, lb.comps[2], NULL);
+    *f = 6.9;
 
     printf("asd %lu\n", entity_b.id);
 
@@ -120,17 +128,20 @@ ecs_ret_t luab_debug_system(ecs_t* ecs, ecs_entity_t* entities,
       ecs_comp_t comp = lb->comps[ci];
       COMP_TYPE comp_type = lb->comp_types[ci];
 
+      // TODO: Make output more pretty
       if (ecs_has(lb->ecs, entity, comp)) {
         printf("  ");
         printf("%d ", ci);
 
         switch (comp_type) {
           case COMP_INTEGER:
-            printf("%d\n", *(lua_Integer*)ecs_get(ecs, entity, comp));
+            printf("%lld\n", *(lua_Integer*)ecs_get(ecs, entity, comp));
             break;
           case COMP_NUMBER:
+            printf("%f\n", *(lua_Number*)ecs_get(ecs, entity, comp));
             break;
           case COMP_STRING:
+            printf("%s\n", *(char**)ecs_get(ecs, entity, comp));
             break;
         }
       }
