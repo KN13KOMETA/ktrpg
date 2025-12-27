@@ -36,7 +36,6 @@ add_executable(
   ${GENERATED_C_FILES}
   src/functions.c
   src/project_options.c
-  src/ltest/ltest.c
   src/luab/luab_helper.c
   src/luab/luab_m.c
   src/luab/luab_core.c

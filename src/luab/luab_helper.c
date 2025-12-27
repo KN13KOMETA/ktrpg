@@ -29,7 +29,7 @@ ecs_id_t luab_h_register_system(luab_state* lb, int lua_func_ref) {
   lb->system_lua_refs[lb->system_count] = lua_func_ref;
   lb->system_count++;
 
-  DEBUG_LOG("registered lua function by reference %d", lua_func_ref);
+  DEBUG_LOG("Registered lua function by reference %d", lua_func_ref);
 
   return s.id;
 }
