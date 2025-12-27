@@ -57,3 +57,14 @@ int luab_m_register_system(lua_State* L) {
 
   return 1;
 }
+
+int luab_m_ecs_entity_create(lua_State* L) { return 0; }
+int luab_m_ecs_entity_destroy(lua_State* L) { return 0; }
+
+int luab_m_ecs_comp_has(lua_State* L) { return 0; }
+int luab_m_ecs_comp_add(lua_State* L) { return 0; }
+int luab_m_ecs_comp_get(lua_State* L) { return 0; }
+int luab_m_ecs_comp_remove(lua_State* L) { return 0; }
+
+int luab_m_ecs_run_system(lua_State* L) { return 0; }
+int luab_m_ecs_run_systems(lua_State* L) { return 0; }
