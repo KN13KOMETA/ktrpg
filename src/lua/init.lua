@@ -1,6 +1,7 @@
 local component = {
   name = game.register_string_component(),
   health = game.register_integer_component(),
+  num = game.register_number_component(),
 }
 
 local system = {
