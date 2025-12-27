@@ -122,7 +122,7 @@ ecs_ret_t luab_debug_system(ecs_t* ecs, ecs_entity_t* entities,
 
   for (size_t i = 0; i < entity_count; i++) {
     ecs_entity_t entity = entities[i];
-    printf("Entity %d {\n", i);
+    printf("Entity %zu {\n", i);
 
     for (ecs_id_t ci = 0; ci < lb->comp_count; ci++) {
       ecs_comp_t comp = lb->comps[ci];
@@ -131,7 +131,7 @@ ecs_ret_t luab_debug_system(ecs_t* ecs, ecs_entity_t* entities,
       // TODO: Make output more pretty
       if (ecs_has(lb->ecs, entity, comp)) {
         printf("  ");
-        printf("%d ", ci);
+        printf("%lu ", ci);
 
         switch (comp_type) {
           case COMP_INTEGER:

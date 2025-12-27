@@ -1,9 +1,10 @@
 #pragma once
-#include "lua.h"
 #ifndef LUAB_LUAB_CORE_H
 #define LUAB_LUAB_CORE_H
 
+#include <lua.h>
 #include <pico_ecs.h>
+#include <stdint.h>
 
 typedef enum { COMP_INTEGER, COMP_NUMBER, COMP_STRING } COMP_TYPE;
 
@@ -13,11 +14,11 @@ typedef struct {
 
   ecs_comp_t* comps;
   COMP_TYPE* comp_types;
-  ecs_id_t comp_count;
+  uint16_t comp_count;
 
   ecs_system_t* systems;
   int* system_lua_refs;
-  ecs_id_t system_count;
+  uint16_t system_count;
 } luab_state;
 
 typedef struct {
