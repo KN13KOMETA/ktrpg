@@ -5,7 +5,6 @@
 
 #include "constants.h"
 #include "functions.h"
-#include "ltest/ltest.h"
 #include "luab/luab_core.h"
 #include "project_options.h"
 #include "tgg/systems.h"
@@ -32,20 +31,9 @@ int main(int argc, char* argv[]) {
   printf(TITLE("RUNNING LUAB"));
   luab_init();
   printf(TITLE("END OF LUAB"));
-  ltest();
-
-  // ecs_t* tgg_ecs = tgg_init();
-
-  // if (tgg_load_content(tgg_ecs, poptions->script_path)) return EXIT_FAILURE;
 
   free_project_options(poptions);
   free(temp_argv);
-
-  // #ifdef DEBUG
-  //   ecs_run_systems(tgg_ecs, TGG_DEBUG_FLAG);
-  // #endif /* ifdef DEBUG */
-
-  // tgg_free(tgg_ecs);
 
   return EXIT_SUCCESS;
 }

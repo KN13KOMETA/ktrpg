@@ -21,7 +21,3 @@ local system = {
     end
   end),
 }
-
-print("ASDJKHSAKJDASDKLH")
-print(component.name)
-print(component.health)
