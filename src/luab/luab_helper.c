@@ -17,6 +17,7 @@ ecs_id_t luab_h_register_number_component(luab_state* lb);
 ecs_id_t luab_h_register_string_component(luab_state* lb);
 
 ecs_id_t luab_h_register_system(luab_state* lb, int lua_func_ref) {
+  // WARN: This memory doesnt free anywhere
   luab_system* lbs = malloc(sizeof(luab_system));
   ecs_system_t s =
       ecs_define_system(lb->ecs, 0, luab_system_wrapper, NULL, NULL, lbs);
