@@ -4,7 +4,7 @@
 
 #include "../functions.h"
 
-ecs_id_t luab_h_register_integer_component(luab_state* lb) {
+uint16_t luab_h_register_integer_component(luab_state* lb) {
   ecs_comp_t comp =
       ecs_define_component(lb->ecs, sizeof(lua_Integer), NULL, NULL);
 
@@ -13,7 +13,7 @@ ecs_id_t luab_h_register_integer_component(luab_state* lb) {
 
   return lb->comp_count++;
 }
-ecs_id_t luab_h_register_number_component(luab_state* lb) {
+uint16_t luab_h_register_number_component(luab_state* lb) {
   ecs_comp_t comp =
       ecs_define_component(lb->ecs, sizeof(lua_Number), NULL, NULL);
 
@@ -22,7 +22,7 @@ ecs_id_t luab_h_register_number_component(luab_state* lb) {
 
   return lb->comp_count++;
 }
-ecs_id_t luab_h_register_string_component(luab_state* lb) {
+uint16_t luab_h_register_string_component(luab_state* lb) {
   ecs_comp_t comp = ecs_define_component(lb->ecs, sizeof(char*), NULL, NULL);
 
   lb->comps[lb->comp_count] = comp;
@@ -31,7 +31,7 @@ ecs_id_t luab_h_register_string_component(luab_state* lb) {
   return lb->comp_count++;
 }
 
-ecs_id_t luab_h_register_system(luab_state* lb, int lua_func_ref) {
+uint16_t luab_h_register_system(luab_state* lb, int lua_func_ref) {
   // WARN: This memory doesnt free anywhere
   luab_system* lbs = malloc(sizeof(luab_system));
   ecs_system_t s =
@@ -42,9 +42,8 @@ ecs_id_t luab_h_register_system(luab_state* lb, int lua_func_ref) {
 
   lb->systems[lb->system_count] = s;
   lb->system_lua_refs[lb->system_count] = lua_func_ref;
-  lb->system_count++;
 
   DEBUG_LOG("Registered lua function by reference %d", lua_func_ref);
 
-  return s.id;
+  return lb->system_count++;
 }
