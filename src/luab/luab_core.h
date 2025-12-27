@@ -16,10 +16,14 @@ typedef struct {
   ecs_id_t comp_count;
 
   ecs_system_t* systems;
-  ecs_system_t wrapper_system;
   int* system_lua_refs;
   ecs_id_t system_count;
 } luab_state;
+
+typedef struct {
+  luab_state* lb;
+  ecs_id_t index;
+} luab_system;
 
 luab_state luab_init(void);
 void luab_free(luab_state* luab_state);

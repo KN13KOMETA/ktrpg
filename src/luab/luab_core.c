@@ -73,9 +73,6 @@ luab_state luab_init(void) {
       printf("Error at internal scripts: %s\n", lua_tostring(L, -1));
     }
 
-    lb.wrapper_system =
-        ecs_define_system(lb.ecs, 0, luab_system_wrapper, NULL, NULL, &lb);
-
     ecs_define_system(lb.ecs, 0, luab_debug_system, NULL, NULL, &lb);
 
     ecs_system_t DEBUG_SYSTEM =
@@ -112,14 +109,15 @@ void luab_free(luab_state* lb) {
 
 ecs_ret_t luab_system_wrapper(ecs_t* ecs, ecs_entity_t* entities,
                               size_t entity_count, void* udata) {
-  luab_state* lb = udata;
+  luab_system* lbs = udata;
+  luab_state* lb = lbs->lb;
 
   (void)ecs;
 
   DEBUG_LOG("Running wrapper");
 
-  for (ecs_id_t i = 0; i < lb->system_count; i++) {
-    int lua_func_ref = lb->system_lua_refs[i];
+  {
+    int lua_func_ref = lb->system_lua_refs[lbs->index];
 
     DEBUG_LOG("Wrapper running lua function with reference %d", lua_func_ref);
 
