@@ -7,8 +7,6 @@
 #include "functions.h"
 #include "luab/luab_core.h"
 #include "project_options.h"
-#include "tgg/systems.h"
-#include "tgg/tgg.h"
 
 #define PICO_ECS_IMPLEMENTATION
 #include <pico_ecs.h>

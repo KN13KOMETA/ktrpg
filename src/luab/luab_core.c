@@ -14,6 +14,7 @@
 
 #define LUAB_MAX_COMP_COUNT 64
 #define LUAB_MAX_SYSTEM_COUNT 64
+#define LUAB_MAX_ENTITY_COUNT 64
 
 luab_state luab_init(void) {
   luab_state lb;
@@ -24,6 +25,7 @@ luab_state luab_init(void) {
   lb.comp_types = malloc(sizeof(COMP_TYPE) * LUAB_MAX_COMP_COUNT);
   lb.systems = malloc(sizeof(ecs_system_t) * LUAB_MAX_SYSTEM_COUNT);
   lb.system_lua_refs = malloc(sizeof(int) * LUAB_MAX_SYSTEM_COUNT);
+  lb.entities = malloc(sizeof(ecs_entity_t) * LUAB_MAX_ENTITY_COUNT);
 
   luaL_openlibs(L);
 
