@@ -12,6 +12,14 @@ struct luaL_Reg luab_m_l[] = {
     {"register_number_component", luab_m_register_number_component},
     {"register_string_component", luab_m_register_string_component},
     {"register_system", luab_m_register_system},
+    {"ecs_entity_create", luab_m_ecs_entity_create},
+    {"ecs_entity_destroy", luab_m_ecs_entity_destroy},
+    {"ecs_comp_has", luab_m_ecs_comp_has},
+    {"ecs_comp_add", luab_m_ecs_comp_add},
+    {"ecs_comp_get", luab_m_ecs_comp_get},
+    {"ecs_comp_remove", luab_m_ecs_comp_remove},
+    {"ecs_run_system", luab_m_ecs_run_system},
+    {"ecs_run_systems", luab_m_ecs_run_systems},
     {NULL, NULL}};
 
 // TODO: Add checks if too many componensts/systems added
@@ -37,6 +45,7 @@ int luab_m_register_string_component(lua_State* L) {
   return 1;
 }
 
+// TODO: include exclude components
 int luab_m_register_system(lua_State* L) {
   luab_state* lb = lua_touserdata(L, lua_upvalueindex(1));
 

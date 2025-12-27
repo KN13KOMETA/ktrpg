@@ -7,10 +7,22 @@
 
 extern struct luaL_Reg luab_m_l[];
 
-// TODO: Change component functions
 int luab_m_register_integer_component(lua_State* L);
 int luab_m_register_number_component(lua_State* L);
 int luab_m_register_string_component(lua_State* L);
+
 int luab_m_register_system(lua_State* L);
+
+// Ecs functions
+int luab_m_ecs_entity_create(lua_State* L);
+int luab_m_ecs_entity_destroy(lua_State* L);
+
+int luab_m_ecs_comp_has(lua_State* L);
+int luab_m_ecs_comp_add(lua_State* L);
+int luab_m_ecs_comp_get(lua_State* L);
+int luab_m_ecs_comp_remove(lua_State* L);
+
+int luab_m_ecs_run_system(lua_State* L);
+int luab_m_ecs_run_systems(lua_State* L);
 
 #endif  // !LUAB_LUAB_M_H
