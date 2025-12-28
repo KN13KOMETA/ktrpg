@@ -124,7 +124,7 @@ ecs_ret_t luab_debug_system(ecs_t* ecs, ecs_entity_t* entities,
 
   for (size_t i = 0; i < entity_count; i++) {
     ecs_entity_t entity = entities[i];
-    printf("Entity %zu {\n", i);
+    printf("Entity %lu {\n", entity.id);
 
     for (ecs_id_t ci = 0; ci < lb->comp_count; ci++) {
       ecs_comp_t comp = lb->comps[ci];
