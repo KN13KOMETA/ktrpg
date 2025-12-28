@@ -12,4 +12,6 @@ uint16_t luab_h_register_string_component(luab_state* lb);
 
 uint16_t luab_h_register_system(luab_state* lb, int lua_func_ref);
 
+uint32_t luab_h_ecs_entity_create(luab_state* lb);
+
 #endif  // !LUAB_LUAB_HELPER_h

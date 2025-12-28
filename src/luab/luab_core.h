@@ -19,9 +19,6 @@ typedef struct {
   ecs_system_t* systems;
   int* system_lua_refs;
   uint16_t system_count;
-
-  ecs_entity_t* entities;
-  uint32_t entity_count;
 } luab_state;
 
 typedef struct {
