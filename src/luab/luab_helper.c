@@ -47,3 +47,9 @@ uint16_t luab_h_register_system(luab_state* lb, int lua_func_ref) {
 
   return lb->system_count++;
 }
+
+uint32_t luab_h_ecs_entity_create(luab_state* lb) {
+  ecs_entity_t entity = ecs_create(lb->ecs);
+
+  return entity.id;
+}

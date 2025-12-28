@@ -58,7 +58,14 @@ int luab_m_register_system(lua_State* L) {
   return 1;
 }
 
-int luab_m_ecs_entity_create(lua_State* L) { return 0; }
+// TODO: implementation
+int luab_m_ecs_entity_create(lua_State* L) {
+  luab_state* lb = lua_touserdata(L, lua_upvalueindex(1));
+
+  lua_pushinteger(L, luab_h_ecs_entity_create(lb));
+
+  return 1;
+}
 int luab_m_ecs_entity_destroy(lua_State* L) { return 0; }
 
 int luab_m_ecs_comp_has(lua_State* L) { return 0; }
