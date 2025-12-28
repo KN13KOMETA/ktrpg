@@ -74,9 +74,10 @@ int luab_m_ecs_comp_add(lua_State* L) {
   lua_Integer entity_id = luaL_checkinteger(L, 1);
   lua_Integer comp_id = luaL_checkinteger(L, 2);
 
-  luab_h_ecs_comp_add(lb, (uint32_t)entity_id, (uint16_t)comp_id);
+  lua_pushinteger(
+      L, luab_h_ecs_comp_add(lb, (uint32_t)entity_id, (uint16_t)comp_id));
 
-  return 0;
+  return 1;
 }
 int luab_m_ecs_comp_get(lua_State* L) { return 0; }
 int luab_m_ecs_comp_remove(lua_State* L) { return 0; }
