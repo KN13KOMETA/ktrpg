@@ -22,3 +22,13 @@ local system = {
     end
   end),
 }
+
+local entity1 = game.ecs_entity_create()
+local entity2 = game.ecs_entity_create()
+
+print(string.format("Created entity with id %d", entity1))
+print(string.format("Created entity with id %d", entity2))
+
+local h1 = game.ecs_comp_add(entity1, component.name)
+
+print(string.format("Added component with address %d", h1))

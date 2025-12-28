@@ -1,5 +1,6 @@
 #include "luab_helper.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "../functions.h"
@@ -52,4 +53,11 @@ uint32_t luab_h_ecs_entity_create(luab_state* lb) {
   ecs_entity_t entity = ecs_create(lb->ecs);
 
   return entity.id;
+}
+
+int luab_h_ecs_comp_add(luab_state* lb, uint32_t entity_id, uint16_t comp_id) {
+  void* comp =
+      ecs_add(lb->ecs, (ecs_entity_t){entity_id}, lb->comps[comp_id], NULL);
+
+  return (int)comp;
 }

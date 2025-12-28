@@ -42,6 +42,9 @@ luab_state luab_init(void) {
 
     lb.ecs = ecs;
 
+    // Register debug system before running user scripts
+    ecs_define_system(lb.ecs, 0, luab_debug_system, NULL, NULL, &lb);
+
     DEBUG_LOG("Running lua scripts");
     if (luaL_dostring(L, init_lua) != LUA_OK) {
       printf("Error at internal scripts: %s\n", lua_tostring(L, -1));
@@ -49,10 +52,20 @@ luab_state luab_init(void) {
 
     DEBUG_LOG("Comps registered %d", lb.comp_count);
 
-    ecs_define_system(lb.ecs, 0, luab_debug_system, NULL, NULL, &lb);
+    // ecs_entity_t entity1 = {1};
+    // ecs_entity_t entity2 = {2};
+    //
+    // lua_Integer* d1 = ecs_add(lb.ecs, entity1, lb.comps[1], NULL);
+    // *d1 = 190;
+    //
+    // lua_Number* f2 = ecs_add(lb.ecs, entity2, lb.comps[2], NULL);
+    // *f2 = 200.001;
 
     ecs_entity_t entity_a = ecs_create(ecs);
     ecs_entity_t entity_b = ecs_create(ecs);
+
+    printf("ecs id %d\n", entity_a.id);
+    printf("ecs id %d\n", entity_b.id);
 
     char** s = ecs_add(lb.ecs, entity_b, lb.comps[0], NULL);
     *s = "yo string";
