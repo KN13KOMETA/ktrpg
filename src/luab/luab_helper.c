@@ -1,5 +1,6 @@
 #include "luab_helper.h"
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -55,9 +56,12 @@ uint32_t luab_h_ecs_entity_create(luab_state* lb) {
   return entity.id;
 }
 
-int luab_h_ecs_comp_add(luab_state* lb, uint32_t entity_id, uint16_t comp_id) {
+uintptr_t luab_h_ecs_comp_add(luab_state* lb, uint32_t entity_id,
+                              uint16_t comp_id) {
   void* comp =
       ecs_add(lb->ecs, (ecs_entity_t){entity_id}, lb->comps[comp_id], NULL);
 
-  return (int)comp;
+  printf("ADDR %td\n", (uintptr_t)comp);
+
+  return (uintptr_t)comp;
 }
