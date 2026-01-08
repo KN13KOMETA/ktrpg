@@ -16,6 +16,7 @@ struct luaL_Reg luab_m_l[] = {
     {"ecs_entity_destroy", luab_m_ecs_entity_destroy},
     {"ecs_comp_has", luab_m_ecs_comp_has},
     {"ecs_comp_add", luab_m_ecs_comp_add},
+    {"ecs_comp_set", luab_m_ecs_comp_set},
     {"ecs_comp_get", luab_m_ecs_comp_get},
     {"ecs_comp_remove", luab_m_ecs_comp_remove},
     {"ecs_run_system", luab_m_ecs_run_system},
@@ -74,10 +75,50 @@ int luab_m_ecs_comp_add(lua_State* L) {
   lua_Integer entity_id = luaL_checkinteger(L, 1);
   lua_Integer comp_id = luaL_checkinteger(L, 2);
 
-  lua_pushinteger(
-      L, luab_h_ecs_comp_add(lb, (uint32_t)entity_id, (uint16_t)comp_id));
+  lua_Integer comp =
+      luab_h_ecs_comp_add(lb, (uint32_t)entity_id, (uint16_t)comp_id);
+
+  printf("ADDR 2 %td\n", (ptrdiff_t)comp);
+
+  // lua_pushinteger(L, comp);
+  lua_pushlightuserdata(L, (void*)comp);
 
   return 1;
+}
+int luab_m_ecs_comp_set(lua_State* L) {
+  luab_state* lb = lua_touserdata(L, lua_upvalueindex(1));
+  lua_Integer comp_id = luaL_checkinteger(L, 1);
+  // TODO: Checks for 2 arg
+  void* lud_p = lua_touserdata(L, 2);
+  lua_Integer int_value;
+  lua_Number num_value;
+  char* str_value;
+
+  printf("ASSDSASADASD ADDR %lu\n", (uintptr_t)lud_p);
+
+  printf("COMP TYPE: %d\n", lb->comp_types[comp_id]);
+
+  switch (lb->comp_types[comp_id]) {
+    case COMP_INTEGER:
+      int_value = luaL_checkinteger(L, 3);
+      printf("VALUE %d\n", *(lua_Integer*)lud_p);
+      // WARN: getting seqfault because address is actually wrong
+      *(lua_Integer*)lud_p = int_value;
+      printf("GOT INTEGER %d\n", int_value);
+      break;
+    case COMP_NUMBER:
+      num_value = luaL_checknumber(L, 3);
+      *(lua_Number*)lud_p = num_value;
+      printf("GOT NUMBER %f\n", num_value);
+      break;
+    case COMP_STRING:
+      str_value = luaL_checkstring(L, 3);
+      *(char**)lud_p = str_value;
+      printf("GOT STRING %s\n", str_value);
+      break;
+  }
+
+  return 0;
 }
 int luab_m_ecs_comp_get(lua_State* L) { return 0; }
 int luab_m_ecs_comp_remove(lua_State* L) { return 0; }

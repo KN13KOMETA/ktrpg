@@ -19,6 +19,7 @@ int luab_m_ecs_entity_destroy(lua_State* L);
 
 int luab_m_ecs_comp_has(lua_State* L);
 int luab_m_ecs_comp_add(lua_State* L);
+int luab_m_ecs_comp_set(lua_State* L);
 int luab_m_ecs_comp_get(lua_State* L);
 int luab_m_ecs_comp_remove(lua_State* L);
 
