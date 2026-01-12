@@ -23,6 +23,12 @@ set(ZIG_ARCH ${CMAKE_MATCH_1})
 set(ZIG_OS ${CMAKE_MATCH_2})
 set(ZIG_ABI ${CMAKE_MATCH_3})
 
+# Setup triplet variables
+set(TARGET_TRIPLET ${ZIG_TARGET} CACHE STRING "Target triplet")
+set(TARGET_ARCH ${ZIG_ARCH} CACHE STRING "Target arch")
+set(TARGET_OS ${ZIG_OS} CACHE STRING "Target os")
+set(TARGET_ABI ${ZIG_ABI} CACHE STRING "Target abi")
+
 if(ZIG_OS STREQUAL "linux")
   set(CMAKE_SYSTEM_NAME "Linux")
 elseif(ZIG_OS STREQUAL "windows")

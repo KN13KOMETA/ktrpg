@@ -58,12 +58,9 @@ add_dependencies(${PROJECT_NAME} generated_files)
 
 include("cmake/libraries.cmake")
 
-# TODO: Add architectury in file name
 set_target_properties(
   ${PROJECT_NAME}
-  PROPERTIES
-    OUTPUT_NAME
-      "${PROJECT_NAME}_${PROJECT_FULL_VERSION}$<$<CONFIG:DEBUG>:_debug>"
+  PROPERTIES OUTPUT_NAME "${PROJECT_NAME}_${PROJECT_FULL_VERSION}"
 )
 
 # Turning on a lot compiler checks
