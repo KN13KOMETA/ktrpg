@@ -26,4 +26,6 @@ int luab_m_ecs_comp_remove(lua_State* L);
 int luab_m_ecs_run_system(lua_State* L);
 int luab_m_ecs_run_systems(lua_State* L);
 
+// TODO: save/load system
+
 #endif  // !LUAB_LUAB_M_H

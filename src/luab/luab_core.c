@@ -12,6 +12,7 @@
 #include "../luah/init.h"
 #include "luab_m.h"
 
+// TODO: Make arrays sized with lua script
 #define LUAB_MAX_COMP_COUNT 64
 #define LUAB_MAX_SYSTEM_COUNT 64
 #define LUAB_MAX_ENTITY_COUNT 64
@@ -51,32 +52,6 @@ luab_state luab_init(void) {
     }
 
     DEBUG_LOG("Comps registered %d", lb.comp_count);
-
-    // ecs_entity_t entity1 = {1};
-    // ecs_entity_t entity2 = {2};
-    //
-    // lua_Integer* d1 = ecs_add(lb.ecs, entity1, lb.comps[1], NULL);
-    // *d1 = 190;
-    //
-    // lua_Number* f2 = ecs_add(lb.ecs, entity2, lb.comps[2], NULL);
-    // *f2 = 200.001;
-
-    ecs_entity_t entity_a = ecs_create(ecs);
-    ecs_entity_t entity_b = ecs_create(ecs);
-
-    printf("ecs id %d\n", entity_a.id);
-    printf("ecs id %d\n", entity_b.id);
-
-    char** s = ecs_add(lb.ecs, entity_b, lb.comps[0], NULL);
-    *s = "yo string";
-
-    lua_Integer* d = ecs_add(lb.ecs, entity_a, lb.comps[1], NULL);
-    *d = 67;
-
-    lua_Number* f = ecs_add(lb.ecs, entity_b, lb.comps[2], NULL);
-    *f = 6.9;
-
-    printf("asd %lu\n", entity_b.id);
 
     for (int i = 0; i < 1; i++) {
       ecs_run_systems(ecs, 0);

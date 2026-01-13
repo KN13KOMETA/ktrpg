@@ -136,6 +136,7 @@ int luab_m_ecs_comp_get(lua_State* L) {
   lua_pushnil(L);
   return 1;
 }
+// TODO: write these luab_m function]
 int luab_m_ecs_comp_remove(lua_State* L) { return 0; }
 
 int luab_m_ecs_run_system(lua_State* L) { return 0; }

@@ -26,9 +26,9 @@ int main(int argc, char* argv[]) {
   printf(TITLE("HELP"));
   printf("Run with --help for more info\n\n");
 
-  printf(TITLE("RUNNING LUAB"));
+  printf(TITLE("LOADING CONTENT"));
+  // TODO: Measure load time
   luab_init();
-  printf(TITLE("END OF LUAB"));
 
   free_project_options(poptions);
   free(temp_argv);
