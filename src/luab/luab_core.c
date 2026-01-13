@@ -7,7 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
+#include "../constants.h"
 #include "../functions.h"
 #include "../luah/init.h"
 #include "luab_m.h"
@@ -17,7 +19,7 @@
 #define LUAB_MAX_SYSTEM_COUNT 64
 #define LUAB_MAX_ENTITY_COUNT 64
 
-luab_state luab_init(project_options* poptions) {
+luab_state luab_init(project_options* poptions, clock_t start_time) {
   luab_state lb;
   lua_State* L = luaL_newstate();
 
@@ -53,7 +55,13 @@ luab_state luab_init(project_options* poptions) {
       printf("Error at internal scripts: %s\n", lua_tostring(L, -1));
   }
 
-  DEBUG_LOG("Comps registered %d", lb.comp_count);
+  printf(TITLE("CONTENT LOADED"));
+
+  printf("Registered %d components\n", lb.comp_count);
+  printf("Registered %d systems\n", lb.system_count);
+
+  printf("Loaded in %f ms\n\n",
+         (double)(clock() - start_time) / CLOCKS_PER_SEC * 1000);
 
   // TODO: remove this after lua implementation
   for (int i = 0; i < 1; i++) {

@@ -1,4 +1,5 @@
 #pragma once
+#include <time.h>
 #ifndef LUAB_LUAB_CORE_H
 #define LUAB_LUAB_CORE_H
 
@@ -28,7 +29,7 @@ typedef struct {
   ecs_id_t index;
 } luab_system;
 
-luab_state luab_init(project_options* poptions);
+luab_state luab_init(project_options* poptions, clock_t start_time);
 void luab_free(luab_state* luab_state);
 
 // Since we can't directly turn lua function into c function
