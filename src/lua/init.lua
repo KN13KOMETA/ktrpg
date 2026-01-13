@@ -11,6 +11,7 @@ local system = {
     for i = 1, entity_count do
       local entity_id = entities[i]
       print(string.format("entity id: %d", entity_id))
+      print(game.ecs_comp_get(entity_id, component.name))
     end
   end),
   death = game.register_system(function(entities, entity_count)
@@ -19,6 +20,8 @@ local system = {
     for i = 1, entity_count do
       local entity_id = entities[i]
       print(string.format("s entity id: %d", entity_id))
+      print(game.ecs_comp_get(entity_id, component.health))
+      print(game.ecs_comp_get(entity_id, component.num))
     end
   end),
 }
