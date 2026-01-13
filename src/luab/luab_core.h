@@ -6,6 +6,8 @@
 #include <pico_ecs.h>
 #include <stdint.h>
 
+#include "../project_options.h"
+
 typedef enum { COMP_INTEGER, COMP_NUMBER, COMP_STRING } COMP_TYPE;
 
 typedef struct {
@@ -26,7 +28,7 @@ typedef struct {
   ecs_id_t index;
 } luab_system;
 
-luab_state luab_init(void);
+luab_state luab_init(project_options* poptions);
 void luab_free(luab_state* luab_state);
 
 // Since we can't directly turn lua function into c function
