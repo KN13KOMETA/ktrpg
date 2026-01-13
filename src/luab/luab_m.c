@@ -78,9 +78,6 @@ int luab_m_ecs_comp_add(lua_State* L) {
   lua_Integer comp =
       luab_h_ecs_comp_add(lb, (uint32_t)entity_id, (uint16_t)comp_id);
 
-  printf("ADDR 2 %td\n", (ptrdiff_t)comp);
-
-  // lua_pushinteger(L, comp);
   lua_pushlightuserdata(L, (void*)comp);
 
   return 1;
@@ -94,27 +91,18 @@ int luab_m_ecs_comp_set(lua_State* L) {
   lua_Number num_value;
   char* str_value;
 
-  printf("ASSDSASADASD ADDR %lu\n", (uintptr_t)lud_p);
-
-  printf("COMP TYPE: %d\n", lb->comp_types[comp_id]);
-
   switch (lb->comp_types[comp_id]) {
     case COMP_INTEGER:
       int_value = luaL_checkinteger(L, 3);
-      printf("VALUE %d\n", *(lua_Integer*)lud_p);
-      // WARN: getting seqfault because address is actually wrong
       *(lua_Integer*)lud_p = int_value;
-      printf("GOT INTEGER %d\n", int_value);
       break;
     case COMP_NUMBER:
       num_value = luaL_checknumber(L, 3);
       *(lua_Number*)lud_p = num_value;
-      printf("GOT NUMBER %f\n", num_value);
       break;
     case COMP_STRING:
       str_value = luaL_checkstring(L, 3);
       *(char**)lud_p = str_value;
-      printf("GOT STRING %s\n", str_value);
       break;
   }
 
