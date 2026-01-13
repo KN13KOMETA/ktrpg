@@ -29,7 +29,7 @@ typedef struct {
   ecs_id_t index;
 } luab_system;
 
-luab_state luab_init(project_options* poptions, clock_t start_time);
+luab_state luab_init(project_options* poptions);
 void luab_free(luab_state* luab_state);
 
 // Since we can't directly turn lua function into c function
