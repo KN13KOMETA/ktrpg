@@ -57,8 +57,8 @@ void print_version(void) {
   exit(EXIT_SUCCESS);
 }
 void export_scripts(char* path, project_options* poptions) {
-  poptions->save_path = malloc(strlen(path) + 1);
-  strcpy(poptions->save_path, path);
+  poptions->export_path = malloc(strlen(path) + 1);
+  strcpy(poptions->export_path, path);
 }
 void use_user_script(char* path, project_options* poptions) {
   poptions->script_path = malloc(strlen(path) + 1);
@@ -85,7 +85,7 @@ int user_opt_cb(struct argparse* self, const struct argparse_option* option) {
 
 void free_project_options(project_options* options) {
   if (options->script_path) free(options->script_path);
-  if (options->save_path) free(options->save_path);
+  if (options->export_path) free(options->export_path);
 
   free(options);
 }
