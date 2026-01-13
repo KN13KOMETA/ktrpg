@@ -39,10 +39,6 @@ add_executable(
   src/luab/luab_helper.c
   src/luab/luab_m.c
   src/luab/luab_core.c
-  src/tgg/components.c
-  src/tgg/systems.c
-  src/tgg/tgg_lua_module.c
-  src/tgg/tgg.c
   src/game/ecs/components.c
   src/game/ecs/systems.c
   src/main.c
