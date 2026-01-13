@@ -108,7 +108,34 @@ int luab_m_ecs_comp_set(lua_State* L) {
 
   return 0;
 }
-int luab_m_ecs_comp_get(lua_State* L) { return 0; }
+int luab_m_ecs_comp_get(lua_State* L) {
+  luab_state* lb = lua_touserdata(L, lua_upvalueindex(1));
+  lua_Integer entity_id = luaL_checkinteger(L, 1);
+  lua_Integer comp_id = luaL_checkinteger(L, 2);
+  ecs_entity_t entity = {entity_id};
+
+  if (!ecs_has(lb->ecs, entity, lb->comps[comp_id])) {
+    lua_pushnil(L);
+    return 1;
+  }
+
+  switch (lb->comp_types[comp_id]) {
+    case COMP_INTEGER:
+      lua_pushinteger(
+          L, *(lua_Integer*)ecs_get(lb->ecs, entity, lb->comps[comp_id]));
+      return 1;
+    case COMP_NUMBER:
+      lua_pushnumber(
+          L, *(lua_Number*)ecs_get(lb->ecs, entity, lb->comps[comp_id]));
+      return 1;
+    case COMP_STRING:
+      lua_pushstring(L, *(char**)ecs_get(lb->ecs, entity, lb->comps[comp_id]));
+      return 1;
+  }
+
+  lua_pushnil(L);
+  return 1;
+}
 int luab_m_ecs_comp_remove(lua_State* L) { return 0; }
 
 int luab_m_ecs_run_system(lua_State* L) { return 0; }
