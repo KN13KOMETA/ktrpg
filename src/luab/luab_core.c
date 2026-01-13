@@ -19,25 +19,27 @@
 #define LUAB_MAX_SYSTEM_COUNT 64
 #define LUAB_MAX_ENTITY_COUNT 64
 
-luab_state luab_init(project_options* poptions, clock_t start_time) {
+luab_state luab_init(project_options* poptions) {
   luab_state lb;
-  lua_State* L = luaL_newstate();
+  clock_t start_time = clock();
 
-  lb.L = L;
+  printf(TITLE("LOADING CONTENT"));
+
+  lb.L = luaL_newstate();
   lb.ecs = ecs_new(LUAB_MAX_ENTITY_COUNT, NULL);
   lb.comps = malloc(sizeof(ecs_comp_t) * LUAB_MAX_COMP_COUNT);
   lb.comp_types = malloc(sizeof(COMP_TYPE) * LUAB_MAX_COMP_COUNT);
   lb.systems = malloc(sizeof(ecs_system_t) * LUAB_MAX_SYSTEM_COUNT);
   lb.system_lua_refs = malloc(sizeof(int) * LUAB_MAX_SYSTEM_COUNT);
 
-  luaL_openlibs(L);
+  luaL_openlibs(lb.L);
 
   // Register luab module
   // NOTE: For 5.1 use luaL_register
-  lua_newtable(L);
-  lua_pushlightuserdata(L, &lb);
-  luaL_setfuncs(L, luab_m_l, 1);
-  lua_setglobal(L, "game");
+  lua_newtable(lb.L);
+  lua_pushlightuserdata(lb.L, &lb);
+  luaL_setfuncs(lb.L, luab_m_l, 1);
+  lua_setglobal(lb.L, "game");
 
   // Register debug system before running lua scripts
   // NOTE: Register systems after components, but before entities
@@ -47,13 +49,15 @@ luab_state luab_init(project_options* poptions, clock_t start_time) {
   if (poptions->script_path != NULL &&
       file_exists(poptions->script_path) == 0) {
     DEBUG_LOG("Running user lua scripts");
-    if (luaL_dofile(L, poptions->script_path) != LUA_OK)
-      printf("Error at internal user scripts: %s\n", lua_tostring(L, -1));
+    if (luaL_dofile(lb.L, poptions->script_path) != LUA_OK)
+      printf("Error at internal user scripts: %s\n", lua_tostring(lb.L, -1));
   } else {
     DEBUG_LOG("Running internal lua scripts");
-    if (luaL_dostring(L, init_lua) != LUA_OK)
-      printf("Error at internal scripts: %s\n", lua_tostring(L, -1));
+    if (luaL_dostring(lb.L, init_lua) != LUA_OK)
+      printf("Error at internal scripts: %s\n", lua_tostring(lb.L, -1));
   }
+
+  putchar('\n');
 
   printf(TITLE("CONTENT LOADED"));
 

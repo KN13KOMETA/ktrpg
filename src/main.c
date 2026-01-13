@@ -22,14 +22,12 @@ int main(int argc, char* argv[]) {
 
   poptions = prompt_project_options(argc, temp_argv);
 
-  DEBUG_LOG(TITLE("DEBUG MODE") "\n");
+  DEBUG_LOG(TITLE("DEBUG MODE"));
 
   printf(TITLE("HELP"));
   printf("Run with --help for more info\n\n");
 
-  printf(TITLE("LOADING CONTENT"));
-  clock_t start_time = clock();
-  luab_init(poptions, start_time);
+  luab_init(poptions);
 
   free_project_options(poptions);
   free(temp_argv);
