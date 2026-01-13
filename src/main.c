@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "constants.h"
 #include "functions.h"
@@ -27,8 +28,8 @@ int main(int argc, char* argv[]) {
   printf("Run with --help for more info\n\n");
 
   printf(TITLE("LOADING CONTENT"));
-  // TODO: Measure load time
-  luab_init(poptions);
+  clock_t start_time = clock();
+  luab_init(poptions, start_time);
 
   free_project_options(poptions);
   free(temp_argv);
