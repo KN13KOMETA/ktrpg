@@ -61,7 +61,5 @@ uintptr_t luab_h_ecs_comp_add(luab_state* lb, uint32_t entity_id,
   void* comp =
       ecs_add(lb->ecs, (ecs_entity_t){entity_id}, lb->comps[comp_id], NULL);
 
-  printf("ADDR %td\n", (uintptr_t)comp);
-
   return (uintptr_t)comp;
 }
