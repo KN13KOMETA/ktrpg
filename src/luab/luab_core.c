@@ -22,6 +22,7 @@ luab_state luab_init(project_options* poptions) {
   lua_State* L = luaL_newstate();
 
   lb.L = L;
+  lb.ecs = ecs_new(LUAB_MAX_ENTITY_COUNT, NULL);
   lb.comps = malloc(sizeof(ecs_comp_t) * LUAB_MAX_COMP_COUNT);
   lb.comp_types = malloc(sizeof(COMP_TYPE) * LUAB_MAX_COMP_COUNT);
   lb.systems = malloc(sizeof(ecs_system_t) * LUAB_MAX_SYSTEM_COUNT);
@@ -36,43 +37,39 @@ luab_state luab_init(project_options* poptions) {
   luaL_setfuncs(L, luab_m_l, 1);
   lua_setglobal(L, "game");
 
-  // NOTE: Clean this part after testing
-  {
-    // NOTE: Register systems after components, but before entities
-    ecs_t* ecs = ecs_new(64, NULL);
+  // Register debug system before running lua scripts
+  // NOTE: Register systems after components, but before entities
+  ecs_define_system(lb.ecs, 0, luab_debug_system, NULL, NULL, &lb);
 
-    lb.ecs = ecs;
-
-    // Register debug system before running lua scripts
-    ecs_define_system(lb.ecs, 0, luab_debug_system, NULL, NULL, &lb);
-
-    // Load lua scripts or use internal ones
-    if (poptions->script_path != NULL &&
-        file_exists(poptions->script_path) == 0) {
-      DEBUG_LOG("Running user lua scripts");
-      if (luaL_dofile(L, poptions->script_path) != LUA_OK)
-        printf("Error at internal user scripts: %s\n", lua_tostring(L, -1));
-    } else {
-      DEBUG_LOG("Running internal lua scripts");
-      if (luaL_dostring(L, init_lua) != LUA_OK)
-        printf("Error at internal scripts: %s\n", lua_tostring(L, -1));
-    }
-
-    DEBUG_LOG("Comps registered %d", lb.comp_count);
-
-    for (int i = 0; i < 1; i++) {
-      ecs_run_systems(ecs, 0);
-    }
-
-    ecs_free(ecs);
+  // Load lua scripts or use internal ones
+  if (poptions->script_path != NULL &&
+      file_exists(poptions->script_path) == 0) {
+    DEBUG_LOG("Running user lua scripts");
+    if (luaL_dofile(L, poptions->script_path) != LUA_OK)
+      printf("Error at internal user scripts: %s\n", lua_tostring(L, -1));
+  } else {
+    DEBUG_LOG("Running internal lua scripts");
+    if (luaL_dostring(L, init_lua) != LUA_OK)
+      printf("Error at internal scripts: %s\n", lua_tostring(L, -1));
   }
 
-  lua_close(L);
+  DEBUG_LOG("Comps registered %d", lb.comp_count);
+
+  // TODO: remove this after lua implementation
+  for (int i = 0; i < 1; i++) {
+    ecs_run_systems(lb.ecs, 0);
+  }
+
   return lb;
 }
 
 void luab_free(luab_state* lb) {
+  lua_close(lb->L);
+  ecs_free(lb->ecs);
+
   free(lb->comps);
+  free(lb->comp_types);
+
   free(lb->systems);
   free(lb->system_lua_refs);
 }
