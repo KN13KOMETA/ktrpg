@@ -4,7 +4,7 @@
 
 typedef struct {
   char* script_path;
-  char* save_path;
+  char* export_path;
 } project_options;
 
 project_options* prompt_project_options(int argc, const char* argv[]);
