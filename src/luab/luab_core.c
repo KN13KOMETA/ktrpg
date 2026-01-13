@@ -17,7 +17,7 @@
 #define LUAB_MAX_SYSTEM_COUNT 64
 #define LUAB_MAX_ENTITY_COUNT 64
 
-luab_state luab_init(void) {
+luab_state luab_init(project_options* poptions) {
   luab_state lb;
   lua_State* L = luaL_newstate();
 
@@ -43,12 +43,19 @@ luab_state luab_init(void) {
 
     lb.ecs = ecs;
 
-    // Register debug system before running user scripts
+    // Register debug system before running lua scripts
     ecs_define_system(lb.ecs, 0, luab_debug_system, NULL, NULL, &lb);
 
-    DEBUG_LOG("Running lua scripts");
-    if (luaL_dostring(L, init_lua) != LUA_OK) {
-      printf("Error at internal scripts: %s\n", lua_tostring(L, -1));
+    // Load lua scripts or use internal ones
+    if (poptions->script_path != NULL &&
+        file_exists(poptions->script_path) == 0) {
+      DEBUG_LOG("Running user lua scripts");
+      if (luaL_dofile(L, poptions->script_path) != LUA_OK)
+        printf("Error at internal user scripts: %s\n", lua_tostring(L, -1));
+    } else {
+      DEBUG_LOG("Running internal lua scripts");
+      if (luaL_dostring(L, init_lua) != LUA_OK)
+        printf("Error at internal scripts: %s\n", lua_tostring(L, -1));
     }
 
     DEBUG_LOG("Comps registered %d", lb.comp_count);

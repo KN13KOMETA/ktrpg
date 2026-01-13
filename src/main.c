@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 
   printf(TITLE("LOADING CONTENT"));
   // TODO: Measure load time
-  luab_init();
+  luab_init(poptions);
 
   free_project_options(poptions);
   free(temp_argv);
