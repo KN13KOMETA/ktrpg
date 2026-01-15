@@ -4,6 +4,7 @@
 #include <lua.h>
 #include <lualib.h>
 #include <pico_ecs.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,8 +16,6 @@
 #include "luab_m.h"
 
 // TODO: Make arrays sized with lua script
-#define LUAB_MAX_COMP_COUNT 64
-#define LUAB_MAX_SYSTEM_COUNT 64
 #define LUAB_MAX_ENTITY_COUNT 64
 
 luab_state luab_init(project_options* poptions) {
@@ -27,10 +26,16 @@ luab_state luab_init(project_options* poptions) {
 
   lb.L = luaL_newstate();
   lb.ecs = ecs_new(LUAB_MAX_ENTITY_COUNT, NULL);
-  lb.comps = malloc(sizeof(ecs_comp_t) * LUAB_MAX_COMP_COUNT);
-  lb.comp_types = malloc(sizeof(COMP_TYPE) * LUAB_MAX_COMP_COUNT);
-  lb.systems = malloc(sizeof(ecs_system_t) * LUAB_MAX_SYSTEM_COUNT);
-  lb.system_lua_refs = malloc(sizeof(int) * LUAB_MAX_SYSTEM_COUNT);
+
+  // lb.comps_size = MAX_COMP_COUNT;
+  lb.comps_size = DEFAULT_COMP_COUNT;
+  lb.comps = malloc(sizeof(ecs_comp_t) * lb.comps_size);
+  lb.comp_types = malloc(sizeof(COMP_TYPE) * lb.comps_size);
+
+  // lb.systems_size = MAX_SYSTEM_COUNT;
+  lb.systems_size = DEFAULT_SYSTEM_COUNT;
+  lb.systems = malloc(sizeof(ecs_system_t) * lb.systems_size);
+  lb.system_lua_refs = malloc(sizeof(int) * lb.systems_size);
 
   luaL_openlibs(lb.L);
 

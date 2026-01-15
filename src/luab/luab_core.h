@@ -9,16 +9,23 @@
 
 #include "../project_options.h"
 
+#define DEFAULT_COMP_COUNT 01000
+#define DEFAULT_SYSTEM_COUNT 0100
+#define MAX_COMP_COUNT UINT16_MAX
+#define MAX_SYSTEM_COUNT UINT16_MAX
+
 typedef enum { COMP_INTEGER, COMP_NUMBER, COMP_STRING } COMP_TYPE;
 
 typedef struct {
   lua_State* L;
   ecs_t* ecs;
 
+  uint16_t comps_size;
   ecs_comp_t* comps;
   COMP_TYPE* comp_types;
   uint16_t comp_count;
 
+  uint16_t systems_size;
   ecs_system_t* systems;
   int* system_lua_refs;
   uint16_t system_count;
