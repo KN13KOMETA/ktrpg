@@ -64,6 +64,7 @@ luab_state luab_init(project_options* poptions) {
 
   putchar('\n');
 
+  // TODO: fix message (it's called not after load but after lua script finish)
   printf(TITLE("CONTENT LOADED"));
 
   printf("Registered %d components\n", lb.comp_count);
@@ -71,11 +72,6 @@ luab_state luab_init(project_options* poptions) {
 
   printf("Loaded in %f ms\n\n",
          (double)(clock() - start_time) / CLOCKS_PER_SEC * 1000);
-
-  // TODO: remove this after lua implementation
-  for (int i = 0; i < 1; i++) {
-    ecs_run_systems(lb.ecs, 0);
-  }
 
   return lb;
 }
