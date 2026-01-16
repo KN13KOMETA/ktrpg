@@ -139,5 +139,14 @@ int luab_m_ecs_comp_get(lua_State* L) {
 // TODO: write these luab_m function]
 int luab_m_ecs_comp_remove(lua_State* L) { return 0; }
 
-int luab_m_ecs_run_system(lua_State* L) { return 0; }
-int luab_m_ecs_run_systems(lua_State* L) { return 0; }
+int luab_m_ecs_run_system(lua_State* L) {
+  luab_state* lb = lua_touserdata(L, lua_upvalueindex(1));
+  return 0;
+}
+int luab_m_ecs_run_systems(lua_State* L) {
+  luab_state* lb = lua_touserdata(L, lua_upvalueindex(1));
+
+  ecs_run_systems(lb->ecs, 0);
+
+  return 0;
+}
