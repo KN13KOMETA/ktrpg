@@ -13,6 +13,7 @@
 #include "../constants.h"
 #include "../functions.h"
 #include "../luah/init.h"
+#include "../luah/t.h"
 #include "luab_m.h"
 
 // TODO: Make arrays sized with lua script
@@ -58,6 +59,9 @@ luab_state luab_init(project_options* poptions) {
       printf("Error at internal user scripts: %s\n", lua_tostring(lb.L, -1));
   } else {
     DEBUG_LOG("Running internal lua scripts");
+
+    luab_register_text_module(lb.L, "t", t_lua);
+
     if (luaL_dostring(lb.L, init_lua) != LUA_OK)
       printf("Error at internal scripts: %s\n", lua_tostring(lb.L, -1));
   }
@@ -157,4 +161,17 @@ ecs_ret_t luab_debug_system(ecs_t* ecs, ecs_entity_t* entities,
   }
 
   return 0;
+}
+
+void luab_register_text_module(lua_State* L, char* name, char* content) {
+  lua_getglobal(L, "package");
+  lua_getfield(L, -1, "preload");
+
+  if (luaL_loadbuffer(L, content, strlen(content), name) == LUA_OK) {
+    lua_setfield(L, -2, name);
+  } else {
+    lua_pop(L, 1);
+  }
+
+  lua_pop(L, 2);
 }
