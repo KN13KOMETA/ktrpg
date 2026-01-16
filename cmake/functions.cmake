@@ -90,8 +90,15 @@ function(generate_header_from_lua input_file)
     ${c_file}
     PROPERTIES GENERATED TRUE
   )
-  set(GENERATED_HEADERS ${GENERATED_HEADERS} ${header_file} PARENT_SCOPE)
-  set(GENERATED_C_FILES ${GENERATED_HEADERS} ${c_file} PARENT_SCOPE)
+
+  set(_GENERATED_HEADERS ${GENERATED_HEADERS})
+  set(_GENERATED_C_FILES ${GENERATED_C_FILES})
+
+  list(APPEND _GENERATED_HEADERS ${header_file})
+  list(APPEND _GENERATED_C_FILES ${c_file})
+
+  set(GENERATED_HEADERS ${_GENERATED_HEADERS} PARENT_SCOPE)
+  set(GENERATED_C_FILES ${_GENERATED_C_FILES} PARENT_SCOPE)
 
   message(STATUS "Registered dependency: ${input_file} -> ${header_file}")
   message(STATUS "Registered dependency: ${input_file} -> ${c_file}")
