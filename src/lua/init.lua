@@ -1,3 +1,8 @@
+local a = require("t")
+
+print("SADASDASDASDDASDASDASDASADSA")
+print(a.name)
+
 local component = {
   name = game.register_string_component(),
   health = game.register_integer_component(),
@@ -39,3 +44,7 @@ game.ecs_comp_set(component.health, h1, 199)
 
 local n1 = game.ecs_comp_add(entity2, component.name)
 game.ecs_comp_set(component.name, n1, "hello world")
+
+for i = 1, 10, 1 do
+  game.ecs_run_systems()
+end

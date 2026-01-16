@@ -48,4 +48,6 @@ ecs_ret_t luab_system_wrapper(ecs_t* ecs, ecs_entity_t* entities,
 ecs_ret_t luab_debug_system(ecs_t* ecs, ecs_entity_t* entities,
                             size_t entity_count, void* udata);
 
+void luab_register_text_module(lua_State* L, char* name, char* content);
+
 #endif  // !LUAB_LUAB_CORE_H
