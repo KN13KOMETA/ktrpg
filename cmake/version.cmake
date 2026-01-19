@@ -5,6 +5,7 @@
 set(PROJECT_VERSION_PRERELEASE "alpha")
 
 # Getting git short hash
+# TODO: Value is getting on cmake configuration not project build
 execute_process(
   COMMAND git rev-parse --short HEAD
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
