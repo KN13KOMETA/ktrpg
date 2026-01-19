@@ -101,6 +101,7 @@ int luab_m_ecs_comp_set(lua_State* L) {
       *(lua_Number*)lud_p = num_value;
       break;
     case COMP_STRING:
+      // TODO: Malloc string because string value gets cleared by lua
       str_value = luaL_checkstring(L, 3);
       *(char**)lud_p = str_value;
       break;

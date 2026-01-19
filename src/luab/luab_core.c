@@ -30,13 +30,13 @@ luab_state luab_init(project_options* poptions) {
 
   // lb.comps_size = MAX_COMP_COUNT;
   lb.comps_size = DEFAULT_COMP_COUNT;
-  lb.comps = malloc(sizeof(ecs_comp_t) * lb.comps_size);
-  lb.comp_types = malloc(sizeof(COMP_TYPE) * lb.comps_size);
+  lb.comps = malloc(sizeof(*lb.comps) * lb.comps_size);
+  lb.comp_types = malloc(sizeof(*lb.comp_types) * lb.comps_size);
 
   // lb.systems_size = MAX_SYSTEM_COUNT;
   lb.systems_size = DEFAULT_SYSTEM_COUNT;
-  lb.systems = malloc(sizeof(ecs_system_t) * lb.systems_size);
-  lb.system_lua_refs = malloc(sizeof(int) * lb.systems_size);
+  lb.systems = malloc(sizeof(*lb.systems) * lb.systems_size);
+  lb.system_lua_refs = malloc(sizeof(*lb.system_lua_refs) * lb.systems_size);
 
   luaL_openlibs(lb.L);
 

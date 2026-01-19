@@ -22,7 +22,7 @@ int export_opt_cb(struct argparse* self, const struct argparse_option* option);
 int user_opt_cb(struct argparse* self, const struct argparse_option* option);
 
 project_options* prompt_project_options(int argc, const char* argv[]) {
-  project_options* poptions = malloc(sizeof(project_options));
+  project_options* poptions = malloc(sizeof(*poptions));
 
   // NOTE: These two unused, but required for value in callback
   void* export_value = NULL;
