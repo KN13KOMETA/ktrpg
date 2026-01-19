@@ -25,7 +25,8 @@ uint16_t luab_h_register_number_component(luab_state* lb) {
   return lb->comp_count++;
 }
 uint16_t luab_h_register_string_component(luab_state* lb) {
-  ecs_comp_t comp = ecs_define_component(lb->ecs, sizeof(luab_str), NULL, NULL);
+  ecs_comp_t comp = ecs_define_component(lb->ecs, sizeof(luab_str), NULL,
+                                         luab_luab_str_desctructor);
 
   lb->comps[lb->comp_count] = comp;
   lb->comp_types[lb->comp_count] = COMP_STRING;

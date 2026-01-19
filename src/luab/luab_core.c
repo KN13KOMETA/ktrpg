@@ -176,3 +176,8 @@ void luab_register_text_module(lua_State* L, char* name, char* content) {
 
   lua_pop(L, 2);
 }
+
+void luab_luab_str_desctructor(ecs_t* ecs, ecs_entity_t entity,
+                               void* comp_ptr) {
+  free(((luab_str*)comp_ptr)->str);
+}

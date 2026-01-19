@@ -57,4 +57,6 @@ ecs_ret_t luab_debug_system(ecs_t* ecs, ecs_entity_t* entities,
 
 void luab_register_text_module(lua_State* L, char* name, char* content);
 
+void luab_luab_str_desctructor(ecs_t* ecs, ecs_entity_t entity, void* comp_ptr);
+
 #endif  // !LUAB_LUAB_CORE_H
