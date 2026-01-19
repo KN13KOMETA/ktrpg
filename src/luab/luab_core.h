@@ -15,6 +15,10 @@
 #define MAX_SYSTEM_COUNT UINT16_MAX
 
 typedef enum { COMP_INTEGER, COMP_NUMBER, COMP_STRING } COMP_TYPE;
+typedef struct {
+  char* str;
+  uint16_t size;
+} luab_str;
 
 typedef struct {
   lua_State* L;

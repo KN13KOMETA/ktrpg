@@ -152,7 +152,7 @@ ecs_ret_t luab_debug_system(ecs_t* ecs, ecs_entity_t* entities,
             printf("%f\n", *(lua_Number*)ecs_get(ecs, entity, comp));
             break;
           case COMP_STRING:
-            printf("%s\n", *(char**)ecs_get(ecs, entity, comp));
+            printf("%s\n", (*(luab_str*)ecs_get(ecs, entity, comp)).str);
             break;
         }
       }
