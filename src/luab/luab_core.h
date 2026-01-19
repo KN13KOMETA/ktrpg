@@ -27,11 +27,14 @@ typedef struct {
 
   uint16_t systems_size;
   ecs_system_t* systems;
+  struct luab_system* system_refs;
   int* system_lua_refs;
   uint16_t system_count;
 } luab_state;
 
-typedef struct {
+// NOTE: This is only place where struct is named
+// I still didn't decide about namings
+typedef struct luab_system {
   luab_state* lb;
   ecs_id_t index;
 } luab_system;

@@ -34,8 +34,7 @@ uint16_t luab_h_register_string_component(luab_state* lb) {
 }
 
 uint16_t luab_h_register_system(luab_state* lb, int lua_func_ref) {
-  // WARN: This memory doesnt free anywhere
-  luab_system* lbs = malloc(sizeof(*lbs));
+  luab_system* lbs = &lb->system_refs[lb->system_count];
   ecs_system_t s =
       ecs_define_system(lb->ecs, 0, luab_system_wrapper, NULL, NULL, lbs);
 

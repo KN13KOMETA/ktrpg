@@ -36,6 +36,7 @@ luab_state luab_init(project_options* poptions) {
   // lb.systems_size = MAX_SYSTEM_COUNT;
   lb.systems_size = DEFAULT_SYSTEM_COUNT;
   lb.systems = malloc(sizeof(*lb.systems) * lb.systems_size);
+  lb.system_refs = malloc(sizeof(*lb.system_refs) * lb.systems_size);
   lb.system_lua_refs = malloc(sizeof(*lb.system_lua_refs) * lb.systems_size);
 
   luaL_openlibs(lb.L);
