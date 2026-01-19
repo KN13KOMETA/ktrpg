@@ -3,6 +3,8 @@
 #include <lauxlib.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "lua.h"
 #include "luab_helper.h"
@@ -90,6 +92,7 @@ int luab_m_ecs_comp_set(lua_State* L) {
   lua_Integer int_value;
   lua_Number num_value;
   char* str_value;
+  luab_str* str_p = lud_p;
 
   switch (lb->comp_types[comp_id]) {
     case COMP_INTEGER:
@@ -101,9 +104,12 @@ int luab_m_ecs_comp_set(lua_State* L) {
       *(lua_Number*)lud_p = num_value;
       break;
     case COMP_STRING:
-      // TODO: Malloc string because string value gets cleared by lua
+      // TODO: Free memory somewhere
       str_value = luaL_checkstring(L, 3);
-      *(char**)lud_p = str_value;
+
+      str_p->size = strlen(str_value) + 1;
+      str_p->str = malloc(str_p->size);
+      strcpy(str_p->str, str_value);
       break;
   }
 
