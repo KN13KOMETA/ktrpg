@@ -56,6 +56,78 @@ luab_state luab_init(project_options* poptions) {
   if (poptions->script_path != NULL &&
       file_exists(poptions->script_path) == 0) {
     DEBUG_LOG("Running user lua scripts");
+
+    // TODO: Test it on windows
+    {
+      char* module_path;
+      char* path_type1 = "?.lua";
+      char* path_type2 = "?/init.lua";
+      char* target_path;
+      size_t target_path_length;
+      int i = 0;
+
+      // Init target_path
+      {
+        char* last_slash = strrchr(poptions->script_path, '/');
+        long length = last_slash - poptions->script_path + 1;
+
+        target_path = malloc(length + 1);
+
+        strncpy(target_path, poptions->script_path, length);
+
+        target_path[length] = '\0';
+      }
+
+      target_path_length = strlen(target_path);
+
+      module_path = malloc(target_path_length + strlen(path_type1) + 1 +
+                           target_path_length + strlen(path_type2) + 1);
+
+      strcpy(module_path, target_path);
+      i += target_path_length;
+
+      strcpy(module_path + i, path_type1);
+      i += strlen(path_type1);
+
+      module_path[i] = ';';
+      i++;
+
+      strcpy(module_path + i, target_path);
+      i += target_path_length;
+
+      strcpy(module_path + i, path_type2);
+
+      // Set new package.path
+      {
+        char* package_path;
+        char* current_path;
+        int i = 0;
+
+        lua_getglobal(lb.L, "package");
+        lua_getfield(lb.L, -1, "path");
+
+        current_path = lua_tostring(lb.L, -1);
+
+        package_path =
+            malloc(strlen(current_path) + 1 + strlen(module_path) + 1);
+
+        strcpy(package_path, current_path);
+        i += strlen(current_path);
+
+        package_path[i] = ';';
+        i++;
+
+        strcpy(package_path + i, module_path);
+
+        lua_pop(lb.L, 1);
+        lua_pushstring(lb.L, package_path);
+        lua_setfield(lb.L, -2, "path");
+        lua_pop(lb.L, 1);
+
+        printf("REAL ASDHFJAFJASASJFLJFKJL %s\n", package_path);
+      }
+    }
+
     if (luaL_dofile(lb.L, poptions->script_path) != LUA_OK)
       printf("Error at internal user scripts: %s\n", lua_tostring(lb.L, -1));
   } else {
