@@ -13,8 +13,7 @@
 #include <pico_ecs.h>
 
 int main(int argc, char* argv[]) {
-  const char** temp_argv =
-      (const char**)malloc(((size_t)argc + 1) * sizeof(const char*));
+  const char** temp_argv = malloc(((size_t)argc + 1) * sizeof(*temp_argv));
   project_options* poptions;
 
   for (int i = 0; i < argc; i++) temp_argv[i] = argv[i];
