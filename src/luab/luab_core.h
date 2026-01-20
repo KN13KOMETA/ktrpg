@@ -21,6 +21,9 @@ typedef struct {
 } luab_str;
 
 typedef struct {
+  clock_t load_start;
+  clock_t load_end;
+
   lua_State* L;
   ecs_t* ecs;
 

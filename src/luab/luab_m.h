@@ -13,6 +13,8 @@ int luab_m_register_string_component(lua_State* L);
 
 int luab_m_register_system(lua_State* L);
 
+int luab_m_content_load_end(lua_State* L);
+
 // Ecs functions
 int luab_m_ecs_entity_create(lua_State* L);
 int luab_m_ecs_entity_destroy(lua_State* L);
