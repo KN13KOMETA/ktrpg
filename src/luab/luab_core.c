@@ -123,8 +123,6 @@ luab_state luab_init(project_options* poptions) {
         lua_pushstring(lb.L, package_path);
         lua_setfield(lb.L, -2, "path");
         lua_pop(lb.L, 1);
-
-        printf("REAL ASDHFJAFJASASJFLJFKJL %s\n", package_path);
       }
     }
 
