@@ -5,7 +5,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
+#include "../constants.h"
 #include "lua.h"
 #include "luab_helper.h"
 
@@ -14,6 +16,7 @@ struct luaL_Reg luab_m_l[] = {
     {"register_number_component", luab_m_register_number_component},
     {"register_string_component", luab_m_register_string_component},
     {"register_system", luab_m_register_system},
+    {"content_load_end", luab_m_content_load_end},
     {"ecs_entity_create", luab_m_ecs_entity_create},
     {"ecs_entity_destroy", luab_m_ecs_entity_destroy},
     {"ecs_comp_has", luab_m_ecs_comp_has},
@@ -59,6 +62,22 @@ int luab_m_register_system(lua_State* L) {
                   luab_h_register_system(lb, luaL_ref(L, LUA_REGISTRYINDEX)));
 
   return 1;
+}
+
+int luab_m_content_load_end(lua_State* L) {
+  luab_state* lb = lua_touserdata(L, lua_upvalueindex(1));
+
+  lb->load_end = clock();
+
+  printf("\n" TITLE("CONTENT LOADED"));
+
+  printf("Registered %d components\n", lb->comp_count);
+  printf("Registered %d systems\n", lb->system_count);
+
+  printf("Loaded in %f ms\n\n",
+         (double)(lb->load_end - lb->load_start) / CLOCKS_PER_SEC * 1000);
+
+  return 0;
 }
 
 // TODO: implementation

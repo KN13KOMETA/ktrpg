@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 #include "../constants.h"
 #include "../functions.h"
@@ -21,7 +20,7 @@
 
 luab_state luab_init(project_options* poptions) {
   luab_state lb;
-  clock_t start_time = clock();
+  lb.load_start = clock();
 
   printf(TITLE("LOADING CONTENT"));
 
@@ -136,17 +135,6 @@ luab_state luab_init(project_options* poptions) {
     if (luaL_dostring(lb.L, init_lua) != LUA_OK)
       printf("Error at internal scripts: %s\n", lua_tostring(lb.L, -1));
   }
-
-  putchar('\n');
-
-  // TODO: fix message (it's called not after load but after lua script finish)
-  printf(TITLE("CONTENT LOADED"));
-
-  printf("Registered %d components\n", lb.comp_count);
-  printf("Registered %d systems\n", lb.system_count);
-
-  printf("Loaded in %f ms\n\n",
-         (double)(clock() - start_time) / CLOCKS_PER_SEC * 1000);
 
   return lb;
 }
