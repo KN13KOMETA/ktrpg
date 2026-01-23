@@ -1,6 +1,6 @@
 #pragma once
-#ifndef PROMPT_OPTIONS
-#define PROMPT_OPTIONS
+#ifndef PROJECT_OPTIONS_H
+#define PROJECT_OPTIONS_H
 
 typedef struct {
   char* script_path;
@@ -11,4 +11,4 @@ project_options* prompt_project_options(int argc, const char* argv[]);
 
 void free_project_options(project_options* poptions);
 
-#endif  // !PROMPT_OPTIONS
+#endif  // !PROJECT_OPTIONS_H
