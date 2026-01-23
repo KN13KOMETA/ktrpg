@@ -1,11 +1,11 @@
 #pragma once
-#include <time.h>
 #ifndef LUAB_LUAB_CORE_H
 #define LUAB_LUAB_CORE_H
 
 #include <lua.h>
 #include <pico_ecs.h>
 #include <stdint.h>
+#include <time.h>
 
 #include "../project_options.h"
 

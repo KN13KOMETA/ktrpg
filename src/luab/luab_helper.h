@@ -1,6 +1,6 @@
 #pragma once
-#ifndef LUAB_LUAB_HELPER_h
-#define LUAB_LUAB_HELPER_h
+#ifndef LUAB_LUAB_HELPER_H
+#define LUAB_LUAB_HELPER_H
 
 #include <pico_ecs.h>
 #include <stdint.h>
@@ -18,4 +18,4 @@ uint32_t luab_h_ecs_entity_create(luab_state* lb);
 uintptr_t luab_h_ecs_comp_add(luab_state* lb, uint32_t entity_id,
                               uint16_t comp_id);
 
-#endif  // !LUAB_LUAB_HELPER_h
+#endif  // !LUAB_LUAB_HELPER_H
