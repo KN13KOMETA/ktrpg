@@ -14,9 +14,9 @@ static ecs_id_t comps_count = 0;
 static ecs_id_t comps_size = 0;
 
 static int method_get_name(lua_State* L) {
-  lg_component* v = luaL_checkudata(L, 1, "ClassComponentMT");
+  lg_component* c = luaL_checkudata(L, 1, "ClassComponentMT");
 
-  lua_pushstring(L, v->name);
+  lua_pushstring(L, c->name);
 
   return 1;
 }
