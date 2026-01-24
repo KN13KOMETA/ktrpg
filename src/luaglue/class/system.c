@@ -9,6 +9,74 @@ static lg_system* systems;
 static ecs_id_t systems_count = 0;
 static ecs_id_t systems_size = 0;
 
+static int method_get_entity_count(lua_State* L) {
+  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+
+  lua_pushstring(L, s->name);
+
+  return 1;
+}
+
+static int method_run(lua_State* L) {
+  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+
+  lua_pushstring(L, s->name);
+
+  return 1;
+}
+static int method_on_run(lua_State* L) {
+  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+
+  lua_pushstring(L, s->name);
+
+  return 1;
+}
+
+static int method_disable(lua_State* L) {
+  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+
+  lua_pushstring(L, s->name);
+
+  return 1;
+}
+static int method_enable(lua_State* L) {
+  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+
+  lua_pushstring(L, s->name);
+
+  return 1;
+}
+
+static int method_get_mask(lua_State* L) {
+  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+
+  lua_pushstring(L, s->name);
+
+  return 1;
+}
+static int method_set_mask(lua_State* L) {
+  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+
+  lua_pushstring(L, s->name);
+
+  return 1;
+}
+
+static int method_excludes(lua_State* L) {
+  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+
+  lua_pushstring(L, s->name);
+
+  return 1;
+}
+static int method_requires(lua_State* L) {
+  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+
+  lua_pushstring(L, s->name);
+
+  return 1;
+}
+
 static int method_get_name(lua_State* L) {
   lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
 
@@ -17,8 +85,18 @@ static int method_get_name(lua_State* L) {
   return 1;
 }
 
-static struct luaL_Reg system_methods[] = {{"get_name", method_get_name},
-                                           {NULL, NULL}};
+static struct luaL_Reg system_methods[] = {
+    {"get_name", method_get_name},
+    {"requires", method_requires},
+    {"excludes", method_excludes},
+    {"set_mask", method_set_mask},
+    {"get_mask", method_get_mask},
+    {"enable", method_enable},
+    {"disable", method_disable},
+    {"on_run", method_on_run},
+    {"run", method_run},
+    {"get_entity_count", method_get_entity_count},
+    {NULL, NULL}};
 
 static int system_gc(lua_State* L) {
   lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
