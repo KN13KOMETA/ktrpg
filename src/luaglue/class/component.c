@@ -76,7 +76,7 @@ static int component_new(lua_State* L) {
     return luaL_argerror(L, 2, "expected \"int\", \"num\", \"tag\" or \"str\"");
   }
 
-  c->name = malloc(strlen(cname));
+  c->name = malloc(strlen(cname) + 1);
   strcpy(c->name, cname);
 
   // TODO: Add realloc
