@@ -5,6 +5,7 @@
 #include "../functions.h"
 #include "../luah/alt.h"
 #include "class/component.h"
+#include "class/system.h"
 #include "lua.h"
 
 static int openclib(lua_State* L) {
@@ -12,6 +13,8 @@ static int openclib(lua_State* L) {
 
   lg_component_create(L);
   lua_setfield(L, -2, "Component");
+  lg_system_create(L);
+  lua_setfield(L, -2, "System");
 
   return 1;
 }
@@ -29,4 +32,7 @@ void lg_create(lua_State* L, ecs_t* ecs) {
   }
   DEBUG_LOG("AMONGUS");
 }
-void lg_destroy(void) { lg_component_destroy(); }
+void lg_destroy(void) {
+  lg_component_destroy();
+  lg_system_destroy();
+}
