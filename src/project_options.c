@@ -23,6 +23,8 @@ int user_opt_cb(struct argparse* self, const struct argparse_option* option);
 
 project_options* prompt_project_options(int argc, const char* argv[]) {
   project_options* poptions = malloc(sizeof(*poptions));
+  poptions->export_path = NULL;
+  poptions->script_path = NULL;
 
   // NOTE: These two unused, but required for value in callback
   void* export_value = NULL;
@@ -84,8 +86,8 @@ int user_opt_cb(struct argparse* self, const struct argparse_option* option) {
 }
 
 void free_project_options(project_options* options) {
-  if (options->script_path) free(options->script_path);
-  if (options->export_path) free(options->export_path);
+  if (options->script_path != NULL) free(options->script_path);
+  if (options->export_path != NULL) free(options->export_path);
 
   free(options);
 }
