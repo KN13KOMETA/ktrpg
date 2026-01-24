@@ -54,9 +54,6 @@ static int component_new(lua_State* L) {
   const char* cname = luaL_checkstring(L, 3);
   lg_component* c = lua_newuserdatauv(L, sizeof(*c), 0);
 
-  c->name = malloc(strlen(cname));
-  strcpy(c->name, cname);
-
   if (strlen(ctype) != 3) goto lua_err;
 
   if (strncmp("int", ctype, 3) == 0) {
@@ -77,6 +74,9 @@ static int component_new(lua_State* L) {
   lua_err:
     return luaL_argerror(L, 2, "expected \"int\", \"num\", \"tag\" or \"str\"");
   }
+
+  c->name = malloc(strlen(cname));
+  strcpy(c->name, cname);
 
   luaL_getmetatable(L, "ClassComponentMT");
   lua_setmetatable(L, -2);
