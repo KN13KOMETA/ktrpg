@@ -1,3 +1,7 @@
+#include <lauxlib.h>
+#include <lua.h>
+#include <lualib.h>
+#include <pico_ecs.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -7,6 +11,8 @@
 #include "constants.h"
 #include "functions.h"
 #include "luab/luab_core.h"
+#include "luaglue/class/component.h"
+#include "luaglue/core.h"
 #include "project_options.h"
 
 #define PICO_ECS_IMPLEMENTATION
@@ -25,6 +31,21 @@ int main(int argc, char* argv[]) {
 
   printf(TITLE("HELP"));
   printf("Run with --help for more info\n\n");
+
+  {
+    lua_State* L = luaL_newstate();
+    ecs_t* ecs = ecs_new(128, NULL);
+
+    luaL_openlibs(L);
+
+    lg_create(L, ecs);
+
+    lg_destroy();
+    ecs_free(ecs);
+    lua_close(L);
+
+    return EXIT_SUCCESS;
+  }
 
   luab_init(poptions);
 
