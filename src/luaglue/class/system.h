@@ -1,0 +1,5 @@
+#pragma once
+#ifndef LUAGLUE_CLASS_SYSTEM_H
+#define LUAGLUE_CLASS_SYSTEM_H
+
+#endif  // !LUAGLUE_CLASS_SYSTEM_H

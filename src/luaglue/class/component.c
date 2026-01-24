@@ -1,0 +1,109 @@
+#include "component.h"
+
+#include <lauxlib.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "../../functions.h"
+#include "lua.h"
+
+static ecs_t* ecs;
+static lg_component* comps;
+static ecs_id_t comps_count = 0;
+static ecs_id_t comps_size = 0;
+
+int comp_name(lua_State* L) {
+  lg_component* v = luaL_checkudata(L, 1, "ComponentMT");
+
+  lua_pushstring(L, v->name);
+
+  return 1;
+}
+struct luaL_Reg luab_ecs_comp_methods[] = {{"get", comp_name}, {NULL, NULL}};
+
+static int component_gc(lua_State* L) {
+  lg_component* c = luaL_checkudata(L, 1, "ComponentMT");
+
+  printf("%s, %d, %d\n", c->name, c->type, c->id);
+
+  free(c->name);
+
+  return 0;
+}
+
+static void component_init_metatable(lua_State* L) {
+  luaL_newmetatable(L, "ComponentMT");
+  lua_pushvalue(L, -1);
+
+  lua_setfield(L, -2, "__index");
+  luaL_setfuncs(L, luab_ecs_comp_methods, 0);
+
+  lua_pushcfunction(L, component_gc);
+  lua_setfield(L, -2, "__gc");
+
+  lua_pop(L, 1);
+}
+
+static void component_str_destructor(ecs_t* ecs, ecs_entity_t entity,
+                                     void* comp_ptr) {
+  free(((char*)comp_ptr));
+}
+
+static int component_new(lua_State* L) {
+  const char* ctype = luaL_checkstring(L, 2);
+  const char* cname = luaL_checkstring(L, 3);
+  lg_component* c = lua_newuserdatauv(L, sizeof(*c), 0);
+
+  c->name = malloc(strlen(cname));
+  strcpy(c->name, cname);
+
+  if (strlen(ctype) != 3) goto lua_err;
+
+  if (strncmp("int", ctype, 3) == 0) {
+    c->type = COMP_INT;
+    c->id = ecs_define_component(ecs, sizeof(lua_Integer), NULL, NULL).id;
+  } else if (strncmp("num", ctype, 3) == 0) {
+    c->type = COMP_NUM;
+    c->id = ecs_define_component(ecs, sizeof(lua_Number), NULL, NULL).id;
+  } else if (strncmp("tag", ctype, 3) == 0) {
+    c->type = COMP_TAG;
+    c->id = ecs_define_component(ecs, sizeof(uint8_t), NULL, NULL).id;
+  } else if (strncmp("str", ctype, 3) == 0) {
+    c->type = COMP_STR;
+    c->id =
+        ecs_define_component(ecs, sizeof(char*), NULL, component_str_destructor)
+            .id;
+  } else {
+  lua_err:
+    return luaL_argerror(L, 2, "expected \"int\", \"num\", \"tag\" or \"str\"");
+  }
+
+  luaL_getmetatable(L, "ComponentMT");
+  lua_setmetatable(L, -2);
+
+  return 1;
+
+  return 1;
+}
+
+static int register_content(lua_State* L) {
+  lua_newtable(L);
+  lua_pushcfunction(L, component_new);
+  lua_setfield(L, -2, "new");
+
+  return 1;
+}
+
+void lg_component_create(lua_State* L) {
+  lua_getfield(L, LUA_REGISTRYINDEX, "ecs");
+  // ecs = lua_touserdata(L, lua_upvalueindex(1));
+  ecs = lua_touserdata(L, -1);
+  lua_pop(L, 1);
+
+  component_init_metatable(L);
+
+  register_content(L);
+}
+void lg_component_destroy(void) {}
