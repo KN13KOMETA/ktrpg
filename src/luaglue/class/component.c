@@ -88,7 +88,7 @@ static int component_new(lua_State* L) {
   return 1;
 }
 
-static int register_content(lua_State* L) {
+static int component_register_content(lua_State* L) {
   lua_newtable(L);
   lua_pushcfunction(L, component_new);
   lua_setfield(L, -2, "new");
@@ -107,7 +107,7 @@ void lg_component_create(lua_State* L) {
 
   component_init_metatable(L);
 
-  register_content(L);
+  component_register_content(L);
 }
 void lg_component_destroy(void) {
   free(comps);
