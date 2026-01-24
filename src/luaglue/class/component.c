@@ -109,4 +109,11 @@ void lg_component_create(lua_State* L) {
 
   register_content(L);
 }
-void lg_component_destroy(void) {}
+void lg_component_destroy(void) {
+  for (ecs_id_t i = 0; i < comps_count; i++) {
+    free(comps[i].name);
+  }
+
+  free(comps);
+  comps_count = comps_size = 0;
+}

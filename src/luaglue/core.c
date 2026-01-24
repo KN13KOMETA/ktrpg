@@ -29,4 +29,4 @@ void lg_create(lua_State* L, ecs_t* ecs) {
   }
   DEBUG_LOG("AMONGUS");
 }
-void lg_destroy(void) {}
+void lg_destroy(void) { lg_component_destroy(); }

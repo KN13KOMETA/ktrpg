@@ -44,10 +44,10 @@ int main(int argc, char* argv[]) {
     ecs_free(ecs);
     lua_close(L);
 
-    return EXIT_SUCCESS;
+    // return EXIT_SUCCESS;
   }
 
-  luab_init(poptions);
+  // luab_init(poptions);
 
   free_project_options(poptions);
   free(temp_argv);
