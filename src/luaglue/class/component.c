@@ -3,9 +3,10 @@
 #include <lauxlib.h>
 #include <lua.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "../../functions.h"
 
 static ecs_t* ecs;
 static lg_component* comps;
@@ -78,6 +79,9 @@ static int component_new(lua_State* L) {
   c->name = malloc(strlen(cname));
   strcpy(c->name, cname);
 
+  // TODO: Add realloc
+  comps[comps_count++] = *c;
+
   luaL_getmetatable(L, "ClassComponentMT");
   lua_setmetatable(L, -2);
 
@@ -96,6 +100,10 @@ void lg_component_create(lua_State* L) {
   lua_getfield(L, LUA_REGISTRYINDEX, "ecs");
   ecs = lua_touserdata(L, -1);
   lua_pop(L, 1);
+
+  comps_size = UINT8_MAX;
+  comps_count = 0;
+  comps = malloc(sizeof(*comps) * comps_size);
 
   component_init_metatable(L);
 
