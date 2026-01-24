@@ -1,32 +1,30 @@
 #include "component.h"
 
 #include <lauxlib.h>
+#include <lua.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "../../functions.h"
-#include "lua.h"
 
 static ecs_t* ecs;
 static lg_component* comps;
 static ecs_id_t comps_count = 0;
 static ecs_id_t comps_size = 0;
 
-int comp_name(lua_State* L) {
-  lg_component* v = luaL_checkudata(L, 1, "ComponentMT");
+static int method_get_name(lua_State* L) {
+  lg_component* v = luaL_checkudata(L, 1, "ClassComponentMT");
 
   lua_pushstring(L, v->name);
 
   return 1;
 }
-struct luaL_Reg luab_ecs_comp_methods[] = {{"get", comp_name}, {NULL, NULL}};
+
+static struct luaL_Reg component_methods[] = {{"get_name", method_get_name},
+                                              {NULL, NULL}};
 
 static int component_gc(lua_State* L) {
-  lg_component* c = luaL_checkudata(L, 1, "ComponentMT");
-
-  printf("%s, %d, %d\n", c->name, c->type, c->id);
+  lg_component* c = luaL_checkudata(L, 1, "ClassComponentMT");
 
   free(c->name);
 
@@ -34,11 +32,11 @@ static int component_gc(lua_State* L) {
 }
 
 static void component_init_metatable(lua_State* L) {
-  luaL_newmetatable(L, "ComponentMT");
+  luaL_newmetatable(L, "ClassComponentMT");
   lua_pushvalue(L, -1);
 
   lua_setfield(L, -2, "__index");
-  luaL_setfuncs(L, luab_ecs_comp_methods, 0);
+  luaL_setfuncs(L, component_methods, 0);
 
   lua_pushcfunction(L, component_gc);
   lua_setfield(L, -2, "__gc");
@@ -80,10 +78,8 @@ static int component_new(lua_State* L) {
     return luaL_argerror(L, 2, "expected \"int\", \"num\", \"tag\" or \"str\"");
   }
 
-  luaL_getmetatable(L, "ComponentMT");
+  luaL_getmetatable(L, "ClassComponentMT");
   lua_setmetatable(L, -2);
-
-  return 1;
 
   return 1;
 }
@@ -98,7 +94,6 @@ static int register_content(lua_State* L) {
 
 void lg_component_create(lua_State* L) {
   lua_getfield(L, LUA_REGISTRYINDEX, "ecs");
-  // ecs = lua_touserdata(L, lua_upvalueindex(1));
   ecs = lua_touserdata(L, -1);
   lua_pop(L, 1);
 

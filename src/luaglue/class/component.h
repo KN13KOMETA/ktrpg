@@ -5,8 +5,6 @@
 #include <lua.h>
 #include <pico_ecs.h>
 
-// TODO: Check if ecs system works with 0 size values
-// and then add tag comp
 typedef enum { COMP_INT, COMP_NUM, COMP_TAG, COMP_STR } LG_COMPONENT_TYPE;
 typedef struct {
   char* name;
