@@ -4,13 +4,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../../constants.h"
+
 static ecs_t* ecs;
 static lg_system* systems;
 static ecs_id_t systems_count = 0;
 static ecs_id_t systems_size = 0;
 
 static int method_get_entity_count(lua_State* L) {
-  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+  lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
   lua_pushstring(L, s->name);
 
@@ -18,14 +20,14 @@ static int method_get_entity_count(lua_State* L) {
 }
 
 static int method_run(lua_State* L) {
-  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+  lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
   lua_pushstring(L, s->name);
 
   return 1;
 }
 static int method_on_run(lua_State* L) {
-  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+  lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
   lua_pushstring(L, s->name);
 
@@ -33,14 +35,14 @@ static int method_on_run(lua_State* L) {
 }
 
 static int method_disable(lua_State* L) {
-  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+  lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
   lua_pushstring(L, s->name);
 
   return 1;
 }
 static int method_enable(lua_State* L) {
-  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+  lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
   lua_pushstring(L, s->name);
 
@@ -48,14 +50,14 @@ static int method_enable(lua_State* L) {
 }
 
 static int method_get_mask(lua_State* L) {
-  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+  lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
   lua_pushstring(L, s->name);
 
   return 1;
 }
 static int method_set_mask(lua_State* L) {
-  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+  lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
   lua_pushstring(L, s->name);
 
@@ -63,14 +65,14 @@ static int method_set_mask(lua_State* L) {
 }
 
 static int method_excludes(lua_State* L) {
-  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+  lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
   lua_pushstring(L, s->name);
 
   return 1;
 }
 static int method_requires(lua_State* L) {
-  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+  lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
   lua_pushstring(L, s->name);
 
@@ -78,7 +80,7 @@ static int method_requires(lua_State* L) {
 }
 
 static int method_get_name(lua_State* L) {
-  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
+  lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
   lua_pushstring(L, s->name);
 
@@ -99,9 +101,7 @@ static struct luaL_Reg system_methods[] = {
     {NULL, NULL}};
 
 static int system_gc(lua_State* L) {
-  lg_system* s = luaL_checkudata(L, 1, "ClassSystemMT");
-
-  free(s->name);
+  lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
   return 0;
 }
@@ -121,13 +121,15 @@ static void system_init_metatable(lua_State* L) {
 
 static int system_new(lua_State* L) {
   const char* cname = luaL_checkstring(L, 2);
-  lg_system* s = lua_newuserdatauv(L, sizeof(*s), 0);
+  ptr2ptr* ud = lua_newuserdatauv(L, sizeof(*ud), 0);
+  lg_system* s;
+
+  // TODO: Add realloc
+  s = &systems[systems_count++];
+  ud->ptr = s;
 
   s->name = malloc(strlen(cname) + 1);
   strcpy(s->name, cname);
-
-  // TODO: Add realloc
-  systems[systems_count++] = *s;
 
   luaL_getmetatable(L, "ClassSystemMT");
   lua_setmetatable(L, -2);
@@ -157,6 +159,10 @@ void lg_system_create(lua_State* L) {
   system_register_content(L);
 }
 void lg_system_destroy(void) {
+  for (ecs_id_t i = 0; i < systems_count; i++) {
+    free(systems[i].name);
+  }
+
   free(systems);
   systems_count = systems_size = 0;
 }
