@@ -14,7 +14,6 @@ static lua_State* lstate;
 static lg_system* systems;
 static ecs_id_t systems_count = 0;
 static ecs_id_t systems_size = 0;
-static ecs_id_t system_index = 0;
 
 static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* entities,
                                    size_t entity_count, void* udata) {
@@ -26,6 +25,23 @@ static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* entities,
   if (s->lua_ref == LUA_NOREF) {
     DEBUG_LOG("LG: LRS " SYST_FL " DOES NOT HAVE LUA FUNCTION",
               SYST_FL_ARGS(s));
+  }
+
+  DEBUG_LOG("LG: LRS RUNNING " SYST_FL, SYST_FL_ARGS(s));
+
+  {
+    lua_rawgeti(L, LUA_REGISTRYINDEX, s->lua_ref);
+
+    // Create lua table with entities id
+    lua_createtable(L, entity_count, 0);
+    for (size_t i = 0; i < entity_count; i++) {
+      lua_pushinteger(L, entities[i].id);
+      lua_rawseti(L, -2, i + 1);
+    }
+
+    lua_pushinteger(L, entity_count);
+
+    lua_pcall(L, 2, 0, 1);
   }
 
   return 0;
@@ -50,8 +66,11 @@ static int method_run(lua_State* L) {
 static int method_on_run(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
-  lua_pushstring(L, s->name);
+  luaL_checktype(L, 2, LUA_TFUNCTION);
+  lua_pushvalue(L, 2);
+  s->lua_ref = luaL_ref(L, LUA_REGISTRYINDEX);
 
+  lua_pushvalue(L, 1);
   return 1;
 }
 
