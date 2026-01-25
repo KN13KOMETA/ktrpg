@@ -47,6 +47,9 @@ int main(int argc, char* argv[]) {
       printf("EERRRRR: %s\n", lua_tostring(L, -1));
       lua_pop(L, -1);
     }
+
+    ecs_run_systems(ecs, 0);
+
     DEBUG_LOG("AMONGUS");
 
     lg_destroy();
