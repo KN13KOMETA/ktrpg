@@ -57,15 +57,17 @@ static int method_on_run(lua_State* L) {
 static int method_disable(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
-  lua_pushstring(L, s->name);
+  ecs_disable_system(ecs, ID2SYST(s->id));
 
+  lua_pushvalue(L, 1);
   return 1;
 }
 static int method_enable(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
-  lua_pushstring(L, s->name);
+  ecs_enable_system(ecs, ID2SYST(s->id));
 
+  lua_pushvalue(L, 1);
   return 1;
 }
 
