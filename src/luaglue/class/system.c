@@ -75,8 +75,7 @@ static int method_get_mask(lua_State* L) {
   // NOTE: This conversation may lose data
   // but since we are only setting system mask
   // from lua_Integer (signed) this should be fine
-  lua_pushinteger(L,
-                  (lua_Integer)ecs_get_system_mask(ecs, (ecs_system_t){s->id}));
+  lua_pushinteger(L, (lua_Integer)ecs_get_system_mask(ecs, ID2SYST(s->id)));
 
   return 1;
 }
@@ -86,7 +85,7 @@ static int method_set_mask(lua_State* L) {
 
   if (mask < 0) return luaL_argerror(L, 2, "expected positive integer");
 
-  ecs_set_system_mask(ecs, (ecs_system_t){s->id}, (ecs_mask_t)mask);
+  ecs_set_system_mask(ecs, ID2SYST(s->id), (ecs_mask_t)mask);
 
   lua_pushvalue(L, 1);
   return 1;
@@ -100,7 +99,7 @@ static int method_excludes(lua_State* L) {
     lg_component* c =
         ((ptr2ptr*)luaL_checkudata(L, i, "ClassComponentMT"))->ptr;
 
-    ecs_exclude_component(ecs, (ecs_system_t){s->id}, (ecs_comp_t){c->id});
+    ecs_exclude_component(ecs, ID2SYST(s->id), ID2COMP(c->id));
 
     DEBUG_LOG("LG: " SYST_FL " EXCLUDES " COMP_FL, SYST_FL_ARGS(s),
               COMP_FL_ARGS(c));
@@ -117,7 +116,7 @@ static int method_requires(lua_State* L) {
     lg_component* c =
         ((ptr2ptr*)luaL_checkudata(L, i, "ClassComponentMT"))->ptr;
 
-    ecs_require_component(ecs, (ecs_system_t){s->id}, (ecs_comp_t){c->id});
+    ecs_require_component(ecs, ID2SYST(s->id), ID2COMP(c->id));
 
     DEBUG_LOG("LG: " SYST_FL " REQUIRES " COMP_FL, SYST_FL_ARGS(s),
               COMP_FL_ARGS(c));
