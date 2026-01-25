@@ -55,15 +55,23 @@ static int method_enable(lua_State* L) {
 static int method_get_mask(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
-  lua_pushstring(L, s->name);
+  // NOTE: This conversation may lose data
+  // but since we are only setting system mask
+  // from lua_Integer (signed) this should be fine
+  lua_pushinteger(L,
+                  (lua_Integer)ecs_get_system_mask(ecs, (ecs_system_t){s->id}));
 
   return 1;
 }
 static int method_set_mask(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
+  lua_Integer mask = luaL_checkinteger(L, 2);
 
-  lua_pushstring(L, s->name);
+  if (mask < 0) return luaL_argerror(L, 2, "expected positive integer");
 
+  ecs_set_system_mask(ecs, (ecs_system_t){s->id}, (ecs_mask_t)mask);
+
+  lua_pushvalue(L, 1);
   return 1;
 }
 

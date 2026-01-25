@@ -12,7 +12,11 @@ COMPONENT = {
 }
 
 SYSTEMS = {
-  print_name = ktrpg.System:new("Print Name"):requires(COMPONENT.name),
+  print_name = ktrpg.System
+    :new("Print Name")
+    :requires(COMPONENT.name)
+    :excludes(COMPONENT.attack_target)
+    :set_mask(math.maxinteger),
 }
 
 print(SYSTEMS.print_name:get_name())
