@@ -12,6 +12,9 @@ typedef struct {
   ecs_id_t id;
 } lg_component;
 
+#define ID2COMP(id) \
+  (ecs_comp_t) { id }
+
 #define COMP_FL "Component \"%s\" (%s)"
 // TODO: WTF is clangd doing
 #define COMP_FL_ARGS(c)                         \

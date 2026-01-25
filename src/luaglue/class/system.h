@@ -11,6 +11,9 @@ typedef struct {
   int lua_ref;
 } lg_system;
 
+#define ID2SYST(s) \
+  (ecs_system_t) { s }
+
 #define SYST_FL "System \"%s\""
 #define SYST_FL_ARGS(s) s->name
 
