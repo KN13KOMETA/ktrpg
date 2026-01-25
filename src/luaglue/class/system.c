@@ -1,10 +1,13 @@
 #include "system.h"
 
 #include <lauxlib.h>
+#include <lua.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "../../constants.h"
+#include "../../functions.h"
+#include "component.h"
 
 static ecs_t* ecs;
 static lg_system* systems;
@@ -73,9 +76,16 @@ static int method_excludes(lua_State* L) {
 }
 static int method_requires(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
+  int n = lua_gettop(L);
 
-  lua_pushstring(L, s->name);
+  for (int i = 2; i < n + 1; i++) {
+    lg_component* c =
+        ((ptr2ptr*)luaL_checkudata(L, i, "ClassComponentMT"))->ptr;
 
+    DEBUG_LOG("REQUIRES %s", c->name);
+  }
+
+  lua_pushvalue(L, 1);
   return 1;
 }
 

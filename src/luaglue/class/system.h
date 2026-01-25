@@ -8,6 +8,7 @@
 typedef struct {
   char* name;
   ecs_id_t id;
+  int lua_ref;
 } lg_system;
 
 void lg_system_create(lua_State* L);
