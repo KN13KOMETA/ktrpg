@@ -10,4 +10,8 @@
 
 #define ACT_L "::) "
 
+typedef struct {
+  void* ptr;
+} ptr2ptr;
+
 #endif  // !CONSTANTS_H

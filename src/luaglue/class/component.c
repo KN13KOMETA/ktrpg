@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../../constants.h"
 #include "../../functions.h"
 
 static ecs_t* ecs;
@@ -14,7 +15,7 @@ static ecs_id_t comps_count = 0;
 static ecs_id_t comps_size = 0;
 
 static int method_get_name(lua_State* L) {
-  lg_component* c = luaL_checkudata(L, 1, "ClassComponentMT");
+  lg_component* c = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassComponentMT"))->ptr;
 
   lua_pushstring(L, c->name);
 
@@ -24,23 +25,12 @@ static int method_get_name(lua_State* L) {
 static struct luaL_Reg component_methods[] = {{"get_name", method_get_name},
                                               {NULL, NULL}};
 
-static int component_gc(lua_State* L) {
-  lg_component* c = luaL_checkudata(L, 1, "ClassComponentMT");
-
-  free(c->name);
-
-  return 0;
-}
-
 static void component_init_metatable(lua_State* L) {
   luaL_newmetatable(L, "ClassComponentMT");
   lua_pushvalue(L, -1);
 
   lua_setfield(L, -2, "__index");
   luaL_setfuncs(L, component_methods, 0);
-
-  lua_pushcfunction(L, component_gc);
-  lua_setfield(L, -2, "__gc");
 
   lua_pop(L, 1);
 }
@@ -53,7 +43,12 @@ static void component_str_destructor(ecs_t* ecs, ecs_entity_t entity,
 static int component_new(lua_State* L) {
   const char* ctype = luaL_checkstring(L, 2);
   const char* cname = luaL_checkstring(L, 3);
-  lg_component* c = lua_newuserdatauv(L, sizeof(*c), 0);
+  ptr2ptr* ud = lua_newuserdatauv(L, sizeof(*ud), 0);
+  lg_component* c;
+
+  // TODO: Add realloc
+  c = &comps[comps_count++];
+  ud->ptr = c;
 
   if (strlen(ctype) != 3) goto lua_err;
 
@@ -78,9 +73,6 @@ static int component_new(lua_State* L) {
 
   c->name = malloc(strlen(cname) + 1);
   strcpy(c->name, cname);
-
-  // TODO: Add realloc
-  comps[comps_count++] = *c;
 
   luaL_getmetatable(L, "ClassComponentMT");
   lua_setmetatable(L, -2);
@@ -110,6 +102,10 @@ void lg_component_create(lua_State* L) {
   component_register_content(L);
 }
 void lg_component_destroy(void) {
+  for (ecs_id_t i = 0; i < comps_count; i++) {
+    free(comps[i].name);
+  }
+
   free(comps);
   comps_count = comps_size = 0;
 }
