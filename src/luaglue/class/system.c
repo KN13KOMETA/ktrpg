@@ -34,7 +34,7 @@ static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* entities,
 static int method_get_entity_count(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
-  lua_pushstring(L, s->name);
+  lua_pushinteger(L, ecs_get_system_entity_count(ecs, ID2SYST(s->id)));
 
   return 1;
 }
@@ -42,8 +42,9 @@ static int method_get_entity_count(lua_State* L) {
 static int method_run(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
-  lua_pushstring(L, s->name);
+  ecs_run_system(ecs, ID2SYST(s->id), ecs_get_system_mask(ecs, ID2SYST(s->id)));
 
+  lua_pushvalue(L, 1);
   return 1;
 }
 static int method_on_run(lua_State* L) {
