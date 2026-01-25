@@ -82,7 +82,11 @@ static int method_requires(lua_State* L) {
     lg_component* c =
         ((ptr2ptr*)luaL_checkudata(L, i, "ClassComponentMT"))->ptr;
 
-    DEBUG_LOG("REQUIRES %s", c->name);
+    // TODO: Uncomment when ready
+    // ecs_require_component(ecs, (ecs_system_t){s->id}, (ecs_comp_t){c->id});
+
+    DEBUG_LOG("LG: " SYST_FL " REQUIRES " COMP_FL, SYST_FL_ARGS(s),
+              COMP_FL_ARGS(c));
   }
 
   lua_pushvalue(L, 1);
@@ -144,6 +148,8 @@ static int system_new(lua_State* L) {
   luaL_getmetatable(L, "ClassSystemMT");
   lua_setmetatable(L, -2);
 
+  DEBUG_LOG("LG: REGISTERED " SYST_FL, SYST_FL_ARGS(s));
+
   return 1;
 }
 
@@ -156,6 +162,8 @@ static int system_register_content(lua_State* L) {
 }
 
 void lg_system_create(lua_State* L) {
+  DEBUG_LOG("LG: SYSTEM CREATE");
+
   lua_getfield(L, LUA_REGISTRYINDEX, "ecs");
   ecs = lua_touserdata(L, -1);
   lua_pop(L, 1);
@@ -169,6 +177,8 @@ void lg_system_create(lua_State* L) {
   system_register_content(L);
 }
 void lg_system_destroy(void) {
+  DEBUG_LOG("LG: SYSTEM DESTROY");
+
   for (ecs_id_t i = 0; i < systems_count; i++) {
     free(systems[i].name);
   }
