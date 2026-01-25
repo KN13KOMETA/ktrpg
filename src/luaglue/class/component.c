@@ -3,6 +3,7 @@
 #include <lauxlib.h>
 #include <lua.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -77,6 +78,8 @@ static int component_new(lua_State* L) {
   luaL_getmetatable(L, "ClassComponentMT");
   lua_setmetatable(L, -2);
 
+  DEBUG_LOG("LG: REGISTRED " COMP_FL, COMP_FL_ARGS(c));
+
   return 1;
 }
 
@@ -89,6 +92,8 @@ static int component_register_content(lua_State* L) {
 }
 
 void lg_component_create(lua_State* L) {
+  DEBUG_LOG("LG: COMPONENT CREATE");
+
   lua_getfield(L, LUA_REGISTRYINDEX, "ecs");
   ecs = lua_touserdata(L, -1);
   lua_pop(L, 1);
@@ -102,6 +107,8 @@ void lg_component_create(lua_State* L) {
   component_register_content(L);
 }
 void lg_component_destroy(void) {
+  DEBUG_LOG("LG: COMPONENT DESTROY");
+
   for (ecs_id_t i = 0; i < comps_count; i++) {
     free(comps[i].name);
   }

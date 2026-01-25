@@ -11,6 +11,9 @@ typedef struct {
   int lua_ref;
 } lg_system;
 
+#define SYST_FL "System \"%s\""
+#define SYST_FL_ARGS(s) s->name
+
 void lg_system_create(lua_State* L);
 void lg_system_destroy(void);
 

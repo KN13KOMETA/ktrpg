@@ -13,6 +13,7 @@
 #include "luab/luab_core.h"
 #include "luaglue/class/component.h"
 #include "luaglue/core.h"
+#include "luah/alt.h"
 #include "project_options.h"
 
 #define PICO_ECS_IMPLEMENTATION
@@ -39,6 +40,14 @@ int main(int argc, char* argv[]) {
     luaL_openlibs(L);
 
     lg_create(L, ecs);
+
+    DEBUG_LOG("AMONGUS");
+
+    if (luaL_dostring(L, alt_lua) != LUA_OK) {
+      printf("EERRRRR: %s\n", lua_tostring(L, -1));
+      lua_pop(L, -1);
+    }
+    DEBUG_LOG("AMONGUS");
 
     lg_destroy();
     ecs_free(ecs);
