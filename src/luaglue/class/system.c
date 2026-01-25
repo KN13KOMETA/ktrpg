@@ -69,9 +69,19 @@ static int method_set_mask(lua_State* L) {
 
 static int method_excludes(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
+  int n = lua_gettop(L);
 
-  lua_pushstring(L, s->name);
+  for (int i = 2; i < n + 1; i++) {
+    lg_component* c =
+        ((ptr2ptr*)luaL_checkudata(L, i, "ClassComponentMT"))->ptr;
 
+    ecs_exclude_component(ecs, (ecs_system_t){s->id}, (ecs_comp_t){c->id});
+
+    DEBUG_LOG("LG: " SYST_FL " EXCLUDES " COMP_FL, SYST_FL_ARGS(s),
+              COMP_FL_ARGS(c));
+  }
+
+  lua_pushvalue(L, 1);
   return 1;
 }
 static int method_requires(lua_State* L) {
