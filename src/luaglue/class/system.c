@@ -10,9 +10,26 @@
 #include "component.h"
 
 static ecs_t* ecs;
+static lua_State* lstate;
 static lg_system* systems;
 static ecs_id_t systems_count = 0;
 static ecs_id_t systems_size = 0;
+static ecs_id_t system_index = 0;
+
+static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* entities,
+                                   size_t entity_count, void* udata) {
+  lua_State* L = lstate;
+  lg_system* s = udata;
+
+  (void)ecs;
+
+  if (s->lua_ref == LUA_NOREF) {
+    DEBUG_LOG("LG: LRS " SYST_FL " DOES NOT HAVE LUA FUNCTION",
+              SYST_FL_ARGS(s));
+  }
+
+  return 0;
+}
 
 static int method_get_entity_count(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
@@ -159,7 +176,9 @@ static int system_new(lua_State* L) {
   s = &systems[systems_count++];
   ud->ptr = s;
 
-  s->id = ecs_define_system(ecs, 0, system_lua_wrapper, NULL, NULL, NULL).id;
+  s->lua_ref = LUA_NOREF;
+
+  s->id = ecs_define_system(ecs, 0, lua_runner_system, NULL, NULL, s).id;
 
   s->name = malloc(strlen(cname) + 1);
   strcpy(s->name, cname);
@@ -186,6 +205,8 @@ void lg_system_create(lua_State* L) {
   lua_getfield(L, LUA_REGISTRYINDEX, "ecs");
   ecs = lua_touserdata(L, -1);
   lua_pop(L, 1);
+
+  lstate = L;
 
   systems_size = UINT8_MAX;
   systems_count = 0;
