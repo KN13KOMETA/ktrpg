@@ -82,8 +82,7 @@ static int method_requires(lua_State* L) {
     lg_component* c =
         ((ptr2ptr*)luaL_checkudata(L, i, "ClassComponentMT"))->ptr;
 
-    // TODO: Uncomment when ready
-    // ecs_require_component(ecs, (ecs_system_t){s->id}, (ecs_comp_t){c->id});
+    ecs_require_component(ecs, (ecs_system_t){s->id}, (ecs_comp_t){c->id});
 
     DEBUG_LOG("LG: " SYST_FL " REQUIRES " COMP_FL, SYST_FL_ARGS(s),
               COMP_FL_ARGS(c));
@@ -141,6 +140,8 @@ static int system_new(lua_State* L) {
   // TODO: Add realloc
   s = &systems[systems_count++];
   ud->ptr = s;
+
+  s->id = ecs_define_system(ecs, 0, system_lua_wrapper, NULL, NULL, NULL).id;
 
   s->name = malloc(strlen(cname) + 1);
   strcpy(s->name, cname);
