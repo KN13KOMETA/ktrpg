@@ -34,4 +34,7 @@ typedef struct {
 void lg_component_create(lua_State* L);
 void lg_component_destroy(void);
 
+ecs_ret_t lg_component_debug_system(ecs_t* ecs, ecs_entity_t* entities,
+                                    size_t entity_count, void* udata);
+
 #endif  // !LUAGLUE_CLASS_COMPONENT_H

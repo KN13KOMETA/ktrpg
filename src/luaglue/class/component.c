@@ -9,6 +9,7 @@
 
 #include "../../constants.h"
 #include "../../functions.h"
+#include "entity.h"
 
 static ecs_t* ecs;
 static lg_component* comps;
@@ -116,4 +117,44 @@ void lg_component_destroy(void) {
 
   free(comps);
   comps_count = comps_size = 0;
+}
+
+ecs_ret_t lg_component_debug_system(ecs_t* ecs, ecs_entity_t* entities,
+                                    size_t entity_count, void* udata) {
+  DEBUG_LOG("LG: DEBUG SYSTEM RUNNING");
+
+  for (size_t i = 0; i < entity_count; i++) {
+    printf("LG: DEBUG SYSTEM, ENTITY %lu {\n", i);
+
+    for (ecs_id_t ci = 0; ci < comps_count; ci++) {
+      lg_component* c = &comps[ci];
+
+      if (ecs_has(ecs, ID2ENTI(entities[i].id), ID2COMP(c->id))) {
+        void* v = ecs_get(ecs, ID2ENTI(entities[i].id), ID2COMP(c->id));
+
+        printf("  " COMP_FL " = ", COMP_FL_ARGS(c));
+
+        switch (comps[ci].type) {
+          case COMP_INT:
+            printf("%lld", *(lua_Integer*)v);
+            break;
+          case COMP_NUM:
+            printf("%f", *(lua_Number*)v);
+            break;
+          case COMP_TAG:
+            printf("%d", *(uint8_t*)v);
+            break;
+          case COMP_STR:
+            printf("%s", ((lg_component_str*)v)->str);
+            break;
+        }
+
+        putchar('\n');
+      }
+    }
+
+    printf("}\n");
+  }
+
+  return 0;
 }
