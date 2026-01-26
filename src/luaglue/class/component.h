@@ -12,6 +12,10 @@ typedef struct {
   ecs_id_t id;
 } lg_component;
 
+typedef struct {
+  char* str;
+} lg_component_str;
+
 #define ID2COMP(id) \
   (ecs_comp_t) { id }
 
