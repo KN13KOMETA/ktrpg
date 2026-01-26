@@ -120,12 +120,15 @@ static void entity_init_metatable(lua_State* L) {
 static int entity_by_id(lua_State* L) {
   ptr2ptr* ud;
   lua_Integer tid = luaL_checkinteger(L, 2);
-  lg_entity* e;
 
   for (ecs_id_t i = 0; i < entities_count; i++) {
     if (entities[i].id == tid) {
       ud = lua_newuserdatauv(L, sizeof(*ud), 0);
-      ud->ptr;
+      ud->ptr = &entities[i];
+
+      luaL_getmetatable(L, "ClassEntityMT");
+      lua_setmetatable(L, -2);
+
       return 1;
     }
   }
