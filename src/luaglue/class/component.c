@@ -38,7 +38,7 @@ static void component_init_metatable(lua_State* L) {
 
 static void component_str_destructor(ecs_t* ecs, ecs_entity_t entity,
                                      void* comp_ptr) {
-  free(((char*)comp_ptr));
+  free(((lg_component_str*)comp_ptr)->str);
 }
 
 static int component_new(lua_State* L) {
@@ -64,9 +64,9 @@ static int component_new(lua_State* L) {
     c->id = ecs_define_component(ecs, sizeof(uint8_t), NULL, NULL).id;
   } else if (strncmp("str", ctype, 3) == 0) {
     c->type = COMP_STR;
-    c->id =
-        ecs_define_component(ecs, sizeof(char*), NULL, component_str_destructor)
-            .id;
+    c->id = ecs_define_component(ecs, sizeof(lg_component_str), NULL,
+                                 component_str_destructor)
+                .id;
   } else {
   lua_err:
     return luaL_argerror(L, 2, "expected \"int\", \"num\", \"tag\" or \"str\"");
