@@ -16,6 +16,37 @@ static lg_entity* entities;
 static ecs_id_t entities_count = 0;
 static ecs_id_t entities_size = 0;
 
+static int method_get(lua_State* L) {
+  lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
+  lg_component* c = ((ptr2ptr*)luaL_checkudata(L, 2, "ClassComponentMT"))->ptr;
+  void* ec;
+
+  if (!ecs_has(ecs, ID2ENTI(e->id), ID2COMP(c->id))) {
+    lua_pushnil(L);
+    return 1;
+  }
+
+  ec = ecs_get(ecs, ID2ENTI(e->id), ID2COMP(c->id));
+
+  switch (c->type) {
+    case COMP_INT:
+      lua_pushinteger(L, *(lua_Integer*)ec);
+      break;
+    case COMP_NUM:
+      lua_pushnumber(L, *(lua_Number*)ec);
+      break;
+    case COMP_TAG:
+      lua_pushinteger(L, *(uint8_t*)ec);
+      break;
+    case COMP_STR: {
+      lua_pushstring(L, (*(lg_component_str*)ec).str);
+      break;
+    }
+  }
+
+  return 1;
+}
+
 static int method_set(lua_State* L) {
   lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
   lg_component* c = ((ptr2ptr*)luaL_checkudata(L, 2, "ClassComponentMT"))->ptr;
@@ -49,7 +80,7 @@ static int method_set(lua_State* L) {
 }
 
 static struct luaL_Reg entity_methods[] = {{"set", method_set},
-                                           // {"get", method_get_name},
+                                           {"get", method_get},
 
                                            {NULL, NULL}};
 
