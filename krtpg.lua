@@ -28,4 +28,6 @@ player:set(COMPONENT.name, "POPPO")
 print(player:get(COMPONENT.name))
 player:get_id()
 
+ktrpg.Entity:by_id(1)
+
 ktrpg.System:run_debug_system()
