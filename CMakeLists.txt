@@ -41,6 +41,7 @@ add_executable(
   src/luab/luab_helper.c
   src/luab/luab_m.c
   src/luab/luab_core.c
+  src/luaglue/class/entity.c
   src/luaglue/class/component.c
   src/luaglue/class/system.c
   src/luaglue/core.c
