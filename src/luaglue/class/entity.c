@@ -117,6 +117,23 @@ static void entity_init_metatable(lua_State* L) {
   lua_pop(L, 1);
 }
 
+static int entity_by_id(lua_State* L) {
+  ptr2ptr* ud;
+  lua_Integer tid = luaL_checkinteger(L, 2);
+  lg_entity* e;
+
+  for (ecs_id_t i = 0; i < entities_count; i++) {
+    if (entities[i].id == tid) {
+      ud = lua_newuserdatauv(L, sizeof(*ud), 0);
+      ud->ptr;
+      return 1;
+    }
+  }
+
+  lua_pushnil(L);
+  return 1;
+}
+
 static int entity_new(lua_State* L) {
   ptr2ptr* ud = lua_newuserdatauv(L, sizeof(*ud), 0);
   lg_entity* e;
@@ -135,11 +152,13 @@ static int entity_new(lua_State* L) {
   return 1;
 }
 
+static luaL_Reg entity_class_methods[] = {
+    {"by_id", entity_by_id}, {"new", entity_new}, {NULL, NULL}};
+
 static int entity_register_content(lua_State* L) {
   lua_newtable(L);
 
-  lua_pushcfunction(L, entity_new);
-  lua_setfield(L, -2, "new");
+  luaL_setfuncs(L, entity_class_methods, 0);
 
   return 1;
 }
