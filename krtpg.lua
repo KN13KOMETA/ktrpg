@@ -20,3 +20,11 @@ SYSTEM.print_name:disable()
 SYSTEM.print_name:enable()
 SYSTEM.print_name:get_entity_count()
 SYSTEM.print_name:get_mask()
+
+local player = ktrpg.Entity:new()
+
+player:set(COMPONENT.name, "POPPO")
+
+if player:has(COMPONENT.name) then
+  print(player:get(COMPONENT.name))
+end
