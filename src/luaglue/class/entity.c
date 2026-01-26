@@ -65,7 +65,14 @@ static int method_get(lua_State* L) {
 static int method_set(lua_State* L) {
   lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
   lg_component* c = ((ptr2ptr*)luaL_checkudata(L, 2, "ClassComponentMT"))->ptr;
-  void* ec = ecs_add(ecs, ID2ENTI(e->id), ID2COMP(c->id), NULL);
+  void* ec;
+
+  if (ecs_has(ecs, ID2ENTI(e->id), ID2COMP(c->id))) {
+    ec = ecs_get(ecs, ID2ENTI(e->id), ID2COMP(c->id));
+    printf("Asdasdad %s\n", c->name);
+  } else {
+    ec = ecs_add(ecs, ID2ENTI(e->id), ID2COMP(c->id), NULL);
+  }
 
   switch (c->type) {
     case COMP_INT:
