@@ -1,1 +1,86 @@
 #include "entity.h"
+
+#include <lauxlib.h>
+#include <lua.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "../../constants.h"
+#include "../../functions.h"
+
+static ecs_t* ecs;
+static lg_entity* entities;
+static ecs_id_t entities_count = 0;
+static ecs_id_t entities_size = 0;
+
+static int method_get_name(lua_State* L) {
+  lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
+
+  lua_pushstring(L, "AMONGUS");
+
+  return 1;
+}
+
+static struct luaL_Reg entity_methods[] = {{"get_name", method_get_name},
+                                           {NULL, NULL}};
+
+static void entity_init_metatable(lua_State* L) {
+  luaL_newmetatable(L, "ClassEntityMT");
+  lua_pushvalue(L, -1);
+
+  lua_setfield(L, -2, "__index");
+  luaL_setfuncs(L, entity_methods, 0);
+
+  lua_pop(L, 1);
+}
+
+static int entity_new(lua_State* L) {
+  ptr2ptr* ud = lua_newuserdatauv(L, sizeof(*ud), 0);
+  lg_entity* e;
+
+  // TODO: Add realloc
+  e = &entities[entities_count++];
+  ud->ptr = e;
+
+  e->id = ecs_create(ecs).id;
+
+  luaL_getmetatable(L, "ClassEntityMT");
+  lua_setmetatable(L, -2);
+
+  DEBUG_LOG("LG: REGISTRED " ENTI_FL, ENTI_FL_ARGS(e));
+
+  return 1;
+}
+
+static int entity_register_content(lua_State* L) {
+  lua_newtable(L);
+
+  lua_pushcfunction(L, entity_new);
+  lua_setfield(L, -2, "new");
+
+  return 1;
+}
+
+void lg_entity_create(lua_State* L) {
+  DEBUG_LOG("LG: ENTITY CREATE");
+
+  lua_getfield(L, LUA_REGISTRYINDEX, "ecs");
+  ecs = lua_touserdata(L, -1);
+  lua_pop(L, 1);
+
+  entities_size = UINT16_MAX;
+  entities_count = 0;
+  entities = malloc(sizeof(*entities) * entities_size);
+
+  entity_init_metatable(L);
+
+  entity_register_content(L);
+}
+void lg_entity_destroy(void) {
+  DEBUG_LOG("LG: ENTITY DESTROY");
+
+  free(entities);
+  entities_count = entities_size = 0;
+}
