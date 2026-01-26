@@ -26,5 +26,6 @@ local player = ktrpg.Entity:new()
 player:set(COMPONENT.name, "POPPO")
 
 print(player:get(COMPONENT.name))
+player:get_id()
 
 ktrpg.System:run_debug_system()

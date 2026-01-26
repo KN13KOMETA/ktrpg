@@ -94,7 +94,15 @@ static int method_set(lua_State* L) {
   return 1;
 }
 
-static struct luaL_Reg entity_methods[] = {{"set", method_set},
+static int method_get_id(lua_State* L) {
+  lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
+
+  lua_pushinteger(L, e->id);
+  return 1;
+}
+
+static struct luaL_Reg entity_methods[] = {{"get_id", method_get_id},
+                                           {"set", method_set},
                                            {"get", method_get},
                                            {"remove", method_remove},
                                            {NULL, NULL}};
