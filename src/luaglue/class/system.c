@@ -2,12 +2,14 @@
 
 #include <lauxlib.h>
 #include <lua.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "../../constants.h"
 #include "../../functions.h"
 #include "component.h"
+#include "entity.h"
 
 static ecs_t* ecs;
 static lua_State* lstate;
@@ -15,7 +17,7 @@ static lg_system* systems;
 static ecs_id_t systems_count = 0;
 static ecs_id_t systems_size = 0;
 
-static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* entities,
+static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* raw_entities,
                                    size_t entity_count, void* udata) {
   lua_State* L = lstate;
   lg_system* s = udata;
@@ -30,18 +32,33 @@ static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* entities,
   DEBUG_LOG("LG: LRS RUNNING " SYST_FL, SYST_FL_ARGS(s));
 
   {
+    lg_entity* entities = malloc(sizeof(*entities) * entity_count);
+
     lua_rawgeti(L, LUA_REGISTRYINDEX, s->lua_ref);
 
     // Create lua table with entities id
     lua_createtable(L, entity_count, 0);
     for (size_t i = 0; i < entity_count; i++) {
-      lua_pushinteger(L, entities[i].id);
-      lua_rawseti(L, -2, i + 1);
+      {
+        ptr2ptr* ud = lua_newuserdatauv(L, sizeof(*ud), 0);
+        lg_entity* e = &entities[i];
+
+        ud->ptr = e;
+
+        e->id = raw_entities[i].id;
+
+        luaL_getmetatable(L, "ClassEntityMT");
+        lua_setmetatable(L, -2);
+
+        lua_rawseti(L, -2, i + 1);
+      }
     }
 
     lua_pushinteger(L, entity_count);
 
     lua_pcall(L, 2, 0, 1);
+
+    free(entities);
   }
 
   return 0;
