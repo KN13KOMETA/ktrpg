@@ -131,10 +131,6 @@ int main(int argc, char* argv[]) {
       if (luaL_dostring(L, init_lua) != LUA_OK)
         printf("Error at internal scripts: %s\n", lua_tostring(L, -1));
     }
-    if (luaL_dostring(L, alt_lua) != LUA_OK) {
-      printf("EERRRRR: %s\n", lua_tostring(L, -1));
-      lua_pop(L, -1);
-    }
 
     lg_destroy();
     ecs_free(ecs);
