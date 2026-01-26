@@ -9,21 +9,48 @@
 
 #include "../../constants.h"
 #include "../../functions.h"
+#include "component.h"
 
 static ecs_t* ecs;
 static lg_entity* entities;
 static ecs_id_t entities_count = 0;
 static ecs_id_t entities_size = 0;
 
-static int method_get_name(lua_State* L) {
+static int method_set(lua_State* L) {
   lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
+  lg_component* c = ((ptr2ptr*)luaL_checkudata(L, 2, "ClassComponentMT"))->ptr;
+  void* ec = ecs_add(ecs, ID2ENTI(e->id), ID2COMP(c->id), NULL);
 
-  lua_pushstring(L, "AMONGUS");
+  switch (c->type) {
+    case COMP_INT:
+      *(lua_Integer*)ec = luaL_checkinteger(L, 3);
+      lua_pushinteger(L, *(lua_Integer*)ec);
+      break;
+    case COMP_NUM:
+      *(lua_Number*)ec = luaL_checknumber(L, 3);
+      lua_pushnumber(L, *(lua_Number*)ec);
+      break;
+    case COMP_TAG:
+      *(uint8_t*)ec = (uint8_t)luaL_checkinteger(L, 3);
+      lua_pushinteger(L, *(uint8_t*)ec);
+      break;
+    case COMP_STR: {
+      const char* s = luaL_checkstring(L, 3);
+
+      (*(lg_component_str*)ec).str = malloc(strlen(s) + 1);
+      strcpy((*(lg_component_str*)ec).str, s);
+
+      lua_pushstring(L, (*(lg_component_str*)ec).str);
+      break;
+    }
+  }
 
   return 1;
 }
 
-static struct luaL_Reg entity_methods[] = {{"get_name", method_get_name},
+static struct luaL_Reg entity_methods[] = {{"set", method_set},
+                                           // {"get", method_get_name},
+
                                            {NULL, NULL}};
 
 static void entity_init_metatable(lua_State* L) {
