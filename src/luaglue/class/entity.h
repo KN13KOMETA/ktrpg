@@ -12,7 +12,7 @@ typedef struct {
 #define ID2ENTI(id) \
   (ecs_entity_t) { id }
 
-#define ENTI_FL "Entity #%d"
+#define ENTI_FL "Entity #%lu"
 #define ENTI_FL_ARGS(e) e->id
 
 void lg_entity_create(lua_State* L);
