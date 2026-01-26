@@ -3,8 +3,8 @@
 #include <lauxlib.h>
 
 #include "../functions.h"
-#include "../luah/alt.h"
 #include "class/component.h"
+#include "class/entity.h"
 #include "class/system.h"
 #include "lua.h"
 
@@ -13,6 +13,8 @@ static int openclib(lua_State* L) {
 
   lua_newtable(L);
 
+  lg_entity_create(L);
+  lua_setfield(L, -2, "Entity");
   lg_component_create(L);
   lua_setfield(L, -2, "Component");
   lg_system_create(L);
@@ -32,6 +34,7 @@ void lg_create(lua_State* L, ecs_t* ecs) {
 void lg_destroy(void) {
   DEBUG_LOG("LG: DESTROY");
 
+  lg_entity_destroy();
   lg_component_destroy();
   lg_system_destroy();
 }
