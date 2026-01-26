@@ -14,8 +14,8 @@ typedef struct {
 #define ID2SYST(s) \
   (ecs_system_t) { s }
 
-#define SYST_FL "System \"%s\""
-#define SYST_FL_ARGS(s) s->name
+#define SYST_FL "System #%d \"%s\""
+#define SYST_FL_ARGS(s) s->id, s->name
 
 void lg_system_create(lua_State* L);
 void lg_system_destroy(void);

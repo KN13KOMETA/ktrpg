@@ -15,16 +15,17 @@ typedef struct {
 #define ID2COMP(id) \
   (ecs_comp_t) { id }
 
-#define COMP_FL "Component \"%s\" (%s)"
+#define COMP_FL "Component #%d \"%s\" (%s)"
 // TODO: WTF is clangd doing
-#define COMP_FL_ARGS(c)                         \
-  c->name, ((c->type == COMP_INT)               \
-                ? "INT"                         \
-                : ((c->type == COMP_NUM)        \
-                       ? "NUM"                  \
-                       : ((c->type == COMP_TAG) \
-                              ? "TAG"           \
-                              : ((c->type == COMP_STR) ? "STR" : "ERR"))))
+#define COMP_FL_ARGS(c)                    \
+  c->id, c->name,                          \
+      ((c->type == COMP_INT)               \
+           ? "INT"                         \
+           : ((c->type == COMP_NUM)        \
+                  ? "NUM"                  \
+                  : ((c->type == COMP_TAG) \
+                         ? "TAG"           \
+                         : ((c->type == COMP_STR) ? "STR" : "ERR"))))
 
 void lg_component_create(lua_State* L);
 void lg_component_destroy(void);
