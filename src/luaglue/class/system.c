@@ -214,6 +214,7 @@ static int system_new(lua_State* L) {
 
 static int system_register_content(lua_State* L) {
   lua_newtable(L);
+
   lua_pushcfunction(L, system_new);
   lua_setfield(L, -2, "new");
 
