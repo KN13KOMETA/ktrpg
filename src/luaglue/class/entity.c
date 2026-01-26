@@ -27,6 +27,7 @@ static int method_remove(lua_State* L) {
 
   ecs_remove(ecs, ID2ENTI(e->id), ID2COMP(c->id));
 
+  lua_pushboolean(L, 1);
   return 1;
 }
 
