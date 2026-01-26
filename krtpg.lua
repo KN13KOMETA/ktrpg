@@ -9,11 +9,11 @@ COMPONENT = {
 
 SYSTEM = {
   print_name = ktrpg.System
-      :new("print name")
-      :requires(COMPONENT.name)
-      :excludes(COMPONENT.dead, COMPONENT.health)
-      :set_mask(0)
-      :on_run(function(entity_count, entities) end),
+    :new("print name")
+    :requires(COMPONENT.name)
+    :excludes(COMPONENT.dead, COMPONENT.health)
+    :set_mask(0)
+    :on_run(function(entity_count, entities) end),
 }
 SYSTEM.print_name:run()
 SYSTEM.print_name:disable()
@@ -26,3 +26,5 @@ local player = ktrpg.Entity:new()
 player:set(COMPONENT.name, "POPPO")
 
 print(player:get(COMPONENT.name))
+
+ktrpg.System:run_debug_system()

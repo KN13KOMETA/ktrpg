@@ -17,6 +17,9 @@ static lg_system* systems;
 static ecs_id_t systems_count = 0;
 static ecs_id_t systems_size = 0;
 
+static uint8_t debug_system_valid = 0;
+static ecs_id_t debug_system = 0;
+
 static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* raw_entities,
                                    size_t entity_count, void* udata) {
   lua_State* L = lstate;
@@ -205,6 +208,18 @@ static void system_init_metatable(lua_State* L) {
   lua_pop(L, 1);
 }
 
+static int system_run_debug_system(lua_State* L) {
+  if (debug_system_valid == 0) {
+    lua_pushboolean(L, 0);
+    return 1;
+  }
+
+  ecs_run_system(ecs, ID2SYST(debug_system), 0);
+
+  lua_pushboolean(L, 1);
+  return 1;
+}
+
 static int system_new(lua_State* L) {
   const char* cname = luaL_checkstring(L, 2);
   ptr2ptr* ud = lua_newuserdatauv(L, sizeof(*ud), 0);
@@ -229,11 +244,15 @@ static int system_new(lua_State* L) {
   return 1;
 }
 
+static struct luaL_Reg system_class_methods[] = {
+    {"new", system_new},
+    {"run_debug_system", system_run_debug_system},
+    {NULL, NULL}};
+
 static int system_register_content(lua_State* L) {
   lua_newtable(L);
 
-  lua_pushcfunction(L, system_new);
-  lua_setfield(L, -2, "new");
+  luaL_setfuncs(L, system_class_methods, 0);
 
   return 1;
 }
@@ -254,6 +273,10 @@ void lg_system_create(lua_State* L) {
   system_init_metatable(L);
 
   system_register_content(L);
+
+  debug_system_valid = 1;
+  debug_system =
+      ecs_define_system(ecs, 0, lg_component_debug_system, NULL, NULL, NULL).id;
 }
 void lg_system_destroy(void) {
   DEBUG_LOG("LG: SYSTEM DESTROY");
