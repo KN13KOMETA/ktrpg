@@ -30,4 +30,6 @@ player:get_id()
 
 ktrpg.Entity:by_id(1)
 
+player:kill()
+
 ktrpg.System:run_debug_system()

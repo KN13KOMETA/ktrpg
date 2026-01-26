@@ -2,6 +2,7 @@
 
 #include <lauxlib.h>
 #include <lua.h>
+#include <pico_ecs.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,6 +16,14 @@ static ecs_t* ecs;
 static lg_entity* entities;
 static ecs_id_t entities_count = 0;
 static ecs_id_t entities_size = 0;
+
+static int method_kill(lua_State* L) {
+  lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
+
+  ecs_queue_destroy(ecs, ID2ENTI(e->id));
+
+  return 0;
+}
 
 static int method_remove(lua_State* L) {
   lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
@@ -69,7 +78,6 @@ static int method_set(lua_State* L) {
 
   if (ecs_has(ecs, ID2ENTI(e->id), ID2COMP(c->id))) {
     ec = ecs_get(ecs, ID2ENTI(e->id), ID2COMP(c->id));
-    printf("Asdasdad %s\n", c->name);
   } else {
     ec = ecs_add(ecs, ID2ENTI(e->id), ID2COMP(c->id), NULL);
   }
@@ -108,11 +116,9 @@ static int method_get_id(lua_State* L) {
   return 1;
 }
 
-static struct luaL_Reg entity_methods[] = {{"get_id", method_get_id},
-                                           {"set", method_set},
-                                           {"get", method_get},
-                                           {"remove", method_remove},
-                                           {NULL, NULL}};
+static struct luaL_Reg entity_methods[] = {
+    {"get_id", method_get_id}, {"set", method_set},   {"get", method_get},
+    {"remove", method_remove}, {"kill", method_kill}, {NULL, NULL}};
 
 static void entity_init_metatable(lua_State* L) {
   luaL_newmetatable(L, "ClassEntityMT");
