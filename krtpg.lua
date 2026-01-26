@@ -25,6 +25,4 @@ local player = ktrpg.Entity:new()
 
 player:set(COMPONENT.name, "POPPO")
 
-if player:has(COMPONENT.name) then
-  print(player:get(COMPONENT.name))
-end
+print(player:get(COMPONENT.name))
