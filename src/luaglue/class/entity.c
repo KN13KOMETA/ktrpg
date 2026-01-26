@@ -16,6 +16,20 @@ static lg_entity* entities;
 static ecs_id_t entities_count = 0;
 static ecs_id_t entities_size = 0;
 
+static int method_remove(lua_State* L) {
+  lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
+  lg_component* c = ((ptr2ptr*)luaL_checkudata(L, 2, "ClassComponentMT"))->ptr;
+
+  if (!ecs_has(ecs, ID2ENTI(e->id), ID2COMP(c->id))) {
+    lua_pushboolean(L, 0);
+    return 1;
+  }
+
+  ecs_remove(ecs, ID2ENTI(e->id), ID2COMP(c->id));
+
+  return 1;
+}
+
 static int method_get(lua_State* L) {
   lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
   lg_component* c = ((ptr2ptr*)luaL_checkudata(L, 2, "ClassComponentMT"))->ptr;
@@ -81,7 +95,7 @@ static int method_set(lua_State* L) {
 
 static struct luaL_Reg entity_methods[] = {{"set", method_set},
                                            {"get", method_get},
-
+                                           {"remove", method_remove},
                                            {NULL, NULL}};
 
 static void entity_init_metatable(lua_State* L) {
