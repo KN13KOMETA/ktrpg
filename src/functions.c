@@ -1,6 +1,8 @@
 #include "functions.h"
 
+#include <lauxlib.h>
 #include <stdio.h>
+#include <string.h>
 
 int getchar_clear(char* ch) {
   int c = 0;
@@ -36,4 +38,17 @@ int file_exists(char* path) {
   fclose(f);
 
   return 0;
+}
+
+void register_lua_text_module(lua_State* L, char* name, char* content) {
+  lua_getglobal(L, "package");
+  lua_getfield(L, -1, "preload");
+
+  if (luaL_loadbuffer(L, content, strlen(content), name) == LUA_OK) {
+    lua_setfield(L, -2, name);
+  } else {
+    lua_pop(L, 1);
+  }
+
+  lua_pop(L, 2);
 }

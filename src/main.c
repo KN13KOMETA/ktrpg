@@ -15,7 +15,7 @@
 #include "luaglue/core.h"
 #include "luah/alt.h"
 #include "luah/init.h"
-#include "luah/t.h"
+#include "luah/module.h"
 #include "project_options.h"
 
 #define PICO_ECS_IMPLEMENTATION
@@ -126,7 +126,7 @@ int main(int argc, char* argv[]) {
     } else {
       DEBUG_LOG("RUNNING INTERNAL LUA SCRIPTS");
 
-      luab_register_text_module(L, "t", t_lua);
+      register_lua_text_module(L, "module", module_lua);
 
       if (luaL_dostring(L, init_lua) != LUA_OK)
         printf("Error at internal scripts: %s\n", lua_tostring(L, -1));
