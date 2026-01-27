@@ -30,17 +30,13 @@ set(CMAKE_C_EXTENSIONS OFF)
 
 # Embed lua scripts to source files
 generate_header_from_lua(${SOURCE_FILES_DIR}/lua/init.lua)
-generate_header_from_lua(${SOURCE_FILES_DIR}/lua/t.lua)
-generate_header_from_lua(${SOURCE_FILES_DIR}/lua/alt.lua)
+generate_header_from_lua(${SOURCE_FILES_DIR}/lua/module.lua)
 
 add_executable(
   ${PROJECT_NAME}
   ${GENERATED_C_FILES}
   src/functions.c
   src/project_options.c
-  src/luab/luab_helper.c
-  src/luab/luab_m.c
-  src/luab/luab_core.c
   src/luaglue/class/entity.c
   src/luaglue/class/component.c
   src/luaglue/class/system.c

@@ -10,10 +10,8 @@
 
 #include "constants.h"
 #include "functions.h"
-#include "luab/luab_core.h"
 #include "luaglue/class/component.h"
 #include "luaglue/core.h"
-#include "luah/alt.h"
 #include "luah/init.h"
 #include "luah/module.h"
 #include "project_options.h"
