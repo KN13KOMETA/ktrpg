@@ -124,7 +124,7 @@ ecs_ret_t lg_component_debug_system(ecs_t* ecs, ecs_entity_t* entities,
   DEBUG_LOG("LG: DEBUG SYSTEM RUNNING");
 
   for (size_t i = 0; i < entity_count; i++) {
-    printf("LG: DEBUG SYSTEM, ENTITY %lu {\n", i);
+    printf("LG: DEBUG SYSTEM, ENTITY %lu {\n", entities[i].id);
 
     for (ecs_id_t ci = 0; ci < comps_count; ci++) {
       lg_component* c = &comps[ci];
