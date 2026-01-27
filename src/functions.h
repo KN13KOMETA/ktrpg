@@ -2,6 +2,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+#include <lua.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -30,5 +31,8 @@ int getchars_clear(char* str, size_t len);
 // Checks if file exists on path.
 // Returns 0 when file exists
 int file_exists(char* path);
+
+// Registers a lua module with content as code
+void register_lua_text_module(lua_State* L, char* name, char* content);
 
 #endif  // !FUNCTIONS_H
