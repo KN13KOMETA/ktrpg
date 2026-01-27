@@ -28,6 +28,7 @@ player:set(COMPONENT.name, "POPPO")
 print(player:get(COMPONENT.name))
 player:get_id()
 
+local entities, entity_count = ktrpg.Entity:all()
 ktrpg.Entity:by_id(1)
 
 player:kill()
