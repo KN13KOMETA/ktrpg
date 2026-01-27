@@ -20,6 +20,12 @@ static ecs_id_t entities_size = 0;
 static int method_kill(lua_State* L) {
   lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
 
+  if (ecs_is_invalid_entity(ID2ENTI(e->id)) ||
+      !ecs_is_ready(ecs, ID2ENTI(e->id))) {
+    lua_pushnil(L);
+    return 1;
+  }
+
   ecs_queue_destroy(ecs, ID2ENTI(e->id));
 
   return 0;
@@ -28,6 +34,12 @@ static int method_kill(lua_State* L) {
 static int method_remove(lua_State* L) {
   lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
   lg_component* c = ((ptr2ptr*)luaL_checkudata(L, 2, "ClassComponentMT"))->ptr;
+
+  if (ecs_is_invalid_entity(ID2ENTI(e->id)) ||
+      !ecs_is_ready(ecs, ID2ENTI(e->id))) {
+    lua_pushnil(L);
+    return 1;
+  }
 
   if (!ecs_has(ecs, ID2ENTI(e->id), ID2COMP(c->id))) {
     lua_pushboolean(L, 0);
@@ -44,6 +56,12 @@ static int method_get(lua_State* L) {
   lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
   lg_component* c = ((ptr2ptr*)luaL_checkudata(L, 2, "ClassComponentMT"))->ptr;
   void* ec;
+
+  if (ecs_is_invalid_entity(ID2ENTI(e->id)) ||
+      !ecs_is_ready(ecs, ID2ENTI(e->id))) {
+    lua_pushnil(L);
+    return 1;
+  }
 
   if (!ecs_has(ecs, ID2ENTI(e->id), ID2COMP(c->id))) {
     lua_pushnil(L);
@@ -75,6 +93,12 @@ static int method_set(lua_State* L) {
   lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
   lg_component* c = ((ptr2ptr*)luaL_checkudata(L, 2, "ClassComponentMT"))->ptr;
   void* ec;
+
+  if (ecs_is_invalid_entity(ID2ENTI(e->id)) ||
+      !ecs_is_ready(ecs, ID2ENTI(e->id))) {
+    lua_pushnil(L);
+    return 1;
+  }
 
   if (ecs_has(ecs, ID2ENTI(e->id), ID2COMP(c->id))) {
     ec = ecs_get(ecs, ID2ENTI(e->id), ID2COMP(c->id));
@@ -130,6 +154,25 @@ static void entity_init_metatable(lua_State* L) {
   lua_pop(L, 1);
 }
 
+static int entity_all(lua_State* L) {
+  ptr2ptr* ud;
+
+  lua_createtable(L, entities_count, 0);
+  for (ecs_id_t i = 0; i < entities_count; i++) {
+    ud = lua_newuserdatauv(L, sizeof(*ud), 0);
+    ud->ptr = &entities[i];
+
+    luaL_getmetatable(L, "ClassEntityMT");
+    lua_setmetatable(L, -2);
+
+    lua_rawseti(L, -2, i + 1);
+  }
+
+  lua_pushinteger(L, entities_count);
+
+  return 2;
+}
+
 static int entity_by_id(lua_State* L) {
   ptr2ptr* ud;
   lua_Integer tid = luaL_checkinteger(L, 2);
@@ -168,8 +211,10 @@ static int entity_new(lua_State* L) {
   return 1;
 }
 
-static luaL_Reg entity_class_methods[] = {
-    {"by_id", entity_by_id}, {"new", entity_new}, {NULL, NULL}};
+static luaL_Reg entity_class_methods[] = {{"all", entity_all},
+                                          {"by_id", entity_by_id},
+                                          {"new", entity_new},
+                                          {NULL, NULL}};
 
 static int entity_register_content(lua_State* L) {
   lua_newtable(L);
