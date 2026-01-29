@@ -7,14 +7,17 @@ ktrpg.System:new("Name"):get_entity_count()
 
 local ktrpg = require("ktrpg")
 
+local physical_damage = require("physical_damage")
 local create_player = require("create_player")
+
+TB = "\n:: "
+TE = " ::"
 
 NONAME = "Unknown Entity"
 
 LOCATION = {
   player_home = 1,
   forest = 2,
-  mountain = 3,
 }
 
 MOB_AI = {
@@ -34,6 +37,7 @@ COMPONENT = {
   gold = ktrpg.Component:new("int", "Gold"),
 
   tag_player = ktrpg.Component:new("tag", "Player"),
+  tag_dead = ktrpg.Component:new("tag", "Dead"),
 
   max_health = ktrpg.Component:new("num", "Max Health"),
   health = ktrpg.Component:new("num", "Health"),
@@ -50,117 +54,224 @@ COMPONENT = {
 }
 
 SYSTEM = {
-  mob_hunt = ktrpg.System
-    :new("Mob Hunt")
-    :requires(COMPONENT.location, COMPONENT.attack, COMPONENT.mob_ai, COMPONENT.species)
-    :set_mask(0)
-    :on_run(function(entities, entity_count)
-      local gentities, gentity_count = ktrpg.Entity:all()
-
-      for gi = 1, gentity_count, 1 do
-        local enemy = gentities[gi]
-        local enemy_species = enemy:get(COMPONENT.species)
-
-        if enemy_species == nil then
-          goto continue
-        end
-
+  player_turn = ktrpg.System
+      :new("Player Turn")
+      :requires(
+        COMPONENT.tag_player,
+        COMPONENT.name,
+        COMPONENT.location,
+        COMPONENT.gold,
+        COMPONENT.max_health,
+        COMPONENT.health,
+        COMPONENT.attack
+      )
+      :excludes(COMPONENT.tag_dead)
+      :set_mask(0)
+      :on_run(function(entities, entity_count)
         for i = 1, entity_count, 1 do
-          local entity = entities[i]
-          local mob_ai = entity:get(COMPONENT.mob_ai)
+          local e = entities[i]
+          local player = {
+            name = e:get(COMPONENT.name),
+            location = e:get(COMPONENT.location),
+            gold = e:get(COMPONENT.gold),
+            max_health = e:get(COMPONENT.max_health),
+            health = e:get(COMPONENT.health),
+            attack = e:get(COMPONENT.attack),
+            attacked_by = e:get(COMPONENT.attacked_by),
+          }
 
-          if mob_ai == MOB_AI.hunt then
-            if enemy_species ~= entity:get(COMPONENT.species) then
-              local attack = ktrpg.Entity:new()
-              attack:set(COMPONENT.attacker, entity:get_id())
-              attack:set(COMPONENT.attack_target, enemy:get_id())
-              attack:set(COMPONENT.attack_damage, entity:get(COMPONENT.attack))
-            end
-          end
-        end
-
-        ::continue::
-      end
-    end),
-  physical_damage = ktrpg.System
-    :new("Physical Damage")
-    :requires(COMPONENT.attacker, COMPONENT.attack_target, COMPONENT.attack_damage)
-    :set_mask(0)
-    :on_run(function(entities, entity_count)
-      for i = 1, entity_count, 1 do
-        local attack = entities[i]
-
-        local enemy = ktrpg.Entity:by_id(attack:get(COMPONENT.attacker))
-        local target = ktrpg.Entity:by_id(attack:get(COMPONENT.attack_target))
-
-        if target ~= nil then
-          local total_damage = target:get(COMPONENT.damage_received)
-          local damage = attack:get(COMPONENT.attack_damage)
-
-          if total_damage == nil then
-            total_damage = 0
-          end
-
-          total_damage = total_damage + damage
-
-          target:set(COMPONENT.damage_received, total_damage)
-
+          local enemy
           local enemy_name
+
+          if player.attacked_by ~= nil then
+            enemy = ktrpg.Entity:by_id(player.attacked_by)
+          end
+
           if enemy ~= nil then
             enemy_name = enemy:get(COMPONENT.name)
-
-            target:set(COMPONENT.attacked_by, enemy:get_id())
           end
-          local target_name = target:get(COMPONENT.name)
 
           if enemy_name == nil then
             enemy_name = NONAME
           end
 
-          if target_name == nil then
-            target_name = NONAME
+          while true do
+            print(TB .. player.name .. " turn" .. TE)
+
+            print("s) Check status (doesn't waste turn)")
+            print("i) Idle")
+
+            if enemy ~= nil then
+              print("a) Attack " .. enemy_name .. " (enemy that attacked you)")
+            end
+
+            io.write("Your action: ")
+            local act = io.read()
+            local act_list = {
+              s = function()
+                print(TB .. player.name .. " STATUS" .. TE)
+
+                if player.location == LOCATION.player_home then
+                  print("Location: " .. player.name .. " room")
+                elseif player.location == LOCATION.forest then
+                  print("Location: forest")
+                else
+                  print("Location: void (ah sht here we go again)")
+                end
+
+                print("Gold: " .. player.gold)
+                print("Health: " .. player.health .. "/" .. player.max_health)
+                print("Attack strength: " .. player.attack)
+
+                if player.attacked_by == nil then
+                  return
+                end
+
+                if enemy == nil then
+                  return
+                end
+
+                print("Attacked By " .. enemy_name)
+              end,
+              i = function()
+                print(player.name .. " decided to skip their turn")
+                return 1
+              end,
+              a = function()
+                physical_damage(e, enemy)
+                return 1
+              end,
+            }
+
+            local sel = act_list[act]
+
+            if sel == nil then
+              print("Unknown action")
+              goto continue
+            end
+
+            if sel() == 1 then
+              break
+            end
+
+            ::continue::
+          end
+        end
+      end),
+  mob_hunt = ktrpg.System
+      :new("Mob Hunt")
+      :requires(COMPONENT.location, COMPONENT.attack, COMPONENT.mob_ai, COMPONENT.species)
+      :excludes(COMPONENT.tag_dead)
+      :set_mask(0)
+      :on_run(function(entities, entity_count)
+        local gentities, gentity_count = ktrpg.Entity:all()
+
+        for gi = 1, gentity_count, 1 do
+          local enemy = gentities[gi]
+          local enemy_species = enemy:get(COMPONENT.species)
+
+          if enemy_species == nil then
+            goto continue
           end
 
-          print(":: " .. enemy_name .. " dealt " .. damage .. " damage to " .. target_name)
-        end
+          for i = 1, entity_count, 1 do
+            local entity = entities[i]
+            local mob_ai = entity:get(COMPONENT.mob_ai)
 
-        attack:kill()
-      end
-    end),
+            if mob_ai == MOB_AI.hunt then
+              if enemy_species ~= entity:get(COMPONENT.species) then
+                physical_damage(entity, enemy)
+              end
+            end
+          end
+
+          ::continue::
+        end
+      end),
+  physical_damage = ktrpg.System
+      :new("Physical Damage")
+      :requires(COMPONENT.attacker, COMPONENT.attack_target, COMPONENT.attack_damage)
+      :set_mask(0)
+      :on_run(function(entities, entity_count)
+        for i = 1, entity_count, 1 do
+          local attack = entities[i]
+
+          local enemy = ktrpg.Entity:by_id(attack:get(COMPONENT.attacker))
+          local target = ktrpg.Entity:by_id(attack:get(COMPONENT.attack_target))
+
+          if enemy:get(COMPONENT.tag_dead) ~= nil or target:get(COMPONENT.tag_dead) ~= nil then
+            target = nil
+          end
+
+          if target ~= nil then
+            local total_damage = target:get(COMPONENT.damage_received)
+            local damage = attack:get(COMPONENT.attack_damage)
+
+            if total_damage == nil then
+              total_damage = 0
+            end
+
+            total_damage = total_damage + damage
+
+            target:set(COMPONENT.damage_received, total_damage)
+
+            local enemy_name
+            if enemy ~= nil then
+              enemy_name = enemy:get(COMPONENT.name)
+
+              target:set(COMPONENT.attacked_by, enemy:get_id())
+            end
+            local target_name = target:get(COMPONENT.name)
+
+            if enemy_name == nil then
+              enemy_name = NONAME
+            end
+
+            if target_name == nil then
+              target_name = NONAME
+            end
+
+            print(TB .. enemy_name .. " dealt " .. damage .. " damage to " .. target_name)
+          end
+
+          attack:kill()
+        end
+      end),
   take_damage = ktrpg.System
-    :new("Take Damage")
-    :requires(COMPONENT.max_health, COMPONENT.health, COMPONENT.damage_received)
-    :set_mask(0)
-    :on_run(function(entities, entity_count)
-      for i = 1, entity_count, 1 do
-        local e = entities[i]
+      :new("Take Damage")
+      :requires(COMPONENT.max_health, COMPONENT.health, COMPONENT.damage_received)
+      :excludes(COMPONENT.tag_dead)
+      :set_mask(0)
+      :on_run(function(entities, entity_count)
+        for i = 1, entity_count, 1 do
+          local e = entities[i]
 
-        local mh = e:get(COMPONENT.max_health)
-        local h = e:get(COMPONENT.health)
-        local nh = e:get(COMPONENT.health) - e:get(COMPONENT.damage_received)
-        e:set(COMPONENT.damage_received, 0)
+          local mh = e:get(COMPONENT.max_health)
+          local h = e:get(COMPONENT.health)
+          local nh = e:get(COMPONENT.health) - e:get(COMPONENT.damage_received)
+          e:set(COMPONENT.damage_received, 0)
 
-        if nh < 0 then
-          nh = 0
-        elseif nh > mh then
-          nh = mh
+          if nh < 0 then
+            nh = 0
+          elseif nh > mh then
+            nh = mh
+          end
+
+          e:set(COMPONENT.health, nh)
+
+          local name = e:get(COMPONENT.name)
+
+          if name == nil then
+            name = NONAME
+          end
+
+          if nh < h then
+            print(TB .. name .. " received " .. (h - nh) .. " damage")
+          elseif nh > h then
+            print(TB .. name .. " healed " .. (nh - h) .. " hp")
+          end
         end
-
-        e:set(COMPONENT.health, nh)
-
-        local name = e:get(COMPONENT.name)
-
-        if name == nil then
-          name = NONAME
-        end
-
-        if nh < h then
-          print(":: " .. name .. " received " .. (h - nh) .. " damage")
-        elseif nh > h then
-          print(":: " .. name .. " healed " .. (nh - h) .. " hp")
-        end
-      end
-    end),
+      end),
   death = ktrpg.System:new("Death"):requires(COMPONENT.health):set_mask(0):on_run(function(entities, entity_count)
     for i = 1, entity_count, 1 do
       local e = entities[i]
@@ -169,9 +280,12 @@ SYSTEM = {
         goto continue
       end
 
-      local name = e:get(COMPONENT.name)
+      local entity = {
+        name = e:get(COMPONENT.name),
+        gold = e:get(COMPONENT.gold),
+      }
+
       local total_gold
-      local gold = e:get(COMPONENT.gold)
       local attacker = {
         id = e:get(COMPONENT.attacked_by),
       }
@@ -183,24 +297,30 @@ SYSTEM = {
         attacker.name = attacker.e:get(COMPONENT.name)
       end
 
-      if gold ~= nil and attacker.gold ~= nil then
-        total_gold = gold + attacker.gold
+      if entity.gold ~= nil and attacker.gold ~= nil then
+        total_gold = entity.gold + attacker.gold
       end
 
-      if name == nil then
-        name = NONAME
+      if entity.name == nil then
+        entity.name = NONAME
       end
 
       if attacker.name == nil then
-        name = NONAME
+        attacker.name = NONAME
       end
 
-      if total_gold ~= nil and total_gold < gold then
-        print(":: " .. attacker.name .. " killed " .. name .. " and lost " .. (attacker.gold * -1) .. " gold")
-      elseif total_gold ~= nil and total_gold > gold then
-        print(":: " .. attacker.name .. " killed " .. name .. " and got " .. attacker.gold .. " gold")
+      e:set(COMPONENT.tag_dead, 1)
+      if total_gold ~= nil then
+        e:set(COMPONENT.gold, 0)
+        attacker.e:set(COMPONENT.gold, total_gold)
+      end
+
+      if total_gold ~= nil and total_gold < attacker.gold then
+        print(TB .. attacker.name .. " killed " .. entity.name .. " and lost " .. (entity.gold * -1) .. " gold")
+      elseif total_gold ~= nil and total_gold > attacker.gold then
+        print(TB .. attacker.name .. " killed " .. entity.name .. " and got " .. entity.gold .. " gold")
       else
-        print(":: " .. attacker.name .. " killed " .. name)
+        print(TB .. attacker.name .. " killed " .. entity.name)
       end
 
       ::continue::
@@ -230,9 +350,9 @@ do
 end
 
 local function run()
-  SYSTEM.mob_hunt:run()
+  SYSTEM.player_turn:run()
 
-  ktrpg.System:run_debug_system()
+  SYSTEM.mob_hunt:run()
 
   SYSTEM.physical_damage:run()
   SYSTEM.take_damage:run()
