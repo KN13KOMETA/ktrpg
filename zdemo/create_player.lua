@@ -7,6 +7,8 @@ return function()
   player:set(COMPONENT.name, io.read())
   player:set(COMPONENT.location, LOCATION.player_home)
 
+  player:set(COMPONENT.gold, 10)
+
   player:set(COMPONENT.tag_player, 1)
 
   player:set(COMPONENT.max_health, 100)
