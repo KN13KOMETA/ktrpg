@@ -9,6 +9,8 @@ local ktrpg = require("ktrpg")
 
 local create_player = require("create_player")
 
+NONAME = "Unknown Entity"
+
 LOCATION = {
   player_home = 1,
   forest = 2,
@@ -29,12 +31,15 @@ COMPONENT = {
   name = ktrpg.Component:new("str", "Name"),
   location = ktrpg.Component:new("tag", "Location"),
 
+  gold = ktrpg.Component:new("int", "Gold"),
+
   tag_player = ktrpg.Component:new("tag", "Player"),
 
   max_health = ktrpg.Component:new("num", "Max Health"),
   health = ktrpg.Component:new("num", "Health"),
   attack = ktrpg.Component:new("num", "Attack"),
   damage_received = ktrpg.Component:new("num", "Damage Received"),
+  attacked_by = ktrpg.Component:new("int", "Attacked By"),
 
   attacker = ktrpg.Component:new("int", "Attacker"),
   attack_target = ktrpg.Component:new("int", "Attack Target"),
@@ -103,15 +108,17 @@ SYSTEM = {
           local enemy_name
           if enemy ~= nil then
             enemy_name = enemy:get(COMPONENT.name)
+
+            target:set(COMPONENT.attacked_by, enemy:get_id())
           end
           local target_name = target:get(COMPONENT.name)
 
           if enemy_name == nil then
-            enemy_name = "Unknown Entity"
+            enemy_name = NONAME
           end
 
           if target_name == nil then
-            target_name = "Unknown Entity"
+            target_name = NONAME
           end
 
           print(":: " .. enemy_name .. " dealt " .. damage .. " damage to " .. target_name)
@@ -144,7 +151,7 @@ SYSTEM = {
         local name = e:get(COMPONENT.name)
 
         if name == nil then
-          name = "Unknown Entity"
+          name = NONAME
         end
 
         if nh < h then
@@ -154,6 +161,51 @@ SYSTEM = {
         end
       end
     end),
+  death = ktrpg.System:new("Death"):requires(COMPONENT.health):set_mask(0):on_run(function(entities, entity_count)
+    for i = 1, entity_count, 1 do
+      local e = entities[i]
+
+      if e:get(COMPONENT.health) > 0 then
+        goto continue
+      end
+
+      local name = e:get(COMPONENT.name)
+      local total_gold
+      local gold = e:get(COMPONENT.gold)
+      local attacker = {
+        id = e:get(COMPONENT.attacked_by),
+      }
+
+      if attacker.id ~= nil then
+        attacker.e = ktrpg.Entity:by_id(attacker.id)
+
+        attacker.gold = attacker.e:get(COMPONENT.gold)
+        attacker.name = attacker.e:get(COMPONENT.name)
+      end
+
+      if gold ~= nil and attacker.gold ~= nil then
+        total_gold = gold + attacker.gold
+      end
+
+      if name == nil then
+        name = NONAME
+      end
+
+      if attacker.name == nil then
+        name = NONAME
+      end
+
+      if total_gold ~= nil and total_gold < gold then
+        print(":: " .. attacker.name .. " killed " .. name .. " and lost " .. (attacker.gold * -1) .. " gold")
+      elseif total_gold ~= nil and total_gold > gold then
+        print(":: " .. attacker.name .. " killed " .. name .. " and got " .. attacker.gold .. " gold")
+      else
+        print(":: " .. attacker.name .. " killed " .. name)
+      end
+
+      ::continue::
+    end
+  end),
 }
 
 local player = create_player()
@@ -165,6 +217,8 @@ do
 
   enemy:set(COMPONENT.name, "Goblin")
   enemy:set(COMPONENT.location, LOCATION.forest)
+
+  enemy:set(COMPONENT.gold, 5)
 
   enemy:set(COMPONENT.max_health, 30)
   enemy:set(COMPONENT.health, 30)
@@ -182,10 +236,11 @@ local function run()
 
   SYSTEM.physical_damage:run()
   SYSTEM.take_damage:run()
+  SYSTEM.death:run()
 
   ktrpg.System:run_debug_system()
 end
 
-for i = 1, 3, 1 do
+for i = 1, 22, 1 do
   run()
 end
