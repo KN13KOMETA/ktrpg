@@ -138,7 +138,7 @@ static int method_set(lua_State* L) {
 static int method_get_id(lua_State* L) {
   lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
 
-  lua_pushinteger(L, e->id);
+  lua_pushinteger(L, (int)e->id);
   return 1;
 }
 
@@ -158,9 +158,10 @@ static void entity_init_metatable(lua_State* L) {
 
 static int entity_all(lua_State* L) {
   ptr2ptr* ud;
+  int count = (int)entities_count;
 
-  lua_createtable(L, entities_count, 0);
-  for (ecs_id_t i = 0; i < entities_count; i++) {
+  lua_createtable(L, count, 0);
+  for (int i = 0; i < count; i++) {
     ud = lua_newuserdatauv(L, sizeof(*ud), 0);
     ud->ptr = &entities[i];
 
@@ -170,7 +171,7 @@ static int entity_all(lua_State* L) {
     lua_rawseti(L, -2, i + 1);
   }
 
-  lua_pushinteger(L, entities_count);
+  lua_pushinteger(L, count);
 
   return 2;
 }
@@ -180,7 +181,7 @@ static int entity_by_id(lua_State* L) {
   lua_Integer tid = luaL_checkinteger(L, 2);
 
   for (ecs_id_t i = 0; i < entities_count; i++) {
-    if (entities[i].id == tid) {
+    if (entities[i].id == (ecs_id_t)tid) {
       ud = lua_newuserdatauv(L, sizeof(*ud), 0);
       ud->ptr = &entities[i];
 
