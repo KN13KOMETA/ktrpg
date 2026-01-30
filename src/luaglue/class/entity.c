@@ -284,7 +284,7 @@ void lg_entity_create(lua_State* L) {
   ecs = lua_touserdata(L, -1);
   lua_pop(L, 1);
 
-  array_limit = LONG_MAX / sizeof(*entities);
+  array_limit = LUA_MAXINTEGER / sizeof(*entities);
 
   DEBUG_LOG("LG: ENTITY ARRAY LIMIT %lu", array_limit);
 
