@@ -11,6 +11,8 @@
 #include "component.h"
 #include "entity.h"
 
+static ecs_id_t array_limit;
+
 static ecs_t* ecs;
 static lua_State* lstate;
 static lg_system* systems;
@@ -222,10 +224,16 @@ static int system_run_debug_system(lua_State* L) {
 
 static int system_new(lua_State* L) {
   const char* cname = luaL_checkstring(L, 2);
-  ptr2ptr* ud = lua_newuserdatauv(L, sizeof(*ud), 0);
+  ptr2ptr* ud;
   lg_system* s;
 
-  // TODO: Add realloc
+  if (systems_count + 1 > systems_max) {
+    lua_pushnil(L);
+    lua_pushstring(L, "system limit reached");
+    return 2;
+  }
+
+  ud = lua_newuserdatauv(L, sizeof(*ud), 0);
   s = &systems[systems_count++];
   ud->ptr = s;
 
@@ -244,9 +252,57 @@ static int system_new(lua_State* L) {
   return 1;
 }
 
+static int system_set_limit(lua_State* L) {
+  ecs_id_t limit = (ecs_id_t)luaL_checkinteger(L, 2);
+  void* ptr;
+
+  if (limit < 1) {
+    lua_pushnil(L);
+    lua_pushstring(L, "limit must be at least 1");
+    return 2;
+  }
+
+  if (limit > array_limit) {
+    char str[256];
+
+    sprintf(str, "limit cannot exceed %lu", limit);
+
+    lua_pushnil(L);
+    lua_pushstring(L, str);
+
+    return 2;
+  }
+
+  if (systems_count != 0) {
+    lua_pushnil(L);
+    lua_pushstring(L, "cannot set limit after entities have been created");
+    return 2;
+  }
+
+  if (limit != systems_count) {
+    ptr = malloc(sizeof(*systems) * limit);
+
+    if (ptr == NULL) {
+      lua_pushnil(L);
+      lua_pushstring(L, "memory allocation failed");
+      return 2;
+    }
+
+    free(systems);
+    systems = ptr;
+    systems_max = limit;
+
+    DEBUG_LOG("LG: SYSTEM ARRAY SIZE = %lu", systems_max);
+  }
+
+  lua_pushinteger(L, (lua_Integer)limit);
+  return 1;
+}
+
 static struct luaL_Reg system_class_methods[] = {
-    {"new", system_new},
     {"run_debug_system", system_run_debug_system},
+    {"new", system_new},
+    {"set_limit", system_set_limit},
     {NULL, NULL}};
 
 static int system_register_content(lua_State* L) {
@@ -266,9 +322,15 @@ void lg_system_create(lua_State* L) {
 
   lstate = L;
 
+  array_limit = LUA_MAXINTEGER / sizeof(*systems);
+
+  DEBUG_LOG("LG: SYSTEM ARRAY LIMIT %lu", array_limit);
+
   systems_max = UINT8_MAX;
   systems_count = 0;
   systems = malloc(sizeof(*systems) * systems_max);
+
+  DEBUG_LOG("LG: SYSTEM ARRAY SIZE = %lu", systems_max);
 
   system_init_metatable(L);
 

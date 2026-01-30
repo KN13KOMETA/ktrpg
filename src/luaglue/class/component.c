@@ -161,7 +161,7 @@ void lg_component_create(lua_State* L) {
   ecs = lua_touserdata(L, -1);
   lua_pop(L, 1);
 
-  array_limit = (LUA_MAXINTEGER) / sizeof(*comps);
+  array_limit = LUA_MAXINTEGER / sizeof(*comps);
 
   DEBUG_LOG("LG: COMPONENT ARRAY LIMIT %lu", array_limit);
 
