@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
   DEBUG_LOG(TITLE("DEBUG MODE"));
 
   printf(TITLE("HELP"));
-  printf("Run with --help for more info\n\n");
+  printf("Run with --help for more info\n");
 
   {
     lua_State* L = luaL_newstate();
