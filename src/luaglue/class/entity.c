@@ -15,7 +15,7 @@
 static ecs_t* ecs;
 static lg_entity* entities;
 static ecs_id_t entities_count = 0;
-static ecs_id_t entities_size = 0;
+static ecs_id_t entities_max = 0;
 
 static int method_kill(lua_State* L) {
   lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
@@ -231,9 +231,9 @@ void lg_entity_create(lua_State* L) {
   ecs = lua_touserdata(L, -1);
   lua_pop(L, 1);
 
-  entities_size = UINT16_MAX;
+  entities_max = UINT16_MAX;
   entities_count = 0;
-  entities = malloc(sizeof(*entities) * entities_size);
+  entities = malloc(sizeof(*entities) * entities_max);
 
   entity_init_metatable(L);
 
@@ -243,5 +243,5 @@ void lg_entity_destroy(void) {
   DEBUG_LOG("LG: ENTITY DESTROY");
 
   free(entities);
-  entities_count = entities_size = 0;
+  entities_count = entities_max = 0;
 }

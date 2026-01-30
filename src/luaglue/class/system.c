@@ -15,7 +15,7 @@ static ecs_t* ecs;
 static lua_State* lstate;
 static lg_system* systems;
 static ecs_id_t systems_count = 0;
-static ecs_id_t systems_size = 0;
+static ecs_id_t systems_max = 0;
 
 static uint8_t debug_system_valid = 0;
 static ecs_id_t debug_system = 0;
@@ -266,9 +266,9 @@ void lg_system_create(lua_State* L) {
 
   lstate = L;
 
-  systems_size = UINT8_MAX;
+  systems_max = UINT8_MAX;
   systems_count = 0;
-  systems = malloc(sizeof(*systems) * systems_size);
+  systems = malloc(sizeof(*systems) * systems_max);
 
   system_init_metatable(L);
 
@@ -286,5 +286,5 @@ void lg_system_destroy(void) {
   }
 
   free(systems);
-  systems_count = systems_size = 0;
+  systems_count = systems_max = 0;
 }

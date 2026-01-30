@@ -14,7 +14,7 @@
 static ecs_t* ecs;
 static lg_component* comps;
 static ecs_id_t comps_count = 0;
-static ecs_id_t comps_size = 0;
+static ecs_id_t comps_max = 0;
 
 static int method_get_name(lua_State* L) {
   lg_component* c = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassComponentMT"))->ptr;
@@ -100,9 +100,9 @@ void lg_component_create(lua_State* L) {
   ecs = lua_touserdata(L, -1);
   lua_pop(L, 1);
 
-  comps_size = UINT8_MAX;
+  comps_max = UINT8_MAX;
   comps_count = 0;
-  comps = malloc(sizeof(*comps) * comps_size);
+  comps = malloc(sizeof(*comps) * comps_max);
 
   component_init_metatable(L);
 
@@ -116,7 +116,7 @@ void lg_component_destroy(void) {
   }
 
   free(comps);
-  comps_count = comps_size = 0;
+  comps_count = comps_max = 0;
 }
 
 ecs_ret_t lg_component_debug_system(ecs_t* ecs, ecs_entity_t* entities,
