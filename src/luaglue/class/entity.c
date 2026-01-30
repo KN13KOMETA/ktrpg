@@ -1,6 +1,7 @@
 #include "entity.h"
 
 #include <lauxlib.h>
+#include <limits.h>
 #include <lua.h>
 #include <pico_ecs.h>
 #include <stdlib.h>
@@ -9,6 +10,8 @@
 #include "../../constants.h"
 #include "../../functions.h"
 #include "component.h"
+
+static ecs_id_t array_limit;
 
 static ecs_t* ecs;
 static lg_entity* entities = NULL;
@@ -195,7 +198,12 @@ static int entity_new(lua_State* L) {
   ptr2ptr* ud = lua_newuserdatauv(L, sizeof(*ud), 0);
   lg_entity* e;
 
-  // TODO: Add realloc
+  if (entities_count + 1 > entities_max) {
+    lua_pushnil(L);
+    lua_pushstring(L, "entity limit reached");
+    return 2;
+  }
+
   e = &entities[entities_count++];
   ud->ptr = e;
 
@@ -219,7 +227,7 @@ static int entity_set_limit(lua_State* L) {
     return 2;
   }
 
-  if (limit > ENTI_MAX) {
+  if (limit > array_limit) {
     lua_pushboolean(L, 0);
     lua_pushstring(L, "limit cannot exceed " EXPAND2STR(ENTI_MAX));
     return 2;
@@ -272,9 +280,15 @@ void lg_entity_create(lua_State* L) {
   ecs = lua_touserdata(L, -1);
   lua_pop(L, 1);
 
+  array_limit = LONG_MAX / sizeof(*entities);
+
+  DEBUG_LOG("LG: ENTITY ARRAY LIMIT %lu", array_limit);
+
   entities_max = UINT16_MAX;
   entities_count = 0;
   entities = malloc(sizeof(*entities) * entities_max);
+
+  DEBUG_LOG("LG: ENTITY ARRAY SIZE = %lu", entities_max);
 
   entity_init_metatable(L);
 
