@@ -10,6 +10,7 @@
 #include "../../constants.h"
 #include "../../functions.h"
 #include "component.h"
+#include "luaconf.h"
 
 static ecs_id_t array_limit;
 
@@ -284,7 +285,8 @@ void lg_entity_create(lua_State* L) {
   ecs = lua_touserdata(L, -1);
   lua_pop(L, 1);
 
-  array_limit = LUA_MAXINTEGER / sizeof(*entities);
+  array_limit = ((LUA_MAXINTEGER < INT_MAX) ? LUA_MAXINTEGER : INT_MAX) /
+                sizeof(*entities);
 
   DEBUG_LOG("LG: ENTITY ARRAY LIMIT %lu", array_limit);
 
