@@ -224,43 +224,40 @@ static int entity_set_limit(lua_State* L) {
   void* ptr;
 
   if (limit < 1) {
-    lua_pushboolean(L, 0);
+    lua_pushnil(L);
     lua_pushstring(L, "limit must be at least 1");
     return 2;
   }
 
   if (limit > array_limit) {
-    lua_pushboolean(L, 0);
+    lua_pushnil(L);
     lua_pushstring(L, "limit cannot exceed " EXPAND2STR(ENTI_MAX));
     return 2;
   }
 
   if (entities_count != 0) {
-    lua_pushboolean(L, 0);
+    lua_pushnil(L);
     lua_pushstring(L, "cannot set limit after entities have been created");
     return 2;
   }
 
-  if (limit == entities_count) {
-    lua_pushboolean(L, 1);
-    return 1;
+  if (limit != entities_count) {
+    ptr = malloc(sizeof(*entities) * limit);
+
+    if (ptr == NULL) {
+      lua_pushnil(L);
+      lua_pushstring(L, "memory allocation failed");
+      return 2;
+    }
+
+    free(entities);
+    entities = ptr;
+    entities_max = limit;
+
+    DEBUG_LOG("LG: ENTITY ARRAY SIZE = %lu", entities_max);
   }
 
-  ptr = malloc(sizeof(*entities) * limit);
-
-  if (ptr == NULL) {
-    lua_pushboolean(L, 0);
-    lua_pushstring(L, "memory allocation failed");
-    return 2;
-  }
-
-  free(entities);
-  entities = ptr;
-  entities_max = limit;
-
-  DEBUG_LOG("LG: ENTITY ARRAY SIZE = %lu", entities_max);
-
-  lua_pushboolean(L, 1);
+  lua_pushinteger(L, (lua_Integer)limit);
   return 1;
 }
 
@@ -285,6 +282,7 @@ void lg_entity_create(lua_State* L) {
   ecs = lua_touserdata(L, -1);
   lua_pop(L, 1);
 
+  // Limit is so low because max table length is int
   array_limit = ((LUA_MAXINTEGER < INT_MAX) ? LUA_MAXINTEGER : INT_MAX) /
                 sizeof(*entities);
 
