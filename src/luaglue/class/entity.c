@@ -191,7 +191,8 @@ static int entity_by_id(lua_State* L) {
   }
 
   lua_pushnil(L);
-  return 1;
+  lua_pushstring(L, "entity not found");
+  return 2;
 }
 
 static int entity_new(lua_State* L) {
