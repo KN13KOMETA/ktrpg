@@ -36,6 +36,7 @@ int getchars_clear(char* str, size_t len);
 int file_exists(char* path);
 
 // Registers a lua module with content as code
-void register_lua_text_module(lua_State* L, char* name, char* content);
+void register_lua_text_module(lua_State* L, const char* name,
+                              const char* content);
 
 #endif  // !FUNCTIONS_H

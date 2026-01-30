@@ -1,12 +1,12 @@
 #include "core.h"
 
 #include <lauxlib.h>
+#include <lua.h>
 
 #include "../functions.h"
 #include "class/component.h"
 #include "class/entity.h"
 #include "class/system.h"
-#include "lua.h"
 
 static int openclib(lua_State* L) {
   DEBUG_LOG("LG: OPENING C LIBRARY");
