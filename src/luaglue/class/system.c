@@ -26,6 +26,7 @@ static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* raw_entities,
                                    size_t entity_count, void* udata) {
   lua_State* L = lstate;
   lg_system* s = udata;
+  int ecount = (int)entity_count;
 
   (void)ecs;
 
@@ -42,8 +43,8 @@ static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* raw_entities,
     lua_rawgeti(L, LUA_REGISTRYINDEX, s->lua_ref);
 
     // Create lua table with entities id
-    lua_createtable(L, entity_count, 0);
-    for (size_t i = 0; i < entity_count; i++) {
+    lua_createtable(L, ecount, 0);
+    for (int i = 0; i < ecount; i++) {
       {
         ptr2ptr* ud = lua_newuserdatauv(L, sizeof(*ud), 0);
         lg_entity* e = &entities[i];
@@ -59,7 +60,7 @@ static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* raw_entities,
       }
     }
 
-    lua_pushinteger(L, entity_count);
+    lua_pushinteger(L, ecount);
 
     lua_pcall(L, 2, 0, 1);
 
@@ -72,7 +73,8 @@ static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* raw_entities,
 static int method_get_entity_count(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
-  lua_pushinteger(L, ecs_get_system_entity_count(ecs, ID2SYST(s->id)));
+  lua_pushinteger(
+      L, (lua_Integer)ecs_get_system_entity_count(ecs, ID2SYST(s->id)));
 
   return 1;
 }
@@ -191,12 +193,6 @@ static struct luaL_Reg system_methods[] = {
     {"get_entity_count", method_get_entity_count},
     {NULL, NULL}};
 
-static int system_gc(lua_State* L) {
-  lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
-
-  return 0;
-}
-
 static void system_init_metatable(lua_State* L) {
   luaL_newmetatable(L, "ClassSystemMT");
   lua_pushvalue(L, -1);
@@ -204,16 +200,14 @@ static void system_init_metatable(lua_State* L) {
   lua_setfield(L, -2, "__index");
   luaL_setfuncs(L, system_methods, 0);
 
-  lua_pushcfunction(L, system_gc);
-  lua_setfield(L, -2, "__gc");
-
   lua_pop(L, 1);
 }
 
 static int system_run_debug_system(lua_State* L) {
   if (debug_system_valid == 0) {
     lua_pushboolean(L, 0);
-    return 1;
+    lua_pushstring(L, "debug system is not initialized");
+    return 2;
   }
 
   ecs_run_system(ecs, ID2SYST(debug_system), 0);
