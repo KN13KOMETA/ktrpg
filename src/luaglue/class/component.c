@@ -41,6 +41,9 @@ static void component_init_metatable(lua_State* L) {
 
 static void component_str_destructor(ecs_t* ecs, ecs_entity_t entity,
                                      void* comp_ptr) {
+  (void)ecs;
+  (void)entity;
+
   free(((lg_component_str*)comp_ptr)->str);
 }
 
@@ -93,8 +96,55 @@ static int component_new(lua_State* L) {
   return 1;
 }
 
-static luaL_Reg component_class_methods[] = {{"new", component_new},
-                                             {NULL, NULL}};
+static int component_set_limit(lua_State* L) {
+  ecs_id_t limit = (ecs_id_t)luaL_checkinteger(L, 2);
+  void* ptr;
+
+  if (limit < 1) {
+    lua_pushnil(L);
+    lua_pushstring(L, "limit must be at least 1");
+    return 2;
+  }
+
+  if (limit > array_limit) {
+    char str[256];
+
+    sprintf(str, "limit cannot exceed %lu", limit);
+
+    lua_pushnil(L);
+    lua_pushstring(L, str);
+
+    return 2;
+  }
+
+  if (comps_count != 0) {
+    lua_pushnil(L);
+    lua_pushstring(L, "cannot set limit after entities have been created");
+    return 2;
+  }
+
+  if (limit != comps_count) {
+    ptr = malloc(sizeof(*comps) * limit);
+
+    if (ptr == NULL) {
+      lua_pushnil(L);
+      lua_pushstring(L, "memory allocation failed");
+      return 2;
+    }
+
+    free(comps);
+    comps = ptr;
+    comps_max = limit;
+
+    DEBUG_LOG("LG: COMPONENT ARRAY SIZE = %lu", comps_max);
+  }
+
+  lua_pushinteger(L, (lua_Integer)limit);
+  return 1;
+}
+
+static luaL_Reg component_class_methods[] = {
+    {"new", component_new}, {"set_limit", component_set_limit}, {NULL, NULL}};
 
 static int component_register_content(lua_State* L) {
   lua_newtable(L);
@@ -138,6 +188,8 @@ void lg_component_destroy(void) {
 
 ecs_ret_t lg_component_debug_system(ecs_t* ecs, ecs_entity_t* entities,
                                     size_t entity_count, void* udata) {
+  (void)udata;
+
   DEBUG_LOG("LG: DEBUG SYSTEM RUNNING");
 
   for (size_t i = 0; i < entity_count; i++) {
