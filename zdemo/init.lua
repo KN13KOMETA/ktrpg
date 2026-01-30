@@ -98,6 +98,7 @@ SYSTEM = {
           while true do
             print(TB .. player.name .. " turn" .. TE)
 
+            print("x) exit")
             print("s) Check status (doesn't waste turn)")
             print("i) Idle")
 
@@ -108,6 +109,9 @@ SYSTEM = {
             io.write("Your action: ")
             local act = io.read()
             local act_list = {
+              x = function()
+                os.exit(0)
+              end,
               s = function()
                 print(TB .. player.name .. " STATUS" .. TE)
 
