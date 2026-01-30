@@ -198,7 +198,7 @@ static int entity_by_id(lua_State* L) {
 }
 
 static int entity_new(lua_State* L) {
-  ptr2ptr* ud = lua_newuserdatauv(L, sizeof(*ud), 0);
+  ptr2ptr* ud;
   lg_entity* e;
 
   if (entities_count + 1 > entities_max) {
@@ -206,6 +206,8 @@ static int entity_new(lua_State* L) {
     lua_pushstring(L, "entity limit reached");
     return 2;
   }
+
+  ud = lua_newuserdatauv(L, sizeof(*ud), 0);
 
   e = &entities[entities_count++];
   ud->ptr = e;
