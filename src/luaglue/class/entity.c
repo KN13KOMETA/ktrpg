@@ -255,6 +255,9 @@ static int entity_set_limit(lua_State* L) {
 
   free(entities);
   entities = ptr;
+  entities_max = limit;
+
+  DEBUG_LOG("LG: ENTITY ARRAY SIZE = %lu", entities_max);
 
   lua_pushboolean(L, 1);
   return 1;
