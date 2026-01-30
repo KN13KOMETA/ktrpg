@@ -5,6 +5,8 @@
 #include <lua.h>
 #include <pico_ecs.h>
 
+#define ENTI_MAX 1000000
+
 typedef struct {
   ecs_id_t id;
 } lg_entity;
