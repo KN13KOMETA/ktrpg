@@ -40,7 +40,8 @@ int file_exists(char* path) {
   return 0;
 }
 
-void register_lua_text_module(lua_State* L, char* name, char* content) {
+void register_lua_text_module(lua_State* L, const char* name,
+                              const char* content) {
   lua_getglobal(L, "package");
   lua_getfield(L, -1, "preload");
 

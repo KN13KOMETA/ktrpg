@@ -10,7 +10,6 @@
 
 #include "constants.h"
 #include "functions.h"
-#include "luaglue/class/component.h"
 #include "luaglue/core.h"
 #include "luah/init.h"
 #include "luah/module.h"
@@ -78,7 +77,8 @@ int main(int argc, char* argv[]) {
         {
           // TODO: Add check incase path doesnt contain /
           char* last_slash = strrchr(poptions->script_path, '/');
-          long length = last_slash - poptions->script_path + 1;
+          unsigned long length =
+              (unsigned long)(last_slash - poptions->script_path + 1);
 
           target_path = malloc(length + 1);
 
@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
         // Set new package.path
         {
           char* package_path;
-          char* current_path;
+          const char* current_path;
           int i = 0;
 
           lua_getglobal(L, "package");
