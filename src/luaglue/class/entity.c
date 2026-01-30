@@ -24,13 +24,15 @@ static int method_kill(lua_State* L) {
 
   if (ecs_is_invalid_entity(ID2ENTI(e->id)) ||
       !ecs_is_ready(ecs, ID2ENTI(e->id))) {
-    lua_pushnil(L);
-    return 1;
+    lua_pushboolean(L, 0);
+    lua_pushstring(L, "entity not ready or invalid");
+    return 2;
   }
 
   ecs_queue_destroy(ecs, ID2ENTI(e->id));
 
-  return 0;
+  lua_pushboolean(L, 1);
+  return 1;
 }
 
 static int method_remove(lua_State* L) {
@@ -40,12 +42,14 @@ static int method_remove(lua_State* L) {
   if (ecs_is_invalid_entity(ID2ENTI(e->id)) ||
       !ecs_is_ready(ecs, ID2ENTI(e->id))) {
     lua_pushnil(L);
-    return 1;
+    lua_pushstring(L, "entity not ready or invalid");
+    return 2;
   }
 
   if (!ecs_has(ecs, ID2ENTI(e->id), ID2COMP(c->id))) {
     lua_pushboolean(L, 0);
-    return 1;
+    lua_pushstring(L, "entity doesn't have component");
+    return 2;
   }
 
   ecs_remove(ecs, ID2ENTI(e->id), ID2COMP(c->id));
@@ -62,12 +66,14 @@ static int method_get(lua_State* L) {
   if (ecs_is_invalid_entity(ID2ENTI(e->id)) ||
       !ecs_is_ready(ecs, ID2ENTI(e->id))) {
     lua_pushnil(L);
-    return 1;
+    lua_pushstring(L, "entity not ready or invalid");
+    return 2;
   }
 
   if (!ecs_has(ecs, ID2ENTI(e->id), ID2COMP(c->id))) {
     lua_pushnil(L);
-    return 1;
+    lua_pushstring(L, "entity doesn't have component");
+    return 2;
   }
 
   ec = ecs_get(ecs, ID2ENTI(e->id), ID2COMP(c->id));
@@ -99,7 +105,8 @@ static int method_set(lua_State* L) {
   if (ecs_is_invalid_entity(ID2ENTI(e->id)) ||
       !ecs_is_ready(ecs, ID2ENTI(e->id))) {
     lua_pushnil(L);
-    return 1;
+    lua_pushstring(L, "entity not ready or invalid");
+    return 2;
   }
 
   if (ecs_has(ecs, ID2ENTI(e->id), ID2COMP(c->id))) {
