@@ -3,8 +3,6 @@
 #include <lauxlib.h>
 #include <lua.h>
 #include <pico_ecs.h>
-#include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -13,7 +11,7 @@
 #include "component.h"
 
 static ecs_t* ecs;
-static lg_entity* entities;
+static lg_entity* entities = NULL;
 static ecs_id_t entities_count = 0;
 static ecs_id_t entities_max = 0;
 
@@ -211,9 +209,52 @@ static int entity_new(lua_State* L) {
   return 1;
 }
 
+static int entity_set_limit(lua_State* L) {
+  ecs_id_t limit = (ecs_id_t)luaL_checkinteger(L, 2);
+  void* ptr;
+
+  if (limit < 1) {
+    lua_pushboolean(L, 0);
+    lua_pushstring(L, "limit must be at least 1");
+    return 2;
+  }
+
+  if (limit > ENTI_MAX) {
+    lua_pushboolean(L, 0);
+    lua_pushstring(L, "limit cannot exceed " EXPAND2STR(ENTI_MAX));
+    return 2;
+  }
+
+  if (entities_count != 0) {
+    lua_pushboolean(L, 0);
+    lua_pushstring(L, "cannot set limit after entities have been created");
+    return 2;
+  }
+
+  if (limit == entities_count) {
+    lua_pushboolean(L, 1);
+    return 1;
+  }
+
+  ptr = malloc(sizeof(*entities) * limit);
+
+  if (ptr == NULL) {
+    lua_pushboolean(L, 0);
+    lua_pushstring(L, "memory allocation failed");
+    return 2;
+  }
+
+  free(entities);
+  entities = ptr;
+
+  lua_pushboolean(L, 1);
+  return 1;
+}
+
 static luaL_Reg entity_class_methods[] = {{"all", entity_all},
                                           {"by_id", entity_by_id},
                                           {"new", entity_new},
+                                          {"set_limit", entity_set_limit},
                                           {NULL, NULL}};
 
 static int entity_register_content(lua_State* L) {

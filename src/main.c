@@ -76,6 +76,7 @@ int main(int argc, char* argv[]) {
 
         // Init target_path
         {
+          // TODO: Add check incase path doesnt contain /
           char* last_slash = strrchr(poptions->script_path, '/');
           long length = last_slash - poptions->script_path + 1;
 

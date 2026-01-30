@@ -6,6 +6,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define ANY2STR(any) #any
+#define EXPAND2STR(x) ANY2STR(x)
+
 // TODO: Make debug show short filenames
 #ifdef DEBUG
 #define DEBUG_LOG(...)                \
