@@ -3,6 +3,7 @@
 #include <lauxlib.h>
 #include <limits.h>
 #include <lua.h>
+#include <luaconf.h>
 #include <pico_ecs.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,7 +11,6 @@
 #include "../../constants.h"
 #include "../../functions.h"
 #include "component.h"
-#include "luaconf.h"
 
 static ecs_id_t array_limit;
 
@@ -240,8 +240,13 @@ static int entity_set_limit(lua_State* L) {
   }
 
   if (limit > array_limit) {
+    char str[256];
+
+    sprintf(str, "limit cannot exceed %lu", limit);
+
     lua_pushnil(L);
-    lua_pushstring(L, "limit cannot exceed " EXPAND2STR(ENTI_MAX));
+    lua_pushstring(L, str);
+
     return 2;
   }
 
