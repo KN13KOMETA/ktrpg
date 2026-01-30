@@ -11,6 +11,8 @@
 #include "../../functions.h"
 #include "entity.h"
 
+static ecs_id_t array_limit;
+
 static ecs_t* ecs;
 static lg_component* comps;
 static ecs_id_t comps_count = 0;
@@ -45,10 +47,17 @@ static void component_str_destructor(ecs_t* ecs, ecs_entity_t entity,
 static int component_new(lua_State* L) {
   const char* ctype = luaL_checkstring(L, 2);
   const char* cname = luaL_checkstring(L, 3);
-  ptr2ptr* ud = lua_newuserdatauv(L, sizeof(*ud), 0);
+  ptr2ptr* ud;
   lg_component* c;
 
-  // TODO: Add realloc
+  if (comps_count + 1 > comps_max) {
+    lua_pushnil(L);
+    lua_pushstring(L, "component limit reached");
+    return 2;
+  }
+
+  ud = lua_newuserdatauv(L, sizeof(*ud), 0);
+
   c = &comps[comps_count++];
   ud->ptr = c;
 
@@ -84,11 +93,13 @@ static int component_new(lua_State* L) {
   return 1;
 }
 
+static luaL_Reg component_class_methods[] = {{"new", component_new},
+                                             {NULL, NULL}};
+
 static int component_register_content(lua_State* L) {
   lua_newtable(L);
 
-  lua_pushcfunction(L, component_new);
-  lua_setfield(L, -2, "new");
+  luaL_setfuncs(L, component_class_methods, 0);
 
   return 1;
 }
@@ -100,9 +111,15 @@ void lg_component_create(lua_State* L) {
   ecs = lua_touserdata(L, -1);
   lua_pop(L, 1);
 
+  array_limit = (LUA_MAXINTEGER) / sizeof(*comps);
+
+  DEBUG_LOG("LG: COMPONENT ARRAY LIMIT %lu", array_limit);
+
   comps_max = UINT8_MAX;
   comps_count = 0;
   comps = malloc(sizeof(*comps) * comps_max);
+
+  DEBUG_LOG("LG: COMPONENT ARRAY SIZE = %lu", comps_max);
 
   component_init_metatable(L);
 
