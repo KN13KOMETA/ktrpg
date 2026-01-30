@@ -44,7 +44,26 @@ int main(int argc, char* argv[]) {
     // Load lua scripts or use internal ones
     if (poptions->script_path != NULL &&
         file_exists(poptions->script_path) == 0) {
-      DEBUG_LOG("RUNNING USER LUA SCRIPTS");
+      {
+        char c = '\0';
+
+        printf(TITLE("SECURITY WARNING"));
+        printf("You are about to run user-written Lua scripts\n");
+        printf("They are NOT sandboxed and have full access to your SYSTEM\n");
+        printf("Are you sure you want to continue? (y/n): ");
+
+        getchar_clear(&c);
+
+        switch (c) {
+          case 'y':
+          case 'Y':
+            break;
+          default:
+            return 0;
+        }
+      }
+
+      printf(TITLE("GAME (user scripts)"));
 
       // TODO: Test it on windows
       {
@@ -122,7 +141,7 @@ int main(int argc, char* argv[]) {
       if (luaL_dofile(L, poptions->script_path) != LUA_OK)
         printf("Error at internal user scripts: %s\n", lua_tostring(L, -1));
     } else {
-      DEBUG_LOG("RUNNING INTERNAL LUA SCRIPTS");
+      printf(TITLE("GAME (internal scripts)"));
 
       register_lua_text_module(L, "module", module_lua);
 
