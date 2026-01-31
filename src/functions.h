@@ -11,13 +11,13 @@
 
 #define FMALLOC(ptr, size)                             \
   {                                                    \
-    unsigned long s = size;                            \
-    ptr = malloc(s);                                   \
+    unsigned long _s = size;                           \
+    ptr = malloc(_s);                                  \
     if (ptr == NULL) {                                 \
       printf(__FILE__ ":%d: FATAL ERROR\n", __LINE__); \
       printf("Failed to allocate memory\n");           \
       printf("PTR = " #ptr "\n");                      \
-      printf("SIZE (%lu) = " #size "\n", s);           \
+      printf("SIZE (%lu) = " #size "\n", _s);          \
       exit(0);                                         \
     }                                                  \
   }
