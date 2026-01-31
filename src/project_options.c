@@ -23,7 +23,9 @@ int export_opt_cb(struct argparse* self, const struct argparse_option* option);
 int user_opt_cb(struct argparse* self, const struct argparse_option* option);
 
 project_options* prompt_project_options(int argc, const char* argv[]) {
-  project_options* poptions = malloc(sizeof(*poptions));
+  project_options* poptions;
+  SELFMALLOC(poptions);
+
   poptions->export_path = NULL;
   poptions->script_path = NULL;
 
@@ -60,11 +62,11 @@ void print_version(void) {
   exit(EXIT_SUCCESS);
 }
 void export_scripts(char* path, project_options* poptions) {
-  poptions->export_path = malloc(strlen(path) + 1);
+  FMALLOC(poptions->export_path, strlen(path) + 1);
   strcpy(poptions->export_path, path);
 }
 void use_user_script(char* path, project_options* poptions) {
-  poptions->script_path = malloc(strlen(path) + 1);
+  FMALLOC(poptions->script_path, strlen(path) + 1);
   strcpy(poptions->script_path, path);
 }
 

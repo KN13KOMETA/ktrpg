@@ -55,7 +55,7 @@ void register_lua_text_module(lua_State* L, const char* name,
                               const char* content);
 
 // Allocates memory
-// Returns path/?.lua;path/?/init.lua or NULL
+// Returns path/?.lua;path/?/init.lua
 char* build_lua_package_search_path(const char* path);
 
 // Adds path to lua package.path

@@ -23,8 +23,10 @@ void print_debug_mode(void);
 void user_script_warning(void);
 
 int main(int argc, char* argv[]) {
-  const char** temp_argv = malloc(((size_t)argc + 1) * sizeof(*temp_argv));
+  const char** temp_argv;
   project_options* poptions;
+
+  FMALLOC(temp_argv, ((size_t)argc + 1) * sizeof(*temp_argv));
 
   for (int i = 0; i < argc; i++) temp_argv[i] = argv[i];
   temp_argv[argc] = NULL;
@@ -46,35 +48,34 @@ int main(int argc, char* argv[]) {
 
     // Load lua scripts or use internal ones
     if (poptions->script_path != NULL) {
+      char* target_path;
+      char* module_path;
+
       user_script_warning();
 
       printf(TITLE("GAME (user scripts)"));
 
       // TODO: Test it on windows
+
+      // Init target_path
       {
-        char* module_path;
-        char* target_path;
+        char* last_slash = strrchr(poptions->script_path, '/');
+        unsigned long length =
+            (unsigned long)(last_slash - poptions->script_path);
 
-        // Init target_path
-        {
-          char* last_slash = strrchr(poptions->script_path, '/');
-          unsigned long length =
-              (unsigned long)(last_slash - poptions->script_path);
+        FMALLOC(target_path, length + 1);
 
-          target_path = malloc(length + 1);
+        strncpy(target_path, poptions->script_path, length);
 
-          strncpy(target_path, poptions->script_path, length);
-
-          target_path[length] = '\0';
-        }
-
-        module_path = build_lua_package_search_path(target_path);
-
-        add_lua_package_path(L, module_path);
-
-        free(target_path);
-        free(module_path);
+        target_path[length] = '\0';
       }
+
+      module_path = build_lua_package_search_path(target_path);
+
+      add_lua_package_path(L, module_path);
+
+      free(target_path);
+      free(module_path);
 
       if (luaL_dofile(L, poptions->script_path) != LUA_OK)
         printf("Error at internal user scripts: %s\n", lua_tostring(L, -1));
