@@ -87,6 +87,9 @@ void add_lua_package_path(lua_State* L, const char* path) {
   i++;
 
   strcpy(package_path + i, path);
+  i += strlen(path);
+
+  package_path[i] = '\0';
 
   lua_pop(L, 1);
   lua_pushstring(L, package_path);
