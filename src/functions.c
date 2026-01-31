@@ -2,6 +2,7 @@
 
 #include <lauxlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 int getchar_clear(char* ch) {
@@ -52,4 +53,45 @@ void register_lua_text_module(lua_State* L, const char* name,
   }
 
   lua_pop(L, 2);
+}
+
+char* build_lua_package_search_path(const char* path) {
+  char* p1 = "/?.lua;";
+  char* p2 = "/?/init.lua";
+  unsigned long len = strlen(path);
+  char* np = malloc(len + strlen(p1) + len + strlen(p2) + 1);
+
+  if (np != NULL) {
+    sprintf(np, "%s%s%s%s", path, p1, path, p2);
+  }
+
+  return np;
+}
+
+void add_lua_package_path(lua_State* L, const char* path) {
+  const char* current_path;
+  char* package_path;
+  int i = 0;
+
+  lua_getglobal(L, "package");
+  lua_getfield(L, -1, "path");
+
+  current_path = lua_tostring(L, -1);
+
+  package_path = malloc(strlen(current_path) + 1 + strlen(path) + 1);
+
+  strcpy(package_path, current_path);
+  i += strlen(current_path);
+
+  package_path[i] = ';';
+  i++;
+
+  strcpy(package_path + i, path);
+
+  lua_pop(L, 1);
+  lua_pushstring(L, package_path);
+  lua_setfield(L, -2, "path");
+  lua_pop(L, 1);
+
+  free(package_path);
 }

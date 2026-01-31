@@ -19,6 +19,8 @@
 #define PICO_ECS_IMPLEMENTATION
 #include <pico_ecs.h>
 
+void user_script_warning(void);
+
 int main(int argc, char* argv[]) {
   const char** temp_argv = malloc(((size_t)argc + 1) * sizeof(*temp_argv));
   project_options* poptions;
@@ -43,42 +45,20 @@ int main(int argc, char* argv[]) {
 
     // Load lua scripts or use internal ones
     if (poptions->script_path != NULL) {
-      {
-        char c = '\0';
-
-        printf(TITLE("SECURITY WARNING"));
-        printf("You are about to run user-written Lua scripts\n");
-        printf("They are NOT sandboxed and have full access to your SYSTEM\n");
-        printf("Are you sure you want to continue? (y/n): ");
-
-        getchar_clear(&c);
-
-        switch (c) {
-          case 'y':
-          case 'Y':
-            break;
-          default:
-            return 0;
-        }
-      }
+      user_script_warning();
 
       printf(TITLE("GAME (user scripts)"));
 
       // TODO: Test it on windows
       {
         char* module_path;
-        char* path_type1 = "?.lua";
-        char* path_type2 = "?/init.lua";
         char* target_path;
-        size_t target_path_length;
-        int i = 0;
 
         // Init target_path
         {
-          // TODO: Add check incase path doesnt contain /
           char* last_slash = strrchr(poptions->script_path, '/');
           unsigned long length =
-              (unsigned long)(last_slash - poptions->script_path + 1);
+              (unsigned long)(last_slash - poptions->script_path);
 
           target_path = malloc(length + 1);
 
@@ -87,56 +67,12 @@ int main(int argc, char* argv[]) {
           target_path[length] = '\0';
         }
 
-        target_path_length = strlen(target_path);
+        module_path = build_lua_package_search_path(target_path);
 
-        module_path = malloc(target_path_length + strlen(path_type1) + 1 +
-                             target_path_length + strlen(path_type2) + 1);
+        add_lua_package_path(L, module_path);
 
-        strcpy(module_path, target_path);
-        i += target_path_length;
-
-        strcpy(module_path + i, path_type1);
-        i += strlen(path_type1);
-
-        module_path[i] = ';';
-        i++;
-
-        strcpy(module_path + i, target_path);
-        i += target_path_length;
-
-        strcpy(module_path + i, path_type2);
-
-        // Set new package.path
-        {
-          char* package_path;
-          const char* current_path;
-          int i = 0;
-
-          lua_getglobal(L, "package");
-          lua_getfield(L, -1, "path");
-
-          current_path = lua_tostring(L, -1);
-
-          package_path =
-              malloc(strlen(current_path) + 1 + strlen(module_path) + 1);
-
-          strcpy(package_path, current_path);
-          i += strlen(current_path);
-
-          package_path[i] = ';';
-          i++;
-
-          strcpy(package_path + i, module_path);
-
-          lua_pop(L, 1);
-          lua_pushstring(L, package_path);
-          lua_setfield(L, -2, "path");
-          lua_pop(L, 1);
-
-          free(target_path);
-          free(module_path);
-          free(package_path);
-        }
+        free(target_path);
+        free(module_path);
       }
 
       if (luaL_dofile(L, poptions->script_path) != LUA_OK)
@@ -153,14 +89,29 @@ int main(int argc, char* argv[]) {
     lg_destroy();
     ecs_free(ecs);
     lua_close(L);
-
-    // return EXIT_SUCCESS;
   }
-
-  // luab_init(poptions);
 
   free_project_options(poptions);
   free(temp_argv);
 
   return EXIT_SUCCESS;
+}
+
+void user_script_warning(void) {
+  char c = '\0';
+
+  printf(TITLE("SECURITY WARNING"));
+  printf("You are about to run user-written Lua scripts\n");
+  printf("They are NOT sandboxed and have full access to your SYSTEM\n");
+  printf("Are you sure you want to continue? (y/n): ");
+
+  getchar_clear(&c);
+
+  switch (c) {
+    case 'y':
+    case 'Y':
+      break;
+    default:
+      exit(EXIT_SUCCESS);
+  }
 }
