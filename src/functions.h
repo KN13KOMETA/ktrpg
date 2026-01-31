@@ -9,6 +9,22 @@
 #define ANY2STR(any) #any
 #define EXPAND2STR(x) ANY2STR(x)
 
+#define FMALLOC(ptr, size)                             \
+  {                                                    \
+    unsigned long s = size;                            \
+    ptr = malloc(s);                                   \
+    if (ptr == NULL) {                                 \
+      printf(__FILE__ ":%d: FATAL ERROR\n", __LINE__); \
+      printf("Failed to allocate memory\n");           \
+      printf("PTR = " #ptr "\n");                      \
+      printf("SIZE (%lu) = " #size "\n", s);           \
+      exit(0);                                         \
+    }                                                  \
+  }
+
+#define SELFMALLOC(ptr) FMALLOC(ptr, sizeof(*ptr))
+#define SELFMALLOCARR(ptr, arrsize) FMALLOC(ptr, sizeof(*ptr) * arrsize)
+
 // TODO: Make debug show short filenames
 #ifdef DEBUG
 #define DEBUG_LOG(...)                \
