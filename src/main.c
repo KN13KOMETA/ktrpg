@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #include "constants.h"
@@ -41,8 +42,7 @@ int main(int argc, char* argv[]) {
     lg_create(L, ecs);
 
     // Load lua scripts or use internal ones
-    if (poptions->script_path != NULL &&
-        file_exists(poptions->script_path) == 0) {
+    if (poptions->script_path != NULL) {
       {
         char c = '\0';
 
