@@ -71,6 +71,8 @@ else()
     ${PROJECT_NAME}
     PRIVATE
       -xc
+      # Make __FILE__ relative to src
+      -fmacro-prefix-map=${CMAKE_SOURCE_DIR}/src/=
       # Main warning flags
       -Wall
       -Wextra

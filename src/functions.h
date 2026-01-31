@@ -25,7 +25,6 @@
 #define SELFMALLOC(ptr) FMALLOC(ptr, sizeof(*ptr))
 #define SELFMALLOCARR(ptr, arrsize) FMALLOC(ptr, sizeof(*ptr) * arrsize)
 
-// TODO: Make debug show short filenames
 #ifdef DEBUG
 #define DEBUG_LOG(...)                \
   printf(__FILE__ ":%d: ", __LINE__); \
