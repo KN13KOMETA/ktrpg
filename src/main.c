@@ -19,6 +19,7 @@
 #define PICO_ECS_IMPLEMENTATION
 #include <pico_ecs.h>
 
+void print_debug_mode(void);
 void user_script_warning(void);
 
 int main(int argc, char* argv[]) {
@@ -30,7 +31,7 @@ int main(int argc, char* argv[]) {
 
   poptions = prompt_project_options(argc, temp_argv);
 
-  DEBUG_LOG(TITLE("DEBUG MODE"));
+  print_debug_mode();
 
   printf(TITLE("HELP"));
   printf("Run with --help for more info\n");
@@ -95,6 +96,15 @@ int main(int argc, char* argv[]) {
   free(temp_argv);
 
   return EXIT_SUCCESS;
+}
+
+void print_debug_mode(void) {
+#ifdef DEBUG
+
+  printf(TITLE("DEBUG MODE"));
+  printf("Be Quiet, Wanderer\n");
+
+#endif  // DEBUG
 }
 
 void user_script_warning(void) {
