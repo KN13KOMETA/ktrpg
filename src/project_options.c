@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "functions.h"
+
 static const char* const usages[] = {
     PROJECT_NAME,
     PROJECT_NAME " [options]",
@@ -79,8 +81,22 @@ int export_opt_cb(struct argparse* self, const struct argparse_option* option) {
   return EXIT_SUCCESS;
 }
 int user_opt_cb(struct argparse* self, const struct argparse_option* option) {
+  char* path = *(char**)option->value;
+  char* ext = strrchr(path, '.');
+
   (void)self;
-  use_user_script(*(char**)option->value, (project_options*)option->data);
+
+  if (ext == NULL || strcmp(".lua", ext) != 0) {
+    printf("Path \"%s\" is not path to lua script\n", path);
+    exit(EXIT_SUCCESS);
+  }
+
+  if (file_exists(path) != 0) {
+    printf("Path \"%s\" does not exists\n", path);
+    exit(EXIT_SUCCESS);
+  }
+
+  use_user_script(path, (project_options*)option->data);
   return EXIT_SUCCESS;
 }
 
