@@ -38,7 +38,8 @@ static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* raw_entities,
   DEBUG_LOG("LG: LRS RUNNING " SYST_FL, SYST_FL_ARGS(s));
 
   {
-    lg_entity* entities = malloc(sizeof(*entities) * entity_count);
+    lg_entity* entities;
+    SELFMALLOCARR(entities, entity_count);
 
     lua_rawgeti(L, LUA_REGISTRYINDEX, s->lua_ref);
 
@@ -235,7 +236,7 @@ static int system_new(lua_State* L) {
 
   s->id = ecs_define_system(ecs, 0, lua_runner_system, NULL, NULL, s).id;
 
-  s->name = malloc(strlen(cname) + 1);
+  FMALLOC(s->name, strlen(cname) + 1);
   strcpy(s->name, cname);
 
   luaL_getmetatable(L, "ClassSystemMT");
@@ -322,7 +323,7 @@ void lg_system_create(lua_State* L) {
 
   systems_max = UINT8_MAX;
   systems_count = 0;
-  systems = malloc(sizeof(*systems) * systems_max);
+  SELFMALLOCARR(systems, systems_max);
 
   DEBUG_LOG("LG: SYSTEM ARRAY SIZE = %lu", systems_max);
 

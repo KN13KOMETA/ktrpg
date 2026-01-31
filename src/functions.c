@@ -59,7 +59,9 @@ char* build_lua_package_search_path(const char* path) {
   char* p1 = "/?.lua;";
   char* p2 = "/?/init.lua";
   unsigned long len = strlen(path);
-  char* np = malloc(len + strlen(p1) + len + strlen(p2) + 1);
+  char* np;
+
+  FMALLOC(np, len + strlen(p1) + len + strlen(p2) + 1);
 
   if (np != NULL) {
     sprintf(np, "%s%s%s%s", path, p1, path, p2);
@@ -78,7 +80,7 @@ void add_lua_package_path(lua_State* L, const char* path) {
 
   current_path = lua_tostring(L, -1);
 
-  package_path = malloc(strlen(current_path) + 1 + strlen(path) + 1);
+  FMALLOC(package_path, strlen(current_path) + 1 + strlen(path) + 1)
 
   strcpy(package_path, current_path);
   i += strlen(current_path);

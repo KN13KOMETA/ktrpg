@@ -85,7 +85,7 @@ static int component_new(lua_State* L) {
     return luaL_argerror(L, 2, "expected \"int\", \"num\", \"tag\" or \"str\"");
   }
 
-  c->name = malloc(strlen(cname) + 1);
+  FMALLOC(c->name, strlen(cname) + 1);
   strcpy(c->name, cname);
 
   luaL_getmetatable(L, "ClassComponentMT");
@@ -167,7 +167,7 @@ void lg_component_create(lua_State* L) {
 
   comps_max = UINT8_MAX;
   comps_count = 0;
-  comps = malloc(sizeof(*comps) * comps_max);
+  SELFMALLOCARR(comps, comps_max);
 
   DEBUG_LOG("LG: COMPONENT ARRAY SIZE = %lu", comps_max);
 

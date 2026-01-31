@@ -131,7 +131,7 @@ static int method_set(lua_State* L) {
     case COMP_STR: {
       const char* s = luaL_checkstring(L, 3);
 
-      (*(lg_component_str*)ec).str = malloc(strlen(s) + 1);
+      FMALLOC((*(lg_component_str*)ec).str, strlen(s) + 1);
       strcpy((*(lg_component_str*)ec).str, s);
 
       lua_pushstring(L, (*(lg_component_str*)ec).str);
@@ -305,7 +305,7 @@ void lg_entity_create(lua_State* L) {
 
   entities_max = UINT16_MAX;
   entities_count = 0;
-  entities = malloc(sizeof(*entities) * entities_max);
+  SELFMALLOCARR(entities, entities_max);
 
   DEBUG_LOG("LG: ENTITY ARRAY SIZE = %lu", entities_max);
 
