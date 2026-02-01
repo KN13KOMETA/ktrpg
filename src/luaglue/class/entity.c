@@ -41,7 +41,7 @@ static int method_remove(lua_State* L) {
 
   if (ecs_is_invalid_entity(ID2ENTI(e->id)) ||
       !ecs_is_ready(ecs, ID2ENTI(e->id))) {
-    lua_pushnil(L);
+    lua_pushboolean(L, 0);
     lua_pushstring(L, "entity not ready or invalid");
     return 2;
   }
