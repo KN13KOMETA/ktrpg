@@ -143,8 +143,15 @@ static int component_set_limit(lua_State* L) {
   return 1;
 }
 
-static luaL_Reg component_class_methods[] = {
-    {"new", component_new}, {"set_limit", component_set_limit}, {NULL, NULL}};
+static int component_get_limit(lua_State* L) {
+  lua_pushinteger(L, (lua_Integer)comps_max);
+  return 1;
+}
+
+static luaL_Reg component_class_methods[] = {{"new", component_new},
+                                             {"set_limit", component_set_limit},
+                                             {"get_limit", component_get_limit},
+                                             {NULL, NULL}};
 
 static int component_register_content(lua_State* L) {
   lua_newtable(L);

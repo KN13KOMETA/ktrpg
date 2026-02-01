@@ -294,10 +294,16 @@ static int system_set_limit(lua_State* L) {
   return 1;
 }
 
+static int system_get_limit(lua_State* L) {
+  lua_pushinteger(L, (lua_Integer)systems_max);
+  return 1;
+}
+
 static struct luaL_Reg system_class_methods[] = {
     {"run_debug_system", system_run_debug_system},
     {"new", system_new},
     {"set_limit", system_set_limit},
+    {"get_limit", system_get_limit},
     {NULL, NULL}};
 
 static int system_register_content(lua_State* L) {

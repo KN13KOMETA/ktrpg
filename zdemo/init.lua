@@ -3,6 +3,14 @@ ktrpg.System:new("Name"):get_name()
 ktrpg.System:new("Name"):excludes()
 ktrpg.System:new("Name"):get_mask()
 ktrpg.System:new("Name"):get_entity_count()
+
+local ok, err = ktrpg.Component:set_limit(2000000)
+local ok, err = ktrpg.Entity:set_limit(2000000)
+local ok, err = ktrpg.System:set_limit(2000000)
+
+ktrpg.Component:get_limit()
+ktrpg.Entity:get_limit()
+ktrpg.System:get_limit()
 --]]
 
 local ktrpg = require("ktrpg")
