@@ -76,6 +76,11 @@ SYSTEM = {
       :excludes(COMPONENT.tag_dead)
       :set_mask(0)
       :on_run(function(entities, entity_count)
+        if entity_count == 0 then
+          print("No players alive, stopping...")
+          os.exit(0)
+        end
+
         for i = 1, entity_count, 1 do
           local e = entities[i]
           local player = {
@@ -338,6 +343,35 @@ SYSTEM = {
       ::continue::
     end
   end),
+  clear_attacked_by = ktrpg.System
+      :new("Clear Attacked By")
+      :requires(COMPONENT.attacked_by)
+      :set_mask(0)
+      :on_run(function(entities, entity_count)
+        for i = 1, entity_count, 1 do
+          local e = entities[i]
+
+          local attacker_id = e:get(COMPONENT.attacked_by)
+
+          if attacker_id == nil then
+            e:remove(COMPONENT.attacked_by)
+            goto continue
+          end
+
+          local attacker = ktrpg.Entity:by_id(attacker_id)
+
+          if attacker == nil then
+            e:remove(COMPONENT.attacked_by)
+            goto continue
+          end
+
+          if attacker:get(COMPONENT.tag_dead) == nil then
+            goto continue
+          end
+
+          ::continue::
+        end
+      end),
 }
 
 local player = create_player()
@@ -354,7 +388,7 @@ do
 
   enemy:set(COMPONENT.max_health, 30)
   enemy:set(COMPONENT.health, 30)
-  enemy:set(COMPONENT.attack, 4)
+  enemy:set(COMPONENT.attack, 40)
   enemy:set(COMPONENT.damage_received, 0)
 
   enemy:set(COMPONENT.mob_ai, MOB_AI.hunt)
@@ -369,6 +403,7 @@ local function run()
   SYSTEM.physical_damage:run()
   SYSTEM.take_damage:run()
   SYSTEM.death:run()
+  SYSTEM.clear_attacked_by:run()
 
   ktrpg.System:run_debug_system()
 end
