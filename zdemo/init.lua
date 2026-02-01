@@ -114,6 +114,7 @@ SYSTEM = {
             print("x) exit")
             print("s) Check status (doesn't waste turn)")
             print("i) Idle")
+            print("l) Change location")
 
             if enemy ~= nil then
               print("a) Attack " .. enemy_name .. " (enemy that attacked you)")
@@ -157,6 +158,48 @@ SYSTEM = {
               a = function()
                 physical_damage(e, enemy)
                 return 1
+              end,
+              l = function()
+                print(TB .. "LOCATION SELECT" .. TE)
+
+                local llist = {
+                  [LOCATION.forest] = {
+                    name = "forest",
+                    key = "f",
+                  },
+                  [LOCATION.player_home] = {
+                    name = "Player home",
+                    key = "h",
+                  },
+                }
+
+                llist[player.location] = nil
+
+                for key, value in pairs(llist) do
+                  if value == nil then
+                    goto continue
+                  end
+
+                  print(value.key .. ") go to " .. value.name)
+
+                  ::continue::
+                end
+
+                io.write("Select: ")
+                local act = io.read()
+
+                for key, value in pairs(llist) do
+                  if value == nil then
+                    goto continue
+                  end
+
+                  if act == value.key then
+                    e:set(COMPONENT.location, key)
+                    return 1
+                  end
+
+                  ::continue::
+                end
               end,
             }
 
