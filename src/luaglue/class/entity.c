@@ -276,10 +276,16 @@ static int entity_set_limit(lua_State* L) {
   return 1;
 }
 
+static int entity_get_limit(lua_State* L) {
+  lua_pushinteger(L, (lua_Integer)entities_max);
+  return 1;
+}
+
 static luaL_Reg entity_class_methods[] = {{"all", entity_all},
                                           {"by_id", entity_by_id},
                                           {"new", entity_new},
                                           {"set_limit", entity_set_limit},
+                                          {"get_limit", entity_get_limit},
                                           {NULL, NULL}};
 
 static int entity_register_content(lua_State* L) {

@@ -9,11 +9,11 @@ COMPONENT = {
 
 SYSTEM = {
   print_name = ktrpg.System
-    :new("print name")
-    :requires(COMPONENT.name)
-    :excludes(COMPONENT.dead, COMPONENT.health)
-    :set_mask(0)
-    :on_run(function(entity_count, entities) end),
+      :new("print name")
+      :requires(COMPONENT.name)
+      :excludes(COMPONENT.dead, COMPONENT.health)
+      :set_mask(0)
+      :on_run(function(entity_count, entities) end),
 }
 SYSTEM.print_name:run()
 SYSTEM.print_name:disable()
@@ -34,3 +34,11 @@ ktrpg.Entity:by_id(1)
 player:kill()
 
 ktrpg.System:run_debug_system()
+
+local ok, err = ktrpg.Component:set_limit(2000000)
+local ok, err = ktrpg.Entity:set_limit(2000000)
+local ok, err = ktrpg.System:set_limit(2000000)
+
+ktrpg.Component:get_limit()
+ktrpg.Entity:get_limit()
+ktrpg.System:get_limit()
