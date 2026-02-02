@@ -130,8 +130,11 @@ function SystemInstance:enable() end
 ---@return SystemInstance
 function SystemInstance:disable() end
 
+---@alias SystemInstanceCallback fun(entities: EntityInstance[], entities_count: integer)
+
+---@param callback SystemInstanceCallback
 ---@return SystemInstance
-function SystemInstance:on_run() end
+function SystemInstance:on_run(callback) end
 
 ---@return SystemInstance
 function SystemInstance:run() end
