@@ -11,10 +11,10 @@
 
 #include "constants.h"
 #include "functions.h"
+#include "launch_options.h"
 #include "luaglue/core.h"
 #include "luah/init.h"
 #include "luah/module.h"
-#include "project_options.h"
 
 #define PICO_ECS_IMPLEMENTATION
 #include <pico_ecs.h>
@@ -23,15 +23,20 @@ void print_debug_mode(void);
 void user_script_warning(void);
 
 int main(int argc, char* argv[]) {
-  const char** temp_argv;
-  project_options* poptions;
+  launch_options loptions = {0, 0, NULL, NULL, NULL};
+  int code = process_launch_options(&loptions, argc, argv);
 
-  FMALLOC(temp_argv, ((size_t)argc + 1) * sizeof(*temp_argv));
-
-  for (int i = 0; i < argc; i++) temp_argv[i] = argv[i];
-  temp_argv[argc] = NULL;
-
-  poptions = prompt_project_options(argc, temp_argv);
+  switch (code) {
+    case LO_EXIT_ACTION:
+      return EXIT_SUCCESS;
+    case LO_EXIT_ERROR:
+      return EXIT_FAILURE;
+    case EXIT_SUCCESS:
+      break;
+    default:
+      printf("Unknown exit code (%d)\n", code);
+      return EXIT_FAILURE;
+  }
 
   print_debug_mode();
 
@@ -47,7 +52,7 @@ int main(int argc, char* argv[]) {
     lg_create(L, ecs);
 
     // Load lua scripts or use internal ones
-    if (poptions->script_path != NULL) {
+    if (loptions.script_path != NULL) {
       char* target_path;
       char* module_path;
 
@@ -59,13 +64,13 @@ int main(int argc, char* argv[]) {
 
       // Init target_path
       {
-        char* last_slash = strrchr(poptions->script_path, '/');
+        char* last_slash = strrchr(loptions.script_path, '/');
         unsigned long length =
-            (unsigned long)(last_slash - poptions->script_path);
+            (unsigned long)(last_slash - loptions.script_path);
 
         FMALLOC(target_path, length + 1);
 
-        strncpy(target_path, poptions->script_path, length);
+        strncpy(target_path, loptions.script_path, length);
 
         target_path[length] = '\0';
       }
@@ -77,7 +82,7 @@ int main(int argc, char* argv[]) {
       free(target_path);
       free(module_path);
 
-      if (luaL_dofile(L, poptions->script_path) != LUA_OK)
+      if (luaL_dofile(L, loptions.script_path) != LUA_OK)
         printf("Error at internal user scripts: %s\n", lua_tostring(L, -1));
     } else {
       printf(TITLE("GAME (internal scripts)"));
@@ -92,9 +97,6 @@ int main(int argc, char* argv[]) {
     ecs_free(ecs);
     lua_close(L);
   }
-
-  free_project_options(poptions);
-  free(temp_argv);
 
   return EXIT_SUCCESS;
 }

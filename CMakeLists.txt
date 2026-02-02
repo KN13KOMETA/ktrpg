@@ -41,7 +41,7 @@ add_executable(
   ${PROJECT_NAME}
   ${GENERATED_C_FILES}
   src/functions.c
-  src/project_options.c
+  src/launch_options.c
   src/luaglue/class/entity.c
   src/luaglue/class/component.c
   src/luaglue/class/system.c
