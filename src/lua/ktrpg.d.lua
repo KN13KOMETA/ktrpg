@@ -36,7 +36,7 @@ function Component:new(type, name) end
 
 ---@param limit integer
 ---@return integer limit
----@overload fun(limit: integer): nil, string
+---@overload fun(self: Component, limit: integer): nil, string
 function Component:set_limit(limit) end
 
 ---@return integer limit
@@ -84,24 +84,24 @@ local Entity = {}
 
 ---@return EntityInstance[] entities
 ---@return integer entities_count
-function Entity.all() end
+function Entity:all() end
 
 ---@param id integer
 ---@return EntityInstance entity
----@overload fun(id: integer):nil, string
-function Entity.by_id(id) end
+---@overload fun(self: Entity, id: integer):nil, string
+function Entity:by_id(id) end
 
 ---@return EntityInstance entity
----@overload fun():nil, string
-function Entity.new() end
+---@overload fun(self: Entity):nil, string
+function Entity:new() end
 
 ---@param limit integer
 ---@return integer limit
----@overload fun(limit: integer): nil, string
-function Entity.set_limit(limit) end
+---@overload fun(self: Entity, limit: integer): nil, string
+function Entity:set_limit(limit) end
 
 ---@return integer limit
-function Entity.get_limit() end
+function Entity:get_limit() end
 
 ---@class ktrpg
 local ktrpg = {
