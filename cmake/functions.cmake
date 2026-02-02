@@ -44,8 +44,10 @@ function(generate_header_from_lua input_file)
     BASE_DIRECTORY ${LUAH_SOURCE_DIR}
     OUTPUT_VARIABLE header_file
   )
-  cmake_path(REPLACE_EXTENSION header_file "h" OUTPUT_VARIABLE header_file)
-  cmake_path(REPLACE_EXTENSION header_file "c" OUTPUT_VARIABLE c_file)
+  string(REGEX REPLACE "\\.[^.]*$" "" header_file ${header_file})
+  string(REPLACE "." "_" header_file ${header_file})
+  set(header_file "${header_file}.h")
+  string(REGEX REPLACE "\\.[^.]*$" ".c" c_file ${header_file})
 
   # Set HEADER_GUARD
   cmake_path(
