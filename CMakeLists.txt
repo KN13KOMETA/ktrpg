@@ -31,6 +31,11 @@ set(CMAKE_C_EXTENSIONS OFF)
 # Embed lua scripts to source files
 generate_header_from_lua(${SOURCE_FILES_DIR}/lua/init.lua)
 generate_header_from_lua(${SOURCE_FILES_DIR}/lua/module.lua)
+# Also embed lua types
+generate_header_from_lua(${SOURCE_FILES_DIR}/lua/types/ktrpg/class/entity.d.lua)
+generate_header_from_lua(${SOURCE_FILES_DIR}/lua/types/ktrpg/class/component.d.lua)
+generate_header_from_lua(${SOURCE_FILES_DIR}/lua/types/ktrpg/class/system.d.lua)
+generate_header_from_lua(${SOURCE_FILES_DIR}/lua/types/ktrpg/ktrpg.d.lua)
 
 add_executable(
   ${PROJECT_NAME}
