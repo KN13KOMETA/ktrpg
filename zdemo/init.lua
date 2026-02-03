@@ -13,6 +13,7 @@ ktrpg.Entity:get_limit()
 ktrpg.System:get_limit()
 --]]
 
+---@type ktrpg
 local ktrpg = require("ktrpg")
 
 local physical_damage = require("physical_damage")
