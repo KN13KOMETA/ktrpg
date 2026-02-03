@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "constants.h"
+
 #define ANY2STR(any) #any
 #define EXPAND2STR(x) ANY2STR(x)
 
@@ -64,6 +66,9 @@ int directory_empty(char* path);
 int get_basedir(char* path, char* basedir);
 
 void create_dir_recursive(char* path);
+
+// Returns count of failed writes
+int write_vfiles_to_dir(vfile* vfiles, char* dir);
 
 // Registers a lua module with content as code
 void register_lua_text_module(lua_State* L, const char* name,

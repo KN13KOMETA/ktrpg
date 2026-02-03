@@ -24,7 +24,6 @@
 
 void print_debug_mode(void);
 int user_script_warning(void);
-void write_vfiles_to_dir(vfile* vfiles, char* dir);
 
 int main(int argc, char* argv[]) {
   vfile vfscripts[] = {
@@ -56,10 +55,16 @@ int main(int argc, char* argv[]) {
   printf("Run with --help for more info\n");
 
   if (loptions.scripts_export_path != NULL)
-    write_vfiles_to_dir(vfscripts, loptions.scripts_export_path);
+    if (write_vfiles_to_dir(vfscripts, loptions.scripts_export_path)) {
+      printf("Exporting scripts failed\n");
+      return EXIT_FAILURE;
+    }
 
   if (loptions.types_export_path != NULL)
-    write_vfiles_to_dir(vftypes, loptions.types_export_path);
+    if (write_vfiles_to_dir(vftypes, loptions.types_export_path)) {
+      printf("Exporting types failed\n");
+      return EXIT_FAILURE;
+    }
 
   {
     lua_State* L = luaL_newstate();
@@ -145,28 +150,5 @@ int user_script_warning(void) {
       break;
     default:
       return 1;
-  }
-}
-
-void write_vfiles_to_dir(vfile* vfiles, char* dir) {
-  size_t dir_len = strlen(dir);
-
-  for (int i = 0; vfiles[i].path != NULL; i++) {
-    vfile f = vfiles[i];
-    char filepath[dir_len + 1 + strlen(f.path) + 1];
-    char basedir[dir_len + 1 + strlen(f.path) + 1];
-    FILE* file;
-
-    sprintf(filepath, "%s/%s", dir, f.path);
-
-    get_basedir(filepath, basedir);
-
-    create_dir_recursive(basedir);
-
-    file = fopen(filepath, "w");
-
-    fwrite(f.content, strlen(f.content), 1, file);
-
-    fclose(file);
   }
 }
