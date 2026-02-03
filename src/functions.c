@@ -115,6 +115,32 @@ int directory_empty(char* path) {
 #endif  // ifdef _WIN32
 }
 
+int get_basedir(char* path, char* basedir) {
+  char* last_slash;
+
+  strcpy(basedir, path);
+
+  last_slash = strrchr(basedir, '/');
+
+  if (last_slash == NULL) return 1;
+
+  *last_slash = '\0';
+
+  return 0;
+}
+
+void create_dir_recursive(char* path) {
+  char basedir[strlen(path)];
+
+  if (directory_exists(path) == 0) return;
+
+  get_basedir(path, basedir);
+
+  if (directory_exists(basedir) != 0) create_dir_recursive(basedir);
+
+  mkdir(path, 0777);
+}
+
 void register_lua_text_module(lua_State* L, const char* name,
                               const char* content) {
   lua_getglobal(L, "package");
