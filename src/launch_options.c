@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "argparse.h"
 #include "functions.h"
 
 static const char* const usages[] = {
@@ -78,6 +77,34 @@ int validate_launch_options(launch_options* loptions) {
 
     if (file_exists(path) != 0) {
       printf("Path \"%s\" does not exists\n", path);
+      return LO_EXIT_ERROR;
+    }
+  }
+
+  if (loptions->scripts_export_path != NULL) {
+    char* path = loptions->scripts_export_path;
+
+    if (directory_exists(path) != 0) {
+      printf("Path \"%s\" does not exists or not a directory\n", path);
+      return LO_EXIT_ERROR;
+    }
+
+    if (directory_empty(path) != 0) {
+      printf("Path \"%s\" is not empty directory\n", path);
+      return LO_EXIT_ERROR;
+    }
+  }
+
+  if (loptions->types_export_path != NULL) {
+    char* path = loptions->types_export_path;
+
+    if (directory_exists(path) != 0) {
+      printf("Path \"%s\" does not exists or not a directory\n", path);
+      return LO_EXIT_ERROR;
+    }
+
+    if (directory_empty(path) != 0) {
+      printf("Path \"%s\" is not empty directory\n", path);
       return LO_EXIT_ERROR;
     }
   }
