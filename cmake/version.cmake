@@ -2,7 +2,7 @@
 # You should set major.minor.patch in root file project
 
 # Setting prerelease
-set(PROJECT_VERSION_PRERELEASE "alpha")
+set(PROJECT_VERSION_PRERELEASE "beta")
 
 # Getting git short hash
 # TODO: Value is getting on cmake configuration not project build
