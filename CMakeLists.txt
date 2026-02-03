@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 
 cmake_path(SET SOURCE_FILES_DIR "${CMAKE_SOURCE_DIR}/src")
 
+include(CheckCCompilerFlag)
 include("cmake/functions.cmake")
 
 # Always export compile commands (needs for clangd)
@@ -86,10 +87,20 @@ else()
       -Wcast-qual
       -Wconversion
       -Wmissing-prototypes
-      -Wmissing-variable-declarations
-      -Wreserved-identifier
       $<$<CONFIG:RELEASE>:-Werror>
   )
+  check_c_compiler_flag(
+    "-Wmissing-variable-declarations;-Wreserved-identifier"
+    HAVE_FLAGS
+  )
+  if(HAVE_FLAGS)
+    target_compile_options(
+      ${PROJECT_NAME}
+      PRIVATE -Wmissing-variable-declarations -Wreserved-identifier
+    )
+  else()
+    message(WARNING "Not every warning flag was turned on due to compiler")
+  endif()
 endif()
 
 option(ENABLE_WEVERYTHING "Enable Clang -Weverything" OFF)
