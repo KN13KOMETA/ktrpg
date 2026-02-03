@@ -14,4 +14,9 @@ typedef struct {
   void* ptr;
 } ptr2ptr;
 
+typedef struct {
+  const char* path;
+  const char* content;
+} vfile;
+
 #endif  // !CONSTANTS_H

@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 #include "constants.h"
 #include "functions.h"
@@ -15,14 +14,27 @@
 #include "luaglue/core.h"
 #include "luah/init.h"
 #include "luah/module.h"
+#include "luah/types/ktrpg/class/component_d.h"
+#include "luah/types/ktrpg/class/entity_d.h"
+#include "luah/types/ktrpg/class/system_d.h"
+#include "luah/types/ktrpg/ktrpg_d.h"
 
 #define PICO_ECS_IMPLEMENTATION
 #include <pico_ecs.h>
 
 void print_debug_mode(void);
 void user_script_warning(void);
+void write_vfiles_to_dir(vfile* vfiles, char* dir);
 
 int main(int argc, char* argv[]) {
+  vfile vfscripts[] = {
+      {"init.lua", init_lua}, {"module.lua", module_lua}, {NULL, NULL}};
+  vfile vftypes[] = {
+      {"types/ktrpg/class/entity.d.lua", types_ktrpg_class_entity_d_lua},
+      {"types/ktrpg/class/component.d.lua", types_ktrpg_class_component_d_lua},
+      {"types/ktrpg/class/system.d.lua", types_ktrpg_class_system_d_lua},
+      {"types/ktrpg/ktrpg.d.lua", types_ktrpg_ktrpg_d_lua},
+      {NULL, NULL}};
   launch_options loptions = {0, 0, NULL, NULL, NULL};
   int code = process_launch_options(&loptions, argc, argv);
 
@@ -42,6 +54,12 @@ int main(int argc, char* argv[]) {
 
   printf(TITLE("HELP"));
   printf("Run with --help for more info\n");
+
+  if (loptions.scripts_export_path != NULL)
+    write_vfiles_to_dir(vfscripts, loptions.scripts_export_path);
+
+  if (loptions.types_export_path != NULL)
+    write_vfiles_to_dir(vftypes, loptions.types_export_path);
 
   {
     lua_State* L = luaL_newstate();
@@ -126,5 +144,28 @@ void user_script_warning(void) {
       break;
     default:
       exit(EXIT_SUCCESS);
+  }
+}
+
+void write_vfiles_to_dir(vfile* vfiles, char* dir) {
+  size_t dir_len = strlen(dir);
+
+  for (int i = 0; vfiles[i].path != NULL; i++) {
+    vfile f = vfiles[i];
+    char filepath[dir_len + 1 + strlen(f.path) + 1];
+    char basedir[dir_len + 1 + strlen(f.path) + 1];
+    FILE* file;
+
+    sprintf(filepath, "%s/%s", dir, f.path);
+
+    get_basedir(filepath, basedir);
+
+    create_dir_recursive(basedir);
+
+    file = fopen(filepath, "w");
+
+    fwrite(f.content, strlen(f.content), 1, file);
+
+    fclose(file);
   }
 }
