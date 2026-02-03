@@ -23,7 +23,7 @@
 #include <pico_ecs.h>
 
 void print_debug_mode(void);
-void user_script_warning(void);
+int user_script_warning(void);
 void write_vfiles_to_dir(vfile* vfiles, char* dir);
 
 int main(int argc, char* argv[]) {
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
       char* target_path;
       char* module_path;
 
-      user_script_warning();
+      if (user_script_warning()) return EXIT_SUCCESS;
 
       printf(TITLE("GAME (user scripts)"));
 
@@ -128,7 +128,7 @@ void print_debug_mode(void) {
 #endif  // DEBUG
 }
 
-void user_script_warning(void) {
+int user_script_warning(void) {
   char c = '\0';
 
   printf(TITLE("SECURITY WARNING"));
@@ -141,9 +141,10 @@ void user_script_warning(void) {
   switch (c) {
     case 'y':
     case 'Y':
+      return 0;
       break;
     default:
-      exit(EXIT_SUCCESS);
+      return 1;
   }
 }
 
