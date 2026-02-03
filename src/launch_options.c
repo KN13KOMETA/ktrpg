@@ -83,6 +83,7 @@ int validate_launch_options(launch_options* loptions) {
 
   if (loptions->scripts_export_path != NULL) {
     char* path = loptions->scripts_export_path;
+    size_t len = strlen(path);
 
     if (directory_exists(path) != 0) {
       printf("Path \"%s\" does not exists or not a directory\n", path);
@@ -93,10 +94,13 @@ int validate_launch_options(launch_options* loptions) {
       printf("Path \"%s\" is not empty directory\n", path);
       return LO_EXIT_ERROR;
     }
+
+    if (path[len - 1] == '/') path[len - 1] = '\0';
   }
 
   if (loptions->types_export_path != NULL) {
     char* path = loptions->types_export_path;
+    size_t len = strlen(path);
 
     if (directory_exists(path) != 0) {
       printf("Path \"%s\" does not exists or not a directory\n", path);
@@ -107,6 +111,8 @@ int validate_launch_options(launch_options* loptions) {
       printf("Path \"%s\" is not empty directory\n", path);
       return LO_EXIT_ERROR;
     }
+
+    if (path[len - 1] == '/') path[len - 1] = '\0';
   }
 
   return LO_EXIT_SUCCESS;
