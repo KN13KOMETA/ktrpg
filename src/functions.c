@@ -141,6 +141,37 @@ void create_dir_recursive(char* path) {
   mkdir(path, 0777);
 }
 
+int write_vfiles_to_dir(vfile* vfiles, char* dir) {
+  int code = 0;
+  size_t dir_len = strlen(dir);
+
+  for (int i = 0; vfiles[i].path != NULL; i++) {
+    vfile f = vfiles[i];
+    char filepath[dir_len + 1 + strlen(f.path) + 1];
+    char basedir[dir_len + 1 + strlen(f.path) + 1];
+    FILE* file;
+
+    sprintf(filepath, "%s/%s", dir, f.path);
+
+    get_basedir(filepath, basedir);
+
+    create_dir_recursive(basedir);
+
+    file = fopen(filepath, "w");
+
+    if (file == NULL) {
+      code++;
+      continue;
+    }
+
+    fwrite(f.content, strlen(f.content), 1, file);
+
+    fclose(file);
+  }
+
+  return code;
+}
+
 void register_lua_text_module(lua_State* L, const char* name,
                               const char* content) {
   lua_getglobal(L, "package");
