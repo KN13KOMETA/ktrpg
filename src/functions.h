@@ -58,6 +58,13 @@ int directory_exists(char* path);
 // Returns 0 when directory is empty
 int directory_empty(char* path);
 
+// Sets basedir
+// from /path/file.txt to /path
+// Returns 0 when succesful
+int get_basedir(char* path, char* basedir);
+
+void create_dir_recursive(char* path);
+
 // Registers a lua module with content as code
 void register_lua_text_module(lua_State* L, const char* name,
                               const char* content);
