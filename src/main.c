@@ -132,6 +132,7 @@ int init_game(char* script_path) {
   if (get_basedir(script_path, basedir) == 0) {
     module_path = build_lua_package_search_path(basedir);
     add_lua_package_path(L, module_path);
+    free(module_path);
   }
 
   if (luaL_dofile(L, script_path) != LUA_OK) {
