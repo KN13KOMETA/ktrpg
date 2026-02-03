@@ -50,6 +50,14 @@ int getchars_clear(char* str, size_t len);
 // Returns 0 when file exists
 int file_exists(char* path);
 
+// Checks if directory exists on path.
+// Returns 0 when directory exists
+int directory_exists(char* path);
+
+// Checks if directory has files/directories.
+// Returns 0 when directory is empty
+int directory_empty(char* path);
+
 // Registers a lua module with content as code
 void register_lua_text_module(lua_State* L, const char* name,
                               const char* content);
