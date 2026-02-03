@@ -105,7 +105,10 @@ int directory_empty(char* path) {
 
   // If more than 2 files then directory is not empty
   while (readdir(dir) != NULL)
-    if (++i > 2) return 1;
+    if (++i > 2) {
+      closedir(dir);
+      return 1;
+    }
 
   closedir(dir);
   return 0;
