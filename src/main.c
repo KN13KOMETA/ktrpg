@@ -114,13 +114,16 @@ int init_game(char* script_path) {
   int code = EXIT_SUCCESS;
   char basedir[strlen(script_path)];
   char* module_path;
-  lua_State* L = luaL_newstate();
-  ecs_t* ecs = ecs_new(128, NULL);
+  lua_State* L;
+  ecs_t* ecs;
+
+  if (user_script_warning()) return EXIT_SUCCESS;
+
+  L = luaL_newstate();
+  ecs = ecs_new(128, NULL);
 
   luaL_openlibs(L);
   lg_create(L, ecs);
-
-  if (user_script_warning()) return EXIT_SUCCESS;
 
   printf(TITLE("GAME (user scripts)"));
 
