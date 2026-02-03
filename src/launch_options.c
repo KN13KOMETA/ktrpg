@@ -15,7 +15,7 @@ static const char* const usages[] = {
 
 int process_launch_options(launch_options* loptions, int argc, char* argv[]) {
   int code = LO_EXIT_SUCCESS;
-  const char* temp_argv[argc];
+  const char* temp_argv[argc + 1];
   struct argparse ap;
   struct argparse_option options[] = {
       OPT_BOOLEAN('h', "help", &loptions->help,
