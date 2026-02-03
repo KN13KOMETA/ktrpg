@@ -109,8 +109,6 @@ int validate_launch_options(launch_options* loptions) {
     }
   }
 
-  // TODO: export paths validation
-
   return LO_EXIT_SUCCESS;
 }
 int handle_launch_options_actions(launch_options* loptions,
