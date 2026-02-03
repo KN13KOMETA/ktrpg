@@ -5,6 +5,25 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef _WIN32
+
+#include <fileapi.h>
+#include <sys/stat.h>
+#include <windows.h>
+
+#define stat _stat
+
+#else
+
+#include <dirent.h>
+#include <sys/stat.h>
+
+#endif  // ifdef _WIN32
+
+#ifdef _WIN32
+#else
+#endif  // ifdef _WIN32
+
 int getchar_clear(char* ch) {
   int c = 0;
 
@@ -39,6 +58,58 @@ int file_exists(char* path) {
   fclose(f);
 
   return 0;
+}
+
+int directory_exists(char* path) {
+  struct stat path_stat;
+
+  stat(path, &path_stat);
+
+#ifdef _WIN32
+  return (path_stat.st_mode & _S_IFDIR) == 0;
+#else
+  return S_ISDIR(path_stat.st_mode) == 0;
+#endif  // ifdef _WIN32
+}
+
+int directory_empty(char* path) {
+#ifdef _WIN32
+  WIN32_FIND_DATA find_data;
+  HANDLE h = NULL;
+
+  char* template = "%s\\*";
+  char search_mask[strlen(template) + strlen(path) + 1];
+
+  sprintf(search_mask, template, path);
+
+  if ((h = FindFirstFile(search_mask, &find_data)) == INVALID_HANDLE_VALUE)
+    return -1;
+
+  // If we found file other than "." and ".." means directory not empty
+  do {
+    // TODO: Maybe try count files like unix implementation
+    if (strcmp(find_data.cFileName, ".") != 0 &&
+        strcmp(find_data.cFileName, "..") != 0) {
+      FindClose(h);
+      return 1;
+    }
+  } while (FindNextFile(h, &find_data));
+
+  FindClose(h);
+  return 0;
+#else
+  DIR* dir = opendir(path);
+  int i = 0;
+
+  if (dir == NULL) return -1;
+
+  // If more than 2 files then directory is not empty
+  while (readdir(dir) != NULL)
+    if (++i > 2) return 1;
+
+  closedir(dir);
+  return 0;
+#endif  // ifdef _WIN32
 }
 
 void register_lua_text_module(lua_State* L, const char* name,
