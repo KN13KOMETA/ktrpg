@@ -6,6 +6,7 @@
 #include <pico_ecs.h>
 
 #define ECS_IS_NULL "ecs is nil"
+#define ECS_MODIFIED "ecs already modified"
 
 typedef struct {
   ecs_t* ptr;
