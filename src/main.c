@@ -19,6 +19,9 @@
 #include "luah/types/ktrpg/class/system_d.h"
 #include "luah/types/ktrpg/ktrpg_d.h"
 
+// TODO: Init ecs with lua instead and add limit checks (like when script is
+// trying to take too mush memory)
+
 #define PICO_ECS_IMPLEMENTATION
 #include <pico_ecs.h>
 
@@ -115,15 +118,13 @@ int init_game(char* script_path) {
   char basedir[strlen(script_path)];
   char* module_path;
   lua_State* L;
-  ecs_t* ecs;
 
   if (user_script_warning()) return EXIT_SUCCESS;
 
   L = luaL_newstate();
-  ecs = ecs_new(128, NULL);
 
   luaL_openlibs(L);
-  lg_create(L, ecs);
+  lg_create(L);
 
   printf(TITLE("GAME (user scripts)"));
 
@@ -141,7 +142,6 @@ int init_game(char* script_path) {
   }
 
   lg_destroy();
-  ecs_free(ecs);
   lua_close(L);
 
   return code;
@@ -151,7 +151,6 @@ int init_embedded_game(vfile* scripts) {
   int code = EXIT_SUCCESS;
   int script_count = 0;
   lua_State* L;
-  ecs_t* ecs;
 
   for (int i = 0; scripts[i].path != NULL; i++) script_count++;
 
@@ -163,10 +162,9 @@ int init_embedded_game(vfile* scripts) {
   }
 
   L = luaL_newstate();
-  ecs = ecs_new(128, NULL);
 
   luaL_openlibs(L);
-  lg_create(L, ecs);
+  lg_create(L);
 
   for (int i = 1; i < script_count; i++) {
     vfile f = scripts[i];
@@ -191,8 +189,13 @@ int init_embedded_game(vfile* scripts) {
   }
 
   lg_destroy();
-  ecs_free(ecs);
   lua_close(L);
 
   return code;
 }
+
+// TODO: test that all on windows
+// TODO: update readme
+// write about used libraries
+// write about scripting
+// update spoiler alert

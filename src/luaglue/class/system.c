@@ -13,7 +13,7 @@
 
 static ecs_id_t array_limit;
 
-static ecs_t* ecs;
+static ptr2ptr* ecs;
 static lua_State* lstate;
 static lg_system* systems;
 static ecs_id_t systems_count = 0;
@@ -75,7 +75,7 @@ static int method_get_entity_count(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
   lua_pushinteger(
-      L, (lua_Integer)ecs_get_system_entity_count(ecs, ID2SYST(s->id)));
+      L, (lua_Integer)ecs_get_system_entity_count(ecs->ptr, ID2SYST(s->id)));
 
   return 1;
 }
@@ -83,7 +83,8 @@ static int method_get_entity_count(lua_State* L) {
 static int method_run(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
-  ecs_run_system(ecs, ID2SYST(s->id), ecs_get_system_mask(ecs, ID2SYST(s->id)));
+  ecs_run_system(ecs->ptr, ID2SYST(s->id),
+                 ecs_get_system_mask(ecs->ptr, ID2SYST(s->id)));
 
   lua_pushvalue(L, 1);
   return 1;
@@ -102,7 +103,7 @@ static int method_on_run(lua_State* L) {
 static int method_disable(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
-  ecs_disable_system(ecs, ID2SYST(s->id));
+  ecs_disable_system(ecs->ptr, ID2SYST(s->id));
 
   lua_pushvalue(L, 1);
   return 1;
@@ -110,7 +111,7 @@ static int method_disable(lua_State* L) {
 static int method_enable(lua_State* L) {
   lg_system* s = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassSystemMT"))->ptr;
 
-  ecs_enable_system(ecs, ID2SYST(s->id));
+  ecs_enable_system(ecs->ptr, ID2SYST(s->id));
 
   lua_pushvalue(L, 1);
   return 1;
@@ -122,7 +123,8 @@ static int method_get_mask(lua_State* L) {
   // NOTE: This conversation may lose data
   // but since we are only setting system mask
   // from lua_Integer (signed) this should be fine
-  lua_pushinteger(L, (lua_Integer)ecs_get_system_mask(ecs, ID2SYST(s->id)));
+  lua_pushinteger(L,
+                  (lua_Integer)ecs_get_system_mask(ecs->ptr, ID2SYST(s->id)));
 
   return 1;
 }
@@ -132,7 +134,7 @@ static int method_set_mask(lua_State* L) {
 
   if (mask < 0) return luaL_argerror(L, 2, "expected positive integer");
 
-  ecs_set_system_mask(ecs, ID2SYST(s->id), (ecs_mask_t)mask);
+  ecs_set_system_mask(ecs->ptr, ID2SYST(s->id), (ecs_mask_t)mask);
 
   lua_pushvalue(L, 1);
   return 1;
@@ -146,7 +148,7 @@ static int method_excludes(lua_State* L) {
     lg_component* c =
         ((ptr2ptr*)luaL_checkudata(L, i, "ClassComponentMT"))->ptr;
 
-    ecs_exclude_component(ecs, ID2SYST(s->id), ID2COMP(c->id));
+    ecs_exclude_component(ecs->ptr, ID2SYST(s->id), ID2COMP(c->id));
 
     DEBUG_LOG("LG: " SYST_FL " EXCLUDES " COMP_FL, SYST_FL_ARGS(s),
               COMP_FL_ARGS(c));
@@ -163,7 +165,7 @@ static int method_requires(lua_State* L) {
     lg_component* c =
         ((ptr2ptr*)luaL_checkudata(L, i, "ClassComponentMT"))->ptr;
 
-    ecs_require_component(ecs, ID2SYST(s->id), ID2COMP(c->id));
+    ecs_require_component(ecs->ptr, ID2SYST(s->id), ID2COMP(c->id));
 
     DEBUG_LOG("LG: " SYST_FL " REQUIRES " COMP_FL, SYST_FL_ARGS(s),
               COMP_FL_ARGS(c));
@@ -211,7 +213,7 @@ static int system_run_debug_system(lua_State* L) {
     return 2;
   }
 
-  ecs_run_system(ecs, ID2SYST(debug_system), 0);
+  ecs_run_system(ecs->ptr, ID2SYST(debug_system), 0);
 
   lua_pushboolean(L, 1);
   return 1;
@@ -234,7 +236,7 @@ static int system_new(lua_State* L) {
 
   s->lua_ref = LUA_NOREF;
 
-  s->id = ecs_define_system(ecs, 0, lua_runner_system, NULL, NULL, s).id;
+  s->id = ecs_define_system(ecs->ptr, 0, lua_runner_system, NULL, NULL, s).id;
 
   FMALLOC(s->name, strlen(cname) + 1);
   strcpy(s->name, cname);
@@ -338,8 +340,9 @@ void lg_system_create(lua_State* L) {
   system_register_content(L);
 
   debug_system_valid = 1;
-  debug_system =
-      ecs_define_system(ecs, 0, lg_component_debug_system, NULL, NULL, NULL).id;
+  debug_system = ecs_define_system(ecs->ptr, 0, lg_component_debug_system, NULL,
+                                   NULL, NULL)
+                     .id;
 }
 void lg_system_destroy(void) {
   DEBUG_LOG("LG: SYSTEM DESTROY");

@@ -13,7 +13,7 @@
 
 static ecs_id_t array_limit;
 
-static ecs_t* ecs;
+static ptr2ptr* ecs;
 static lg_component* comps;
 static ecs_id_t comps_count = 0;
 static ecs_id_t comps_max = 0;
@@ -68,16 +68,16 @@ static int component_new(lua_State* L) {
 
   if (strncmp("int", ctype, 3) == 0) {
     c->type = COMP_INT;
-    c->id = ecs_define_component(ecs, sizeof(lua_Integer), NULL, NULL).id;
+    c->id = ecs_define_component(ecs->ptr, sizeof(lua_Integer), NULL, NULL).id;
   } else if (strncmp("num", ctype, 3) == 0) {
     c->type = COMP_NUM;
-    c->id = ecs_define_component(ecs, sizeof(lua_Number), NULL, NULL).id;
+    c->id = ecs_define_component(ecs->ptr, sizeof(lua_Number), NULL, NULL).id;
   } else if (strncmp("tag", ctype, 3) == 0) {
     c->type = COMP_TAG;
-    c->id = ecs_define_component(ecs, sizeof(uint8_t), NULL, NULL).id;
+    c->id = ecs_define_component(ecs->ptr, sizeof(uint8_t), NULL, NULL).id;
   } else if (strncmp("str", ctype, 3) == 0) {
     c->type = COMP_STR;
-    c->id = ecs_define_component(ecs, sizeof(lg_component_str), NULL,
+    c->id = ecs_define_component(ecs->ptr, sizeof(lg_component_str), NULL,
                                  component_str_destructor)
                 .id;
   } else {

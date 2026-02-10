@@ -8,6 +8,8 @@
 #include "class/entity.h"
 #include "class/system.h"
 
+static ptr2ptr ecs = {NULL};
+
 static int openclib(lua_State* L) {
   DEBUG_LOG("LG: OPENING C LIBRARY");
 
@@ -23,10 +25,14 @@ static int openclib(lua_State* L) {
   return 1;
 }
 
-void lg_create(lua_State* L, ecs_t* ecs) {
+void lg_create(lua_State* L) {
   DEBUG_LOG("LG: CREATE");
 
-  lua_pushlightuserdata(L, ecs);
+  // TODO: Remove this later
+  // TODO: Add NULL checks on ecs in class files
+  ecs.ptr = ecs_new(128, NULL);
+
+  lua_pushlightuserdata(L, &ecs);
   lua_setfield(L, LUA_REGISTRYINDEX, "ecs");
 
   luaL_requiref(L, "ktrpg", openclib, 0);
@@ -37,4 +43,6 @@ void lg_destroy(void) {
   lg_entity_destroy();
   lg_component_destroy();
   lg_system_destroy();
+
+  if (ecs.ptr != NULL) ecs_free(ecs.ptr);
 }
