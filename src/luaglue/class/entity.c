@@ -275,6 +275,9 @@ static int entity_set_limit(lua_State* L) {
     entities = ptr;
     entities_max = limit;
 
+    if (ecs->ptr != NULL) ecs_free(ecs->ptr);
+    ecs->ptr = ecs_new(limit, NULL);
+
     DEBUG_LOG("LG: ENTITY ARRAY SIZE = %lu", entities_max);
   }
 
@@ -314,6 +317,8 @@ void lg_entity_create(lua_State* L) {
                 sizeof(*entities);
 
   DEBUG_LOG("LG: ENTITY ARRAY LIMIT %lu", array_limit);
+
+  ecs->ptr = ecs_new(ENTI_DEFAULT_MAX, NULL);
 
   entities_max = ENTI_DEFAULT_MAX;
   entities_count = 0;
