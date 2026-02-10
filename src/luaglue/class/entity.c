@@ -315,7 +315,7 @@ void lg_entity_create(lua_State* L) {
 
   DEBUG_LOG("LG: ENTITY ARRAY LIMIT %lu", array_limit);
 
-  entities_max = UINT16_MAX;
+  entities_max = ENTI_DEFAULT_MAX;
   entities_count = 0;
   SELFMALLOCARR(entities, entities_max);
 
