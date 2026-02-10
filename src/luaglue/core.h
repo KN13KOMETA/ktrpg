@@ -5,6 +5,8 @@
 #include <lua.h>
 #include <pico_ecs.h>
 
+#define ECS_IS_NULL "ecs is nil"
+
 typedef struct {
   ecs_t* ptr;
   uint8_t modified;

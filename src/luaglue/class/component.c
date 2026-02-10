@@ -49,16 +49,22 @@ static void component_str_destructor(ecs_t* ecs, ecs_entity_t entity,
 }
 
 static int component_new(lua_State* L) {
-  const char* ctype = luaL_checkstring(L, 2);
-  const char* cname = luaL_checkstring(L, 3);
+  const char* ctype;
+  const char* cname;
   ptr2ptr* ud;
   lg_component* c;
+
+  if (ecs->ptr == NULL) return luaL_error(L, ECS_IS_NULL);
+  ecs->modified = 1;
 
   if (comps_count + 1 > comps_max) {
     lua_pushnil(L);
     lua_pushstring(L, "component limit reached");
     return 2;
   }
+
+  ctype = luaL_checkstring(L, 2);
+  cname = luaL_checkstring(L, 3);
 
   ud = lua_newuserdatauv(L, sizeof(*ud), 0);
 

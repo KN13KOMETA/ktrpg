@@ -221,15 +221,20 @@ static int system_run_debug_system(lua_State* L) {
 }
 
 static int system_new(lua_State* L) {
-  const char* cname = luaL_checkstring(L, 2);
+  const char* cname;
   ptr2ptr* ud;
   lg_system* s;
+
+  if (ecs->ptr == NULL) return luaL_error(L, ECS_IS_NULL);
+  ecs->modified = 1;
 
   if (systems_count + 1 > systems_max) {
     lua_pushnil(L);
     lua_pushstring(L, "system limit reached");
     return 2;
   }
+
+  cname = luaL_checkstring(L, 2);
 
   ud = lua_newuserdatauv(L, sizeof(*ud), 0);
   s = &systems[systems_count++];
@@ -339,11 +344,6 @@ void lg_system_create(lua_State* L) {
   system_init_metatable(L);
 
   system_register_content(L);
-
-  debug_system_valid = 1;
-  debug_system = ecs_define_system(ecs->ptr, 0, lg_component_debug_system, NULL,
-                                   NULL, NULL)
-                     .id;
 }
 void lg_system_destroy(void) {
   DEBUG_LOG("LG: SYSTEM DESTROY");

@@ -209,6 +209,9 @@ static int entity_new(lua_State* L) {
   ptr2ptr* ud;
   lg_entity* e;
 
+  if (ecs->ptr == NULL) return luaL_error(L, ECS_IS_NULL);
+  ecs->modified = 1;
+
   if (entities_count + 1 > entities_max) {
     lua_pushnil(L);
     lua_pushstring(L, "entity limit reached");
