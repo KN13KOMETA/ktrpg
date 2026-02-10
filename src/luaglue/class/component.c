@@ -179,7 +179,7 @@ void lg_component_create(lua_State* L) {
 
   DEBUG_LOG("LG: COMPONENT ARRAY LIMIT %lu", array_limit);
 
-  comps_max = UINT8_MAX;
+  comps_max = COMP_DEFAULT_MAX;
   comps_count = 0;
   SELFMALLOCARR(comps, comps_max);
 

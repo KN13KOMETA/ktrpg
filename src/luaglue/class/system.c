@@ -327,7 +327,7 @@ void lg_system_create(lua_State* L) {
 
   DEBUG_LOG("LG: SYSTEM ARRAY LIMIT %lu", array_limit);
 
-  systems_max = UINT8_MAX;
+  systems_max = SYST_DEFAULT_MAX;
   systems_count = 0;
   SELFMALLOCARR(systems, systems_max);
 
