@@ -63,6 +63,7 @@ COMPONENT = {
 }
 
 SYSTEM = {
+  debug = ktrpg.System:new("__KTRPG_DEBUG"),
   player_turn = ktrpg.System
     :new("Player Turn")
     :requires(
@@ -449,7 +450,7 @@ local function run()
   SYSTEM.death:run()
   SYSTEM.clear_attacked_by:run()
 
-  ktrpg.System:run_debug_system()
+  SYSTEM.debug:run()
 end
 
 for i = 1, 22, 1 do
