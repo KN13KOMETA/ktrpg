@@ -183,7 +183,6 @@ static int method_get_name(lua_State* L) {
   return 1;
 }
 
-// TODO: Maybe remove *_mask, enable, disable
 static struct luaL_Reg system_methods[] = {
     {"get_name", method_get_name},
     {"requires", method_requires},
