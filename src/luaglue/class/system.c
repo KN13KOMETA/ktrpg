@@ -8,12 +8,13 @@
 
 #include "../../constants.h"
 #include "../../functions.h"
+#include "../core.h"
 #include "component.h"
 #include "entity.h"
 
 static ecs_id_t array_limit;
 
-static ptr2ptr* ecs;
+static ptr2ecs* ecs;
 static lua_State* lstate;
 static lg_system* systems;
 static ecs_id_t systems_count = 0;

@@ -8,7 +8,7 @@
 #include "class/entity.h"
 #include "class/system.h"
 
-static ptr2ptr ecs = {NULL};
+static ptr2ecs ecs = {NULL, 0};
 
 static int openclib(lua_State* L) {
   DEBUG_LOG("LG: OPENING C LIBRARY");
