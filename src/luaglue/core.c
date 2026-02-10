@@ -29,7 +29,6 @@ void lg_create(lua_State* L) {
   DEBUG_LOG("LG: CREATE");
 
   // TODO: Remove this later
-  // TODO: Add NULL checks on ecs in class files
   ecs.ptr = ecs_new(128, NULL);
 
   lua_pushlightuserdata(L, &ecs);
