@@ -45,6 +45,7 @@ local System = {}
 ---@param name string
 ---@return SystemInstance
 ---@overload fun(self: System, name: string): nil, string
+---@overload fun(self: System, name: "__KTRPG_DEBUG"): SystemInstance
 function System:new(name) end
 
 ---@param limit integer

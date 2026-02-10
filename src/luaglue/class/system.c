@@ -12,6 +12,8 @@
 #include "component.h"
 #include "entity.h"
 
+#define DEBUG_SYSTEM_NAME "__KTRPG_DEBUG"
+
 static ecs_id_t array_limit;
 
 static ptr2ecs* ecs;
@@ -19,9 +21,6 @@ static lua_State* lstate;
 static lg_system* systems;
 static ecs_id_t systems_count = 0;
 static ecs_id_t systems_max = 0;
-
-static uint8_t debug_system_valid = 0;
-static ecs_id_t debug_system = 0;
 
 static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* raw_entities,
                                    size_t entity_count, void* udata) {
@@ -184,6 +183,7 @@ static int method_get_name(lua_State* L) {
   return 1;
 }
 
+// TODO: Maybe remove *_mask, enable, disable
 static struct luaL_Reg system_methods[] = {
     {"get_name", method_get_name},
     {"requires", method_requires},
@@ -205,19 +205,6 @@ static void system_init_metatable(lua_State* L) {
   luaL_setfuncs(L, system_methods, 0);
 
   lua_pop(L, 1);
-}
-
-static int system_run_debug_system(lua_State* L) {
-  if (debug_system_valid == 0) {
-    lua_pushboolean(L, 0);
-    lua_pushstring(L, "debug system is not initialized");
-    return 2;
-  }
-
-  ecs_run_system(ecs->ptr, ID2SYST(debug_system), 0);
-
-  lua_pushboolean(L, 1);
-  return 1;
 }
 
 static int system_new(lua_State* L) {
@@ -242,7 +229,13 @@ static int system_new(lua_State* L) {
 
   s->lua_ref = LUA_NOREF;
 
-  s->id = ecs_define_system(ecs->ptr, 0, lua_runner_system, NULL, NULL, s).id;
+  if (strcmp(DEBUG_SYSTEM_NAME, cname) == 0) {
+    s->id = ecs_define_system(ecs->ptr, 0, lg_component_debug_system, NULL,
+                              NULL, NULL)
+                .id;
+  } else {
+    s->id = ecs_define_system(ecs->ptr, 0, lua_runner_system, NULL, NULL, s).id;
+  }
 
   FMALLOC(s->name, strlen(cname) + 1);
   strcpy(s->name, cname);
@@ -308,7 +301,6 @@ static int system_get_limit(lua_State* L) {
 }
 
 static struct luaL_Reg system_class_methods[] = {
-    {"run_debug_system", system_run_debug_system},
     {"new", system_new},
     {"set_limit", system_set_limit},
     {"get_limit", system_get_limit},
