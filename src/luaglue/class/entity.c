@@ -14,7 +14,7 @@
 
 static ecs_id_t array_limit;
 
-static ecs_t* ecs;
+static ptr2ptr* ecs;
 static lg_entity* entities = NULL;
 static ecs_id_t entities_count = 0;
 static ecs_id_t entities_max = 0;
@@ -23,13 +23,13 @@ static int method_kill(lua_State* L) {
   lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
 
   if (ecs_is_invalid_entity(ID2ENTI(e->id)) ||
-      !ecs_is_ready(ecs, ID2ENTI(e->id))) {
+      !ecs_is_ready(ecs->ptr, ID2ENTI(e->id))) {
     lua_pushboolean(L, 0);
     lua_pushstring(L, "entity not ready or invalid");
     return 2;
   }
 
-  ecs_queue_destroy(ecs, ID2ENTI(e->id));
+  ecs_queue_destroy(ecs->ptr, ID2ENTI(e->id));
 
   lua_pushboolean(L, 1);
   return 1;
@@ -40,19 +40,19 @@ static int method_remove(lua_State* L) {
   lg_component* c = ((ptr2ptr*)luaL_checkudata(L, 2, "ClassComponentMT"))->ptr;
 
   if (ecs_is_invalid_entity(ID2ENTI(e->id)) ||
-      !ecs_is_ready(ecs, ID2ENTI(e->id))) {
+      !ecs_is_ready(ecs->ptr, ID2ENTI(e->id))) {
     lua_pushboolean(L, 0);
     lua_pushstring(L, "entity not ready or invalid");
     return 2;
   }
 
-  if (!ecs_has(ecs, ID2ENTI(e->id), ID2COMP(c->id))) {
+  if (!ecs_has(ecs->ptr, ID2ENTI(e->id), ID2COMP(c->id))) {
     lua_pushboolean(L, 0);
     lua_pushstring(L, "entity doesn't have component");
     return 2;
   }
 
-  ecs_remove(ecs, ID2ENTI(e->id), ID2COMP(c->id));
+  ecs_remove(ecs->ptr, ID2ENTI(e->id), ID2COMP(c->id));
 
   lua_pushboolean(L, 1);
   return 1;
@@ -64,19 +64,19 @@ static int method_get(lua_State* L) {
   void* ec;
 
   if (ecs_is_invalid_entity(ID2ENTI(e->id)) ||
-      !ecs_is_ready(ecs, ID2ENTI(e->id))) {
+      !ecs_is_ready(ecs->ptr, ID2ENTI(e->id))) {
     lua_pushnil(L);
     lua_pushstring(L, "entity not ready or invalid");
     return 2;
   }
 
-  if (!ecs_has(ecs, ID2ENTI(e->id), ID2COMP(c->id))) {
+  if (!ecs_has(ecs->ptr, ID2ENTI(e->id), ID2COMP(c->id))) {
     lua_pushnil(L);
     lua_pushstring(L, "entity doesn't have component");
     return 2;
   }
 
-  ec = ecs_get(ecs, ID2ENTI(e->id), ID2COMP(c->id));
+  ec = ecs_get(ecs->ptr, ID2ENTI(e->id), ID2COMP(c->id));
 
   switch (c->type) {
     case COMP_INT:
@@ -103,16 +103,16 @@ static int method_set(lua_State* L) {
   void* ec;
 
   if (ecs_is_invalid_entity(ID2ENTI(e->id)) ||
-      !ecs_is_ready(ecs, ID2ENTI(e->id))) {
+      !ecs_is_ready(ecs->ptr, ID2ENTI(e->id))) {
     lua_pushnil(L);
     lua_pushstring(L, "entity not ready or invalid");
     return 2;
   }
 
-  if (ecs_has(ecs, ID2ENTI(e->id), ID2COMP(c->id))) {
-    ec = ecs_get(ecs, ID2ENTI(e->id), ID2COMP(c->id));
+  if (ecs_has(ecs->ptr, ID2ENTI(e->id), ID2COMP(c->id))) {
+    ec = ecs_get(ecs->ptr, ID2ENTI(e->id), ID2COMP(c->id));
   } else {
-    ec = ecs_add(ecs, ID2ENTI(e->id), ID2COMP(c->id), NULL);
+    ec = ecs_add(ecs->ptr, ID2ENTI(e->id), ID2COMP(c->id), NULL);
   }
 
   switch (c->type) {
@@ -219,7 +219,7 @@ static int entity_new(lua_State* L) {
   e = &entities[entities_count++];
   ud->ptr = e;
 
-  e->id = ecs_create(ecs).id;
+  e->id = ecs_create(ecs->ptr).id;
 
   luaL_getmetatable(L, "ClassEntityMT");
   lua_setmetatable(L, -2);

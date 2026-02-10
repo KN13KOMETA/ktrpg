@@ -5,7 +5,7 @@
 #include <lua.h>
 #include <pico_ecs.h>
 
-void lg_create(lua_State* L, ecs_t* ecs);
+void lg_create(lua_State* L);
 void lg_destroy(void);
 
 #endif  // !LUAGLUE_CORE_H
