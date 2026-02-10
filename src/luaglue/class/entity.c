@@ -260,6 +260,8 @@ static int entity_set_limit(lua_State* L) {
     return 2;
   }
 
+  if (ecs->modified) return luaL_error(L, ECS_MODIFIED);
+
   if (limit != entities_count) {
     ptr = malloc(sizeof(*entities) * limit);
 
