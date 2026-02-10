@@ -9,11 +9,12 @@
 
 #include "../../constants.h"
 #include "../../functions.h"
+#include "../core.h"
 #include "entity.h"
 
 static ecs_id_t array_limit;
 
-static ptr2ptr* ecs;
+static ptr2ecs* ecs;
 static lg_component* comps;
 static ecs_id_t comps_count = 0;
 static ecs_id_t comps_max = 0;
