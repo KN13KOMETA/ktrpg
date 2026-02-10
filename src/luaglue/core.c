@@ -28,9 +28,6 @@ static int openclib(lua_State* L) {
 void lg_create(lua_State* L) {
   DEBUG_LOG("LG: CREATE");
 
-  // TODO: Remove this later
-  ecs.ptr = ecs_new(128, NULL);
-
   lua_pushlightuserdata(L, &ecs);
   lua_setfield(L, LUA_REGISTRYINDEX, "ecs");
 
