@@ -48,6 +48,10 @@ int getchar_clear(char* c);
 // Returns last char from input.
 int getchars_clear(char* str, size_t len);
 
+// Asks for y/n
+// Returns 0 if y
+int ask_yn(char* text);
+
 // Turns bytes into human readable form
 // Returns 'B', 'K', 'M' or 'G'
 char human_bytes(int bytes, double* result);

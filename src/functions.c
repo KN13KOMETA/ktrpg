@@ -50,6 +50,23 @@ int getchars_clear(char* str, size_t len) {
   return c;
 }
 
+int ask_yn(char* text) {
+  char c;
+
+  printf("%s (y/N): ", text);
+
+  getchar_clear(&c);
+
+  switch (c) {
+    case 'y':
+    case 'Y':
+      return 0;
+      break;
+    default:
+      return 1;
+  }
+}
+
 char human_bytes(int bytes, double* result) {
   char unit = 'B';
   *result = bytes;
