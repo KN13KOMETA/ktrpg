@@ -67,26 +67,16 @@ int ask_yn(char* text) {
   }
 }
 
-char human_bytes(int bytes, double* result) {
-  char unit = 'B';
-  *result = bytes;
+char human_bytes(size_t bytes, double* result) {
+  char* units = "BKMGTPE";
+  *result = (double)bytes;
 
-  if (*result >= 1024) {
-    unit = 'K';
+  while (*result >= 1024 && *(units + 1) != '\0') {
     *result /= 1024;
+    units++;
   }
 
-  if (*result >= 1024) {
-    unit = 'M';
-    *result /= 1024;
-  }
-
-  if (*result >= 1024) {
-    unit = 'G';
-    *result /= 1024;
-  }
-
-  return unit;
+  return *units;
 }
 
 int file_exists(char* path) {
