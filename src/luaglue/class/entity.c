@@ -20,6 +20,8 @@ static lg_entity* entities = NULL;
 static ecs_id_t entities_count = 0;
 static ecs_id_t entities_max = 0;
 
+static int entities_estimated_size = ENTI_ESTIMATED_SIZE + sizeof(*entities);
+
 static int method_kill(lua_State* L) {
   lg_entity* e = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassEntityMT"))->ptr;
 
@@ -307,6 +309,8 @@ static int entity_register_content(lua_State* L) {
 
 void lg_entity_create(lua_State* L) {
   DEBUG_LOG("LG: ENTITY CREATE");
+
+  DEBUG_LOG("LG: ENTITY ESTIMATED SIZE = %d", entities_estimated_size);
 
   lua_getfield(L, LUA_REGISTRYINDEX, "ecs");
   ecs = lua_touserdata(L, -1);

@@ -19,6 +19,9 @@ static lg_component* comps;
 static ecs_id_t comps_count = 0;
 static ecs_id_t comps_max = 0;
 
+static int comp_estimated_size =
+    COMP_ESTIMATED_SIZE + sizeof(*comps) + sizeof(uint8_t);
+
 static int method_get_name(lua_State* L) {
   lg_component* c = ((ptr2ptr*)luaL_checkudata(L, 1, "ClassComponentMT"))->ptr;
 
@@ -170,6 +173,8 @@ static int component_register_content(lua_State* L) {
 
 void lg_component_create(lua_State* L) {
   DEBUG_LOG("LG: COMPONENT CREATE");
+
+  DEBUG_LOG("LG: COMPONENT ESTIMATED SIZE = %d", comp_estimated_size);
 
   lua_getfield(L, LUA_REGISTRYINDEX, "ecs");
   ecs = lua_touserdata(L, -1);

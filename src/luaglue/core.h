@@ -9,6 +9,10 @@
 #define ECS_IS_NULL "ecs is nil"
 #define ECS_MODIFIED "ecs already modified"
 
+#define ENTI_ESTIMATED_SIZE 8
+#define COMP_ESTIMATED_SIZE 8
+#define SYST_ESTIMATED_SIZE (8 + 88)
+
 #define ENTI_DEFAULT_MAX UINT16_MAX
 #define COMP_DEFAULT_MAX UINT8_MAX
 #define SYST_DEFAULT_MAX UINT8_MAX
