@@ -134,6 +134,21 @@ static int component_set_limit(lua_State* L) {
   }
 
   if (limit != comps_count) {
+    if (limit > COMP_SOFT_LIMIT) {
+      double result;
+      char unit = human_bytes(limit * (ecs_id_t)comp_estimated_size, &result);
+
+      printf(TITLE("WARNING"));
+      printf("Script requested components limit: %lu\n", limit);
+      printf("This exceeds the soft limit of %d.\n", COMP_SOFT_LIMIT);
+      printf("Estimated memory usage: %.2f%c\n", result, unit);
+
+      if (ask_yn("Are you sure you want to continue?")) {
+        lua_pushliteral(L, LG_EXIT_USER);
+        return lua_error(L);
+      }
+    }
+
     ptr = malloc(sizeof(*comps) * limit);
 
     if (ptr == NULL) {
