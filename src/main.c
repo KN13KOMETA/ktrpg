@@ -125,8 +125,12 @@ int init_game(char* script_path) {
   }
 
   if (luaL_dofile(L, script_path) != LUA_OK) {
-    printf("Lua error: %s\n", lua_tostring(L, -1));
-    code = EXIT_FAILURE;
+    const char* err = lua_tostring(L, -1);
+
+    if (strcmp(LG_EXIT_USER, err) != 0 && strcmp(LG_EXIT_SYSTEM, err) != 0) {
+      printf("Lua error: %s\n", err);
+      code = EXIT_FAILURE;
+    }
   }
 
   lg_destroy();
@@ -172,8 +176,12 @@ int init_embedded_game(vfile* scripts) {
   }
 
   if (code == EXIT_SUCCESS && luaL_dostring(L, scripts[0].content) != LUA_OK) {
-    printf("Lua error: %s\n", lua_tostring(L, -1));
-    code = EXIT_FAILURE;
+    const char* err = lua_tostring(L, -1);
+
+    if (strcmp(LG_EXIT_USER, err) != 0 && strcmp(LG_EXIT_SYSTEM, err) != 0) {
+      printf("Lua error: %s\n", err);
+      code = EXIT_FAILURE;
+    }
   }
 
   lg_destroy();

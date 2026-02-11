@@ -6,6 +6,9 @@
 #include <pico_ecs.h>
 #include <stdint.h>
 
+#define LG_EXIT_USER "__LG_EXIT_USER"
+#define LG_EXIT_SYSTEM "__LG_EXIT_SYSTEM"
+
 #define ECS_IS_NULL "ecs is nil"
 #define ECS_MODIFIED "ecs already modified"
 
