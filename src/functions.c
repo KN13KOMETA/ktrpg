@@ -7,6 +7,7 @@
 
 #ifdef _WIN32
 
+#include <direct.h>
 #include <fileapi.h>
 #include <sys/stat.h>
 #include <windows.h>
@@ -167,7 +168,11 @@ void create_dir_recursive(char* path) {
 
   if (directory_exists(basedir) != 0) create_dir_recursive(basedir);
 
-  mkdir(path, 0777);
+#ifdef _WIN32
+  _mkdir(path);
+#else
+  mkdir(path, DIRECTORY_DEFAULT_MODE);
+#endif  // ifdef _WIN32
 }
 
 int write_vfiles_to_dir(vfile* vfiles, char* dir) {
