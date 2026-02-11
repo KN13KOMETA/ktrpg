@@ -92,23 +92,11 @@ void print_debug_mode(void) {
 }
 
 int user_script_warning(void) {
-  char c = '\0';
-
   printf(TITLE("SECURITY WARNING"));
   printf("You are about to run user-written Lua scripts\n");
   printf("They are NOT sandboxed and have full access to your SYSTEM\n");
-  printf("Are you sure you want to continue? (y/n): ");
 
-  getchar_clear(&c);
-
-  switch (c) {
-    case 'y':
-    case 'Y':
-      return 0;
-      break;
-    default:
-      return 1;
-  }
+  return ask_yn("Are you sure you want to continue?");
 }
 
 // TODO: Check size settings on ecs_new
