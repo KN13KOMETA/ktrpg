@@ -10,6 +10,8 @@
 
 #define ACT_L "::) "
 
+#define DIRECTORY_DEFAULT_MODE 755
+
 typedef struct {
   void* ptr;
 } ptr2ptr;
