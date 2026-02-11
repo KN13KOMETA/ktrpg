@@ -48,6 +48,10 @@ int getchar_clear(char* c);
 // Returns last char from input.
 int getchars_clear(char* str, size_t len);
 
+// Turns bytes into human readable form
+// Returns 'B', 'K', 'M' or 'G'
+char human_bytes(int bytes, double* result);
+
 // Checks if file exists on path.
 // Returns 0 when file exists
 int file_exists(char* path);

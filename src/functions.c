@@ -50,6 +50,28 @@ int getchars_clear(char* str, size_t len) {
   return c;
 }
 
+char human_bytes(int bytes, double* result) {
+  char unit = 'B';
+  *result = bytes;
+
+  if (*result >= 1024) {
+    unit = 'K';
+    *result /= 1024;
+  }
+
+  if (*result >= 1024) {
+    unit = 'M';
+    *result /= 1024;
+  }
+
+  if (*result >= 1024) {
+    unit = 'G';
+    *result /= 1024;
+  }
+
+  return unit;
+}
+
 int file_exists(char* path) {
   FILE* f = fopen(path, "r");
 
