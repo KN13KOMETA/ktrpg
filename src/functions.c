@@ -223,7 +223,7 @@ void register_lua_text_module(lua_State* L, const char* name,
 char* build_lua_package_search_path(const char* path) {
   char* p1 = "/?.lua;";
   char* p2 = "/?/init.lua";
-  unsigned long len = strlen(path);
+  size_t len = strlen(path);
   char* np;
 
   FMALLOC(np, len + strlen(p1) + len + strlen(p2) + 1);
