@@ -53,8 +53,8 @@ int getchars_clear(char* str, size_t len);
 int ask_yn(char* text);
 
 // Turns bytes into human readable form
-// Returns 'B', 'K', 'M' or 'G'
-char human_bytes(int bytes, double* result);
+// Returns char from "BKMGTPE"
+char human_bytes(size_t bytes, double* result);
 
 // Checks if file exists on path.
 // Returns 0 when file exists
