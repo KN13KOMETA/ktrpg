@@ -119,7 +119,7 @@ static int component_set_limit(lua_State* L) {
   if (limit > array_limit) {
     char str[256];
 
-    sprintf(str, "limit cannot exceed %lu", limit);
+    sprintf(str, "limit cannot exceed %zu", limit);
 
     lua_pushnil(L);
     lua_pushstring(L, str);
@@ -139,7 +139,7 @@ static int component_set_limit(lua_State* L) {
       char unit = human_bytes(limit * (ecs_id_t)comp_estimated_size, &result);
 
       printf(TITLE("WARNING"));
-      printf("Script requested components limit: %lu\n", limit);
+      printf("Script requested components limit: %zu\n", limit);
       printf("This exceeds the soft limit of %d.\n", COMP_SOFT_LIMIT);
       printf("Estimated memory usage: %.2f%c\n", result, unit);
 
@@ -161,7 +161,7 @@ static int component_set_limit(lua_State* L) {
     comps = ptr;
     comps_max = limit;
 
-    DEBUG_LOG("LG: COMPONENT ARRAY SIZE = %lu", comps_max);
+    DEBUG_LOG("LG: COMPONENT ARRAY SIZE = %zu", comps_max);
   }
 
   lua_pushinteger(L, (lua_Integer)limit);
@@ -227,7 +227,7 @@ ecs_ret_t lg_component_debug_system(ecs_t* ecs, ecs_entity_t* entities,
   DEBUG_LOG("LG: DEBUG SYSTEM RUNNING");
 
   for (size_t i = 0; i < entity_count; i++) {
-    printf("LG: DEBUG SYSTEM, ENTITY %lu {\n", entities[i].id);
+    printf("LG: DEBUG SYSTEM, ENTITY %zu {\n", entities[i].id);
 
     for (ecs_id_t ci = 0; ci < comps_count; ci++) {
       lg_component* c = &comps[ci];
