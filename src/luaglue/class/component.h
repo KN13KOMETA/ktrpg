@@ -19,7 +19,7 @@ typedef struct {
 #define ID2COMP(id) \
   (ecs_comp_t) { id }
 
-#define COMP_FL "Component #%lu \"%s\" (%s)"
+#define COMP_FL "Component #%zu \"%s\" (%s)"
 // TODO: WTF is clangd doing
 #define COMP_FL_ARGS(c)                    \
   c->id, c->name,                          \

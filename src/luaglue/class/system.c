@@ -262,7 +262,7 @@ static int system_set_limit(lua_State* L) {
   if (limit > array_limit) {
     char str[256];
 
-    sprintf(str, "limit cannot exceed %lu", limit);
+    sprintf(str, "limit cannot exceed %zu", limit);
 
     lua_pushnil(L);
     lua_pushstring(L, str);
@@ -282,7 +282,7 @@ static int system_set_limit(lua_State* L) {
       char unit = human_bytes(limit * (ecs_id_t)system_estimated_size, &result);
 
       printf(TITLE("WARNING"));
-      printf("Script requested systems limit: %lu\n", limit);
+      printf("Script requested systems limit: %zu\n", limit);
       printf("This exceeds the soft limit of %d.\n", SYST_SOFT_LIMIT);
       printf("Estimated memory usage: %.2f%c\n", result, unit);
 

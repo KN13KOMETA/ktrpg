@@ -19,7 +19,7 @@
       printf(__FILE__ ":%d: FATAL ERROR\n", __LINE__); \
       printf("Failed to allocate memory\n");           \
       printf("PTR = " #ptr "\n");                      \
-      printf("SIZE (%lu) = " #size "\n", _s);          \
+      printf("SIZE (%zu) = " #size "\n", _s);          \
       exit(0);                                         \
     }                                                  \
   }
