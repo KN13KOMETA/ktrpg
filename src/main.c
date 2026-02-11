@@ -185,7 +185,6 @@ int init_embedded_game(vfile* scripts) {
   return code;
 }
 
-// TODO: test that all on windows
 // TODO: update readme
 // write about used libraries
 // write about scripting
