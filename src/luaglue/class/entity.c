@@ -5,6 +5,7 @@
 #include <lua.h>
 #include <luaconf.h>
 #include <pico_ecs.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -265,6 +266,22 @@ static int entity_set_limit(lua_State* L) {
   if (ecs->modified) return luaL_error(L, ECS_MODIFIED);
 
   if (limit != entities_count) {
+    if (limit > ENTI_SOFT_LIMIT) {
+      double result;
+      char unit =
+          human_bytes(limit * (ecs_id_t)entities_estimated_size, &result);
+
+      printf(TITLE("WARNING"));
+      printf("Script requested entities limit: %lu\n", limit);
+      printf("This exceeds the soft limit of %d.\n", ENTI_SOFT_LIMIT);
+      printf("Estimated memory usage: %.2f%c\n", result, unit);
+
+      if (ask_yn("Are you sure you want to continue?")) {
+        lua_pushliteral(L, LG_EXIT_USER);
+        return lua_error(L);
+      }
+    }
+
     ptr = malloc(sizeof(*entities) * limit);
 
     if (ptr == NULL) {
