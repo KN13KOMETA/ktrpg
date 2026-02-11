@@ -19,9 +19,6 @@
 #include "luah/types/ktrpg/class/system_d.h"
 #include "luah/types/ktrpg/ktrpg_d.h"
 
-// TODO: Init ecs with lua instead and add limit checks (like when script is
-// trying to take too mush memory)
-
 #define PICO_ECS_IMPLEMENTATION
 #include <pico_ecs.h>
 
@@ -98,8 +95,6 @@ int user_script_warning(void) {
 
   return ask_yn("Are you sure you want to continue?");
 }
-
-// TODO: Check size settings on ecs_new
 
 int init_game(char* script_path) {
   int code = EXIT_SUCCESS;
