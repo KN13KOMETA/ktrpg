@@ -13,7 +13,7 @@
 
 #define FMALLOC(ptr, size)                             \
   {                                                    \
-    unsigned long _s = size;                           \
+    size_t _s = size;                                  \
     ptr = malloc(_s);                                  \
     if (ptr == NULL) {                                 \
       printf(__FILE__ ":%d: FATAL ERROR\n", __LINE__); \
