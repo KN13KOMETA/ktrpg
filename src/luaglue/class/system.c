@@ -22,6 +22,8 @@ static lg_system* systems;
 static ecs_id_t systems_count = 0;
 static ecs_id_t systems_max = 0;
 
+static int system_estimated_size = SYST_ESTIMATED_SIZE + sizeof(*systems);
+
 static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* raw_entities,
                                    size_t entity_count, void* udata) {
   lua_State* L = lstate;
@@ -315,6 +317,8 @@ static int system_register_content(lua_State* L) {
 
 void lg_system_create(lua_State* L) {
   DEBUG_LOG("LG: SYSTEM CREATE");
+
+  DEBUG_LOG("LG: SYSTEM ESTIMATED SIZE = %d", system_estimated_size);
 
   lua_getfield(L, LUA_REGISTRYINDEX, "ecs");
   ecs = lua_touserdata(L, -1);
