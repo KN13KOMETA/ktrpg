@@ -42,3 +42,6 @@ void lg_destroy(void) {
 
   if (ecs.ptr != NULL) ecs_free(ecs.ptr);
 }
+
+// TODO: save/load system
+// TODO: sleep, write, read functions (so i can make it sandbox safe)
