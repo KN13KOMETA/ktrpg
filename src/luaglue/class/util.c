@@ -7,20 +7,6 @@
 #include "lauxlib.h"
 #include "lua.h"
 
-#ifdef _WIN32
-
-#include <windows.h>
-
-#else
-
-#include <unistd.h>
-
-#endif  // ifdef _WIN32
-
-#ifdef _WIN32
-#else
-#endif  // ifdef _WIN32
-
 static ptr2ecs* ecs;
 
 static int util_sleep(lua_State* L) {
@@ -31,12 +17,7 @@ static int util_sleep(lua_State* L) {
     return 1;
   }
 
-  // TODO: Check on windows
-#ifdef _WIN32
-  Sleep(seconds * 1000);
-#else
-  sleep((unsigned)seconds);
-#endif  // ifdef _WIN32
+  sleep_s((unsigned)seconds);
 
   lua_pushboolean(L, 1);
   return 1;
@@ -62,3 +43,6 @@ void lg_util_create(lua_State* L) {
   util_register_content(L);
 }
 void lg_util_destroy(void) { DEBUG_LOG("LG: UTIL DESTROY"); }
+
+// TODO: save/load system
+// TODO: sleep, write, read functions (so i can make it sandbox safe)
