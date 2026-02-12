@@ -1,6 +1,7 @@
 #include "util.h"
 
 #include <limits.h>
+#include <stdio.h>
 
 #include "../../functions.h"
 #include "../core.h"
@@ -8,6 +9,30 @@
 #include "lua.h"
 
 static ptr2ecs* ecs;
+
+static int util_ask_yn(lua_State* L) {
+  const char* str = luaL_checkstring(L, 1);
+
+  lua_pushboolean(L, !ask_yn(str));
+
+  return 1;
+}
+
+static int util_writenl(lua_State* L) {
+  const char* str = luaL_checkstring(L, 1);
+
+  printf("%s\n", str);
+
+  return 0;
+}
+
+static int util_write(lua_State* L) {
+  const char* str = luaL_checkstring(L, 1);
+
+  printf("%s", str);
+
+  return 0;
+}
 
 static int util_sleep(lua_State* L) {
   lua_Integer seconds = luaL_checkinteger(L, 1);
@@ -23,7 +48,11 @@ static int util_sleep(lua_State* L) {
   return 1;
 }
 
-static luaL_Reg util_class_methods[] = {{"sleep", util_sleep}, {NULL, NULL}};
+static luaL_Reg util_class_methods[] = {{"ask_yn", util_ask_yn},
+                                        {"writenl", util_writenl},
+                                        {"write", util_write},
+                                        {"sleep", util_sleep},
+                                        {NULL, NULL}};
 
 static int util_register_content(lua_State* L) {
   lua_newtable(L);
