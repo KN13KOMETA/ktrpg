@@ -57,7 +57,7 @@ int getchars_clear(char* str, size_t len) {
   return c;
 }
 
-int ask_yn(char* text) {
+int ask_yn(const char* text) {
   char c;
 
   printf("%s (y/N): ", text);
