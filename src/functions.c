@@ -18,12 +18,18 @@
 
 #include <dirent.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 #endif  // ifdef _WIN32
 
+void sleep_s(unsigned seconds) {
+  // TODO: Check on windows
 #ifdef _WIN32
+  Sleep(seconds * 1000);
 #else
+  sleep((unsigned)seconds);
 #endif  // ifdef _WIN32
+}
 
 int getchar_clear(char* ch) {
   int c = 0;

@@ -39,6 +39,9 @@
 #define RND_RANGE(max, min) rand() % (max + 1 - min) + min
 #define RND_MAX(max) RND_RANGE(max, 0)
 
+// Sleeps for seconds
+void sleep_s(unsigned seconds);
+
 // Reads char from stdin and clears it's buffer.
 // Returns last char from input.
 int getchar_clear(char* c);
