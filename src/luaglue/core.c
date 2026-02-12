@@ -7,6 +7,7 @@
 #include "class/component.h"
 #include "class/entity.h"
 #include "class/system.h"
+#include "class/util.h"
 
 static ptr2ecs ecs = {NULL, 0};
 
@@ -21,6 +22,8 @@ static int openclib(lua_State* L) {
   lua_setfield(L, -2, "Component");
   lg_system_create(L);
   lua_setfield(L, -2, "System");
+  lg_util_create(L);
+  lua_setfield(L, -2, "Util");
 
   return 1;
 }
@@ -39,6 +42,7 @@ void lg_destroy(void) {
   lg_entity_destroy();
   lg_component_destroy();
   lg_system_destroy();
+  lg_util_destroy();
 
   if (ecs.ptr != NULL) ecs_free(ecs.ptr);
 }
