@@ -188,4 +188,3 @@ int init_embedded_game(vfile* scripts) {
 // TODO: update readme
 // write about used libraries
 // write about scripting
-// update spoiler alert
