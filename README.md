@@ -102,4 +102,13 @@
 
 # RESOURCES
 
-- CMake Zig toolchain stolen from https://github.com/mrexodia/zig-cross
+## Libraries
+
+- [argparse](https://github.com/cofyc/argparse) - command-line argument parsing
+- [Lua](https://github.com/marovira/lua) - a fork of the official Lua with a CMake build system
+- [pico_headers](https://github.com/empyreanx/pico_headers) - a collection of single-header libraries  
+  _It's used for its sparse-set based ECS implementation_
+
+## Toolchain
+
+- CMake Zig toolchain based on [mrexodia/zig-cross](https://github.com/mrexodia/zig-cross)
