@@ -95,4 +95,3 @@ void lg_util_create(lua_State* L) {
 void lg_util_destroy(void) { DEBUG_LOG("LG: UTIL DESTROY"); }
 
 // TODO: save/load system
-// TODO: sleep, write, read functions (so i can make it sandbox safe)
