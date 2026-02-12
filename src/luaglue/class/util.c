@@ -10,6 +10,25 @@
 
 static ptr2ecs* ecs;
 
+static int util_read(lua_State* L) {
+  lua_Integer len = luaL_checkinteger(L, 1);
+  char inp[len + 1];
+
+  getchars_clear(inp, (size_t)len + 1);
+  lua_pushstring(L, inp);
+
+  return 1;
+}
+
+static int util_readchar(lua_State* L) {
+  char c;
+
+  getchar_clear(&c);
+  lua_pushlstring(L, &c, 1);
+
+  return 1;
+}
+
 static int util_ask_yn(lua_State* L) {
   const char* str = luaL_checkstring(L, 1);
 
@@ -48,7 +67,9 @@ static int util_sleep(lua_State* L) {
   return 1;
 }
 
-static luaL_Reg util_class_methods[] = {{"ask_yn", util_ask_yn},
+static luaL_Reg util_class_methods[] = {{"read", util_read},
+                                        {"readchar", util_readchar},
+                                        {"ask_yn", util_ask_yn},
                                         {"writenl", util_writenl},
                                         {"write", util_write},
                                         {"sleep", util_sleep},
