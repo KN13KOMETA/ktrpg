@@ -53,7 +53,7 @@ int getchars_clear(char* str, size_t len);
 
 // Asks for y/n
 // Returns 0 if y
-int ask_yn(char* text);
+int ask_yn(const char* text);
 
 // Turns bytes into human readable form
 // Returns char from "BKMGTPE"
