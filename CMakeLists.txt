@@ -46,6 +46,7 @@ add_executable(
   src/luaglue/class/entity.c
   src/luaglue/class/component.c
   src/luaglue/class/system.c
+  src/luaglue/class/util.c
   src/luaglue/core.c
   src/main.c
 )
