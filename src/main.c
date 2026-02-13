@@ -11,6 +11,7 @@
 #include "constants.h"
 #include "functions.h"
 #include "launch_options.h"
+#include "lua_tools.h"
 #include "luaglue/core.h"
 #include "luah/init.h"
 #include "luah/module.h"
@@ -114,8 +115,8 @@ int init_game(char* script_path) {
   // We only need to set up package.path
   // if file not in the same workdir
   if (get_basedir(script_path, basedir) == 0) {
-    module_path = build_lua_package_search_path(basedir);
-    add_lua_package_path(L, module_path);
+    module_path = luat_build_package_search_path(basedir);
+    luat_add_package_path(L, module_path);
     free(module_path);
   }
 
@@ -167,7 +168,7 @@ int init_embedded_game(vfile* scripts) {
     strncpy(module_name, f.path, path_len - 4);
     module_name[path_len - 4] = '\0';
 
-    register_lua_text_module(L, module_name, f.content);
+    luat_requiref_text(L, module_name, f.content);
   }
 
   if (code == EXIT_SUCCESS && luaL_dostring(L, scripts[0].content) != LUA_OK) {
