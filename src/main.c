@@ -134,14 +134,11 @@ int init_game(char* script_path) {
 
 int init_embedded_game(vfile* scripts) {
   int code = EXIT_SUCCESS;
-  int script_count = 0;
   lua_State* L;
-
-  for (int i = 0; scripts[i].path != NULL; i++) script_count++;
 
   printf(TITLE("GAME (embedded scripts)"));
 
-  if (script_count == 0) {
+  if (scripts[0].path == NULL) {
     printf("Fail to load embedded game, expected at least 1 scripts\n");
     return EXIT_FAILURE;
   }
@@ -152,7 +149,7 @@ int init_embedded_game(vfile* scripts) {
   lsb_create(L, scripts, NULL);
   lg_create(L);
 
-  if (code == EXIT_SUCCESS && luaL_dostring(L, scripts[0].content) != LUA_OK) {
+  if (luaL_dostring(L, scripts[0].content) != LUA_OK) {
     const char* err = lua_tostring(L, -1);
 
     if (strcmp(LG_EXIT_USER, err) != 0 && strcmp(LG_EXIT_SYSTEM, err) != 0) {
