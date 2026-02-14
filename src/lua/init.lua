@@ -1,3 +1,3 @@
-local module = require("module")
+local module = krequire("module")
 
 print(module.placeholder)
