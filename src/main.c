@@ -12,7 +12,6 @@
 #include "functions.h"
 #include "launch_options.h"
 #include "lua_sandbox.h"
-#include "lua_tools.h"
 #include "luaglue/core.h"
 #include "luah/init.h"
 #include "luah/module.h"
@@ -26,8 +25,7 @@
 
 void print_debug_mode(void);
 int user_script_warning(void);
-int init_game(char* script_path);
-int init_embedded_game(vfile* scripts);
+int init_game_universal(char* script_path, vfile* modules);
 
 int main(int argc, char* argv[]) {
   vfile vfscripts[] = {
@@ -74,9 +72,9 @@ int main(int argc, char* argv[]) {
   }
 
   if (loptions.script_path != NULL)
-    return init_game(loptions.script_path);
+    return init_game_universal(loptions.script_path, (vfile[]){{NULL, NULL}});
   else
-    return init_embedded_game(vfscripts);
+    return init_game_universal(NULL, vfscripts);
 
   return EXIT_SUCCESS;
 }
@@ -98,25 +96,36 @@ int user_script_warning(void) {
   return ask_yn("Are you sure you want to continue?");
 }
 
-int init_game(char* script_path) {
+int init_game_universal(char* script_path, vfile* modules) {
   int code = EXIT_SUCCESS;
-  char basedir[strlen(script_path)];
+  char* basedir = NULL;
   lua_State* L;
 
-  if (user_script_warning()) return EXIT_SUCCESS;
+  if (script_path != NULL) {
+    if (user_script_warning()) return EXIT_SUCCESS;
+
+    printf(TITLE("GAME (user scripts)"));
+    FMALLOC(basedir, strlen(script_path) + 1);
+
+    if (get_basedir(script_path, basedir) != 0) {
+      strcpy(basedir, ".");
+    }
+  } else {
+    if (modules[0].path == NULL) {
+      printf("Fail to load embedded game, no scripts found\n");
+      return EXIT_FAILURE;
+    }
+
+    printf(TITLE("GAME (embedded scripts)"));
+  }
 
   L = luaL_newstate();
-
-  printf(TITLE("GAME (user scripts)"));
-
-  // If cant get basedir, then its current workdir
-  if (get_basedir(script_path, basedir) != 0) strcpy(basedir, ".");
-
   luaL_openlibs(L);
-  lsb_create(L, (vfile[]){{NULL, NULL}}, basedir);
+  lsb_create(L, modules, basedir);
   lg_create(L);
 
-  if (luaL_dofile(L, script_path) != LUA_OK) {
+  if ((basedir == NULL) ? luaL_dostring(L, modules[0].content)
+                        : luaL_dofile(L, script_path) != LUA_OK) {
     const char* err = lua_tostring(L, -1);
 
     if (strcmp(LG_EXIT_USER, err) != 0 && strcmp(LG_EXIT_SYSTEM, err) != 0) {
@@ -128,39 +137,7 @@ int init_game(char* script_path) {
   lsb_destroy();
   lg_destroy();
   lua_close(L);
-
-  return code;
-}
-
-int init_embedded_game(vfile* scripts) {
-  int code = EXIT_SUCCESS;
-  lua_State* L;
-
-  printf(TITLE("GAME (embedded scripts)"));
-
-  if (scripts[0].path == NULL) {
-    printf("Fail to load embedded game, expected at least 1 scripts\n");
-    return EXIT_FAILURE;
-  }
-
-  L = luaL_newstate();
-
-  luaL_openlibs(L);
-  lsb_create(L, scripts, NULL);
-  lg_create(L);
-
-  if (luaL_dostring(L, scripts[0].content) != LUA_OK) {
-    const char* err = lua_tostring(L, -1);
-
-    if (strcmp(LG_EXIT_USER, err) != 0 && strcmp(LG_EXIT_SYSTEM, err) != 0) {
-      printf("Lua error: %s\n", err);
-      code = EXIT_FAILURE;
-    }
-  }
-
-  lsb_destroy();
-  lg_destroy();
-  lua_close(L);
+  if (basedir != NULL) free(basedir);
 
   return code;
 }
