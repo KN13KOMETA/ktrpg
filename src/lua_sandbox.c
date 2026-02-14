@@ -7,8 +7,6 @@
 
 #include "functions.h"
 
-#define LSB_REG "krequire_loaded"
-
 static char* wd;
 static vfile* vlibs;
 

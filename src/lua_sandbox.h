@@ -5,6 +5,8 @@
 
 #include "constants.h"
 
+#define LSB_REG "krequire_loaded"
+
 // Creates lua sandbox
 // workdir_path == NULL then only virtual_libs will be used
 // virtual_libs == NULL then only workdir_path will be used
