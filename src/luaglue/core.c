@@ -4,6 +4,7 @@
 #include <lua.h>
 
 #include "../functions.h"
+#include "../lua_sandbox.h"
 #include "class/component.h"
 #include "class/entity.h"
 #include "class/system.h"
@@ -28,13 +29,25 @@ static int openclib(lua_State* L) {
   return 1;
 }
 
+// TODO: Exit codes
 void lg_create(lua_State* L) {
   DEBUG_LOG("LG: CREATE");
 
   lua_pushlightuserdata(L, &ecs);
   lua_setfield(L, LUA_REGISTRYINDEX, "ecs");
 
-  luaL_requiref(L, "ktrpg", openclib, 0);
+  lua_pushcfunction(L, openclib);
+  if (lua_pcall(L, 0, 1, 0) != LUA_OK) {
+    DEBUG_LOG("LG: failed at loading module: %s", lua_tostring(L, -1));
+    lua_pop(L, 1);
+    return;
+  }
+
+  lua_getfield(L, LUA_REGISTRYINDEX, LSB_REG);
+
+  lua_pushvalue(L, -2);
+  lua_setfield(L, -2, "ktrpg");
+  lua_pop(L, 2);
 }
 void lg_destroy(void) {
   DEBUG_LOG("LG: DESTROY");
