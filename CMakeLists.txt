@@ -43,6 +43,7 @@ add_executable(
   ${GENERATED_C_FILES}
   src/functions.c
   src/lua_tools.c
+  src/lua_sandbox.c
   src/launch_options.c
   src/luaglue/class/entity.c
   src/luaglue/class/component.c
