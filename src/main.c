@@ -11,6 +11,7 @@
 #include "constants.h"
 #include "functions.h"
 #include "launch_options.h"
+#include "lua_sandbox.h"
 #include "lua_tools.h"
 #include "luaglue/core.h"
 #include "luah/init.h"
@@ -100,25 +101,20 @@ int user_script_warning(void) {
 int init_game(char* script_path) {
   int code = EXIT_SUCCESS;
   char basedir[strlen(script_path)];
-  char* module_path;
   lua_State* L;
 
   if (user_script_warning()) return EXIT_SUCCESS;
 
   L = luaL_newstate();
 
-  luaL_openlibs(L);
-  lg_create(L);
-
   printf(TITLE("GAME (user scripts)"));
 
-  // We only need to set up package.path
-  // if file not in the same workdir
-  if (get_basedir(script_path, basedir) == 0) {
-    module_path = luat_build_package_search_path(basedir);
-    luat_add_package_path(L, module_path);
-    free(module_path);
-  }
+  // If cant get basedir, then its current workdir
+  if (get_basedir(script_path, basedir) != 0) strcpy(basedir, ".");
+
+  luaL_openlibs(L);
+  lsb_create(L, (vfile[]){{NULL, NULL}}, basedir);
+  lg_create(L);
 
   if (luaL_dofile(L, script_path) != LUA_OK) {
     const char* err = lua_tostring(L, -1);
@@ -129,6 +125,7 @@ int init_game(char* script_path) {
     }
   }
 
+  lsb_destroy();
   lg_destroy();
   lua_close(L);
 
@@ -152,24 +149,8 @@ int init_embedded_game(vfile* scripts) {
   L = luaL_newstate();
 
   luaL_openlibs(L);
+  lsb_create(L, scripts, NULL);
   lg_create(L);
-
-  for (int i = 1; i < script_count; i++) {
-    vfile f = scripts[i];
-    size_t path_len = strlen(f.path);
-    char* ext = strrchr(f.path, '.');
-    char module_name[path_len - 4 + 1];
-
-    if (ext == NULL || strcmp(".lua", ext) != 0) {
-      printf("Fail to load embedded game, unknown file \"%s\"\n", f.path);
-      code = EXIT_FAILURE;
-    }
-
-    strncpy(module_name, f.path, path_len - 4);
-    module_name[path_len - 4] = '\0';
-
-    luat_requiref_text(L, module_name, f.content);
-  }
 
   if (code == EXIT_SUCCESS && luaL_dostring(L, scripts[0].content) != LUA_OK) {
     const char* err = lua_tostring(L, -1);
@@ -180,6 +161,7 @@ int init_embedded_game(vfile* scripts) {
     }
   }
 
+  lsb_destroy();
   lg_destroy();
   lua_close(L);
 
