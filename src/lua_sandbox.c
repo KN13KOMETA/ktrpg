@@ -2,6 +2,7 @@
 
 #include <lauxlib.h>
 #include <lua.h>
+#include <lualib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,6 +14,33 @@
 static int loaded = 0;
 static char* wd;
 static vfile* vlibs;
+
+int lsbopen_base(lua_State* L) {
+  char* allowed_base[] = {
+      "assert", "error",  "getmetatable", "ipairs",   "next",
+      "pairs",  "pcall",  "rawequal",     "rawlen",   "rawget",
+      "rawset", "select", "setmetatable", "tonumber", "tostring",
+      "type",   "xpcall", LUA_GNAME,      "_VERSION", NULL};
+
+  luaopen_base(L);
+
+  lua_newtable(L);
+
+  for (char** p = allowed_base; *p != NULL; p++) {
+    char* name = *p;
+
+    lua_getfield(L, -2, name);
+    if (lua_isnil(L, -1)) {
+      lua_pushfstring(L, "%s not found in base", name);
+      return lua_error(L);
+    }
+    lua_setfield(L, -2, name);
+  }
+
+  lua_remove(L, -2);
+
+  return 1;
+}
 
 int lsb_krequiref(lua_State* L, const char* name, lua_CFunction openf,
                   int glb) {
