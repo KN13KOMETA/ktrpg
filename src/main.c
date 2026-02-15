@@ -100,6 +100,7 @@ static luaL_Reg glibs[] = {{LUA_GNAME, lsbopen_base},
                            {LUA_TABLIBNAME, luaopen_table},
                            {LUA_STRLIBNAME, luaopen_string},
                            {LUA_MATHLIBNAME, luaopen_math},
+                           {"ktrpg", lg_openlib},
                            {NULL, NULL}};
 
 int init_game_universal(char* script_path, vfile* modules) {
@@ -129,13 +130,14 @@ int init_game_universal(char* script_path, vfile* modules) {
   L = luaL_newstate();
   // Create Sandbox
   lsb_create(L, modules, basedir);
+  // Create luaglue
+  lg_create(L);
+
   // Create global libs/modules
   for (luaL_Reg* glib = glibs; glib->name != NULL; glib++) {
     printf("asdd  %s\n", glib->name);
     lsb_krequiref(L, glib->name, glib->func, 1);
   }
-  // Create luaglue
-  lg_create(L);
 
   if ((basedir == NULL) ? luaL_dostring(L, modules[0].content)
                         : luaL_dofile(L, script_path) != LUA_OK) {
