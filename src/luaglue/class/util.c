@@ -37,8 +37,11 @@ static int util_ask_yn(lua_State* L) {
   return 1;
 }
 
+// TODO: find out why standard print
+// outputs nil as "\n"
+// but this give (null)
 static int util_writenl(lua_State* L) {
-  const char* str = luaL_checkstring(L, 1);
+  const char* str = lua_tostring(L, 1);
 
   printf("%s\n", str);
 
@@ -46,7 +49,7 @@ static int util_writenl(lua_State* L) {
 }
 
 static int util_write(lua_State* L) {
-  const char* str = luaL_checkstring(L, 1);
+  const char* str = lua_tostring(L, 1);
 
   printf("%s", str);
 
