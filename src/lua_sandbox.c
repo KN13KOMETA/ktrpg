@@ -7,6 +7,7 @@
 
 #include "functions.h"
 
+static int loaded = 0;
 static char* wd;
 static vfile* vlibs;
 
@@ -90,6 +91,8 @@ static int ll_krequire(lua_State* L) {
 void lsb_create(lua_State* L, vfile* virtual_libs, char* workdir_path) {
   DEBUG_LOG("LSB: CREATE");
 
+  loaded = 1;
+
   vlibs = virtual_libs;
 
   if (workdir_path != NULL) {
@@ -109,5 +112,7 @@ void lsb_create(lua_State* L, vfile* virtual_libs, char* workdir_path) {
 void lsb_destroy(void) {
   DEBUG_LOG("LSB: DESTROY");
 
+  loaded = 0;
+  vlibs = NULL;
   if (wd != NULL) free(wd);
 }
