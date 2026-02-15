@@ -4,7 +4,6 @@
 #include <lua.h>
 
 #include "../functions.h"
-#include "../lua_sandbox.h"
 #include "class/component.h"
 #include "class/entity.h"
 #include "class/system.h"
@@ -12,7 +11,7 @@
 
 static ptr2ecs ecs = {NULL, 0};
 
-static int openclib(lua_State* L) {
+int lg_openlib(lua_State* L) {
   DEBUG_LOG("LG: OPENING C LIBRARY");
 
   lua_newtable(L);
@@ -34,8 +33,6 @@ void lg_create(lua_State* L) {
 
   lua_pushlightuserdata(L, &ecs);
   lua_setfield(L, LUA_REGISTRYINDEX, "ecs");
-
-  lsb_krequiref(L, "ktrpg", openclib, 0);
 }
 void lg_destroy(void) {
   DEBUG_LOG("LG: DESTROY");
