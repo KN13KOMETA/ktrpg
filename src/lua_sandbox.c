@@ -24,7 +24,7 @@ int lsbopen_base(lua_State* L) {
 
   luaopen_base(L);
 
-  lua_newtable(L);
+  lua_pushglobaltable(L);
 
   for (char** p = allowed_base; *p != NULL; p++) {
     char* name = *p;
