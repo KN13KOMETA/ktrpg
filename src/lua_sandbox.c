@@ -15,30 +15,38 @@ static int loaded = 0;
 static char* wd;
 static vfile* vlibs;
 
-// TODO: Make _G work correctly
 int lsbopen_base(lua_State* L) {
-  char* allowed_base[] = {
-      "assert", "error",  "getmetatable", "ipairs",   "next",
-      "pairs",  "pcall",  "rawequal",     "rawlen",   "rawget",
-      "rawset", "select", "setmetatable", "tonumber", "tostring",
-      "type",   "xpcall", LUA_GNAME,      "_VERSION", NULL};
+  char* allowed_keys[] = {
+      "krequire", "assert", "error",  "getmetatable", "ipairs",
+      "next",     "pairs",  "pcall",  "rawequal",     "rawlen",
+      "rawget",   "rawset", "select", "setmetatable", "tonumber",
+      "tostring", "type",   "xpcall", LUA_GNAME,      "_VERSION",
+      NULL};
 
   luaopen_base(L);
 
-  lua_newtable(L);
+  lua_pushnil(L);
+  while (lua_next(L, 1) != 0) {
+    const char* key = lua_tostring(L, -2);
+    int allowed = 0;
 
-  for (char** p = allowed_base; *p != NULL; p++) {
-    char* name = *p;
-
-    lua_getfield(L, -2, name);
-    if (lua_isnil(L, -1)) {
-      lua_pushfstring(L, "%s not found in base", name);
-      return lua_error(L);
+    for (char** ak = allowed_keys; *ak != NULL; ak++) {
+      if (strcmp(*ak, key) == 0) allowed = 1;
     }
-    lua_setfield(L, -2, name);
-  }
 
-  lua_remove(L, -2);
+    if (allowed) {
+      lua_pop(L, 1);
+      continue;
+    }
+
+    DEBUG_LOG("LSB: %s is not allowed", key);
+
+    lua_pushnil(L);
+    lua_setfield(L, -4, key);
+
+    // Keep key for next iteration
+    lua_pop(L, 1);
+  }
 
   return 1;
 }
