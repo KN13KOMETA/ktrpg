@@ -15,6 +15,7 @@ static int loaded = 0;
 static char* wd;
 static vfile* vlibs;
 
+// TODO: Make _G work correctly
 int lsbopen_base(lua_State* L) {
   char* allowed_base[] = {
       "assert", "error",  "getmetatable", "ipairs",   "next",
@@ -24,7 +25,7 @@ int lsbopen_base(lua_State* L) {
 
   luaopen_base(L);
 
-  lua_pushglobaltable(L);
+  lua_newtable(L);
 
   for (char** p = allowed_base; *p != NULL; p++) {
     char* name = *p;
