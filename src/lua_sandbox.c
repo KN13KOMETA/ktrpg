@@ -2,14 +2,41 @@
 
 #include <lauxlib.h>
 #include <lua.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "functions.h"
 
+#define LSB_NOT_INIT "LSB not initialized call lsb_create first\n"
+
 static int loaded = 0;
 static char* wd;
 static vfile* vlibs;
+
+int lsb_krequiref(lua_State* L, const char* name, lua_CFunction openf,
+                  int glb) {
+  if (loaded == 0) {
+    printf(LSB_NOT_INIT);
+    return EXIT_FAILURE;
+  }
+
+  lua_pushcfunction(L, openf);
+  if (lua_pcall(L, 0, 1, 0) != LUA_OK) return lua_error(L);
+
+  lua_getfield(L, LUA_REGISTRYINDEX, LSB_REG);
+
+  lua_pushvalue(L, -2);
+  lua_setfield(L, -2, name);
+  lua_pop(L, 1);
+
+  if (glb) {
+    lua_pushvalue(L, -1);
+    lua_setglobal(L, name);
+  }
+
+  return EXIT_SUCCESS;
+}
 
 static int ll_krequire(lua_State* L) {
   const char* name = luaL_checkstring(L, 1);

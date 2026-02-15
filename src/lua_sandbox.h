@@ -7,6 +7,10 @@
 
 #define LSB_REG "krequire_loaded"
 
+// Create a cached module and adds it to krequire
+// If glb != 0 adds global
+int lsb_krequiref(lua_State* L, const char* name, lua_CFunction openf, int glb);
+
 // Creates lua sandbox
 // workdir_path == NULL then only virtual_libs will be used
 // virtual_libs == NULL then only workdir_path will be used
