@@ -96,6 +96,12 @@ int user_script_warning(void) {
   return ask_yn("Are you sure you want to continue?");
 }
 
+static luaL_Reg glibs[] = {{LUA_GNAME, lsbopen_base},
+                           {LUA_TABLIBNAME, luaopen_table},
+                           {LUA_STRLIBNAME, luaopen_string},
+                           {LUA_MATHLIBNAME, luaopen_math},
+                           {NULL, NULL}};
+
 int init_game_universal(char* script_path, vfile* modules) {
   int code = EXIT_SUCCESS;
   char* basedir = NULL;
@@ -119,9 +125,16 @@ int init_game_universal(char* script_path, vfile* modules) {
     printf(TITLE("GAME (embedded scripts)"));
   }
 
+  // Create Lua state
   L = luaL_newstate();
-  luaL_openlibs(L);
+  // Create Sandbox
   lsb_create(L, modules, basedir);
+  // Create global libs/modules
+  for (luaL_Reg* glib = glibs; glib->name != NULL; glib++) {
+    printf("asdd  %s\n", glib->name);
+    lsb_krequiref(L, glib->name, glib->func, 1);
+  }
+  // Create luaglue
   lg_create(L);
 
   if ((basedir == NULL) ? luaL_dostring(L, modules[0].content)
