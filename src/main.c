@@ -128,16 +128,14 @@ int init_game_universal(char* script_path, vfile* modules) {
 
   // Create Lua state
   L = luaL_newstate();
-  // Create Sandbox
+  // Create sandbox
   lsb_create(L, modules, basedir);
   // Create luaglue
   lg_create(L);
 
   // Create global libs/modules
-  for (luaL_Reg* glib = glibs; glib->name != NULL; glib++) {
-    printf("asdd  %s\n", glib->name);
+  for (luaL_Reg* glib = glibs; glib->name != NULL; glib++)
     lsb_krequiref(L, glib->name, glib->func, 1);
-  }
 
   if ((basedir == NULL) ? luaL_dostring(L, modules[0].content)
                         : luaL_dofile(L, script_path) != LUA_OK) {
