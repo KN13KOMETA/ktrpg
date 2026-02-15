@@ -7,6 +7,8 @@
 
 #define LSB_REG "krequire_loaded"
 
+int lsbopen_base(lua_State* L);
+
 // Create a cached module and adds it to krequire
 // If glb != 0 adds global
 int lsb_krequiref(lua_State* L, const char* name, lua_CFunction openf, int glb);
