@@ -1,3 +1,4 @@
+local ktrpg = krequire("ktrpg")
 local module = krequire("module")
 
-print(module.placeholder)
+ktrpg.Util.writenl(module.placeholder)
