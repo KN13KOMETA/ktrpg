@@ -65,7 +65,7 @@ static ecs_ret_t lua_runner_system(ecs_t* ecs, ecs_entity_t* raw_entities,
 
     lua_pushinteger(L, ecount);
 
-    lua_pcall(L, 2, 0, 1);
+    if (lua_pcall(L, 2, 0, 0) != LUA_OK) return lua_error(L);
 
     free(entities);
   }
