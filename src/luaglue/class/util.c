@@ -98,3 +98,10 @@ void lg_util_create(lua_State* L) {
 void lg_util_destroy(void) { DEBUG_LOG("LG: UTIL DESTROY"); }
 
 // TODO: save/load system
+// I am not sure if I can do that with current ecs implementation
+// It doesn't have builtin serialization/deserialization
+// So I planned to just go through every entity and check what components it
+// have Yeah that would be a bit slow but working But here's another problem,
+// since I can't change entity id's
+// When loading I can't set them id that I want,
+// so this breaks id-based targeting system
