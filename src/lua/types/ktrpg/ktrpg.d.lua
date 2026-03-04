@@ -8,6 +8,8 @@ local ktrpg = {
   Component = {},
   ---@type System
   System = {},
+  ---@type Util
+  Util = {},
 }
 
 return ktrpg
