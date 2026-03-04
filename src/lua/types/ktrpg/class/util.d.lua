@@ -22,6 +22,7 @@ function Util.readchar() end
 function Util.ask_yn(question) end
 
 ---@param text string
+---@overload fun()
 function Util.writenl(text) end
 
 ---@param text string
