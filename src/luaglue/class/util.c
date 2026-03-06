@@ -37,6 +37,7 @@ static int util_ask_yn(lua_State* L) {
   return 1;
 }
 
+// TODO: fix infinite recursion
 static int print_tostring(lua_State* L, int li, int indent) {
   switch (lua_type(L, li)) {
     case LUA_TNUMBER:
