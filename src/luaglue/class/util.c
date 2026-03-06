@@ -71,16 +71,16 @@ static int print_tostring(lua_State* L, int i) {
       break;
     }
     case LUA_TFUNCTION:
-      printf("TODO: function");
+      printf("function: %p", lua_topointer(L, i));
       break;
     case LUA_TUSERDATA:
-      printf("TODO: userdata");
+      printf("userdata: %p", lua_topointer(L, i));
       break;
     case LUA_TTHREAD:
-      printf("TODO: thread");
+      printf("thread: %p", lua_topointer(L, i));
       break;
     case LUA_TLIGHTUSERDATA:
-      printf("TODO: lightuserdata");
+      printf("lightuserdata: %p", lua_topointer(L, i));
       break;
   }
 
