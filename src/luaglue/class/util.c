@@ -37,7 +37,7 @@ static int util_ask_yn(lua_State* L) {
   return 1;
 }
 
-static int print_tostring(lua_State* L, int li) {
+static int print_tostring(lua_State* L, int li, int indent) {
   switch (lua_type(L, li)) {
     case LUA_TNUMBER:
       if (lua_isinteger(L, li))
@@ -55,23 +55,38 @@ static int print_tostring(lua_State* L, int li) {
       printf(lua_toboolean(L, li) == 0 ? "false" : "true");
       break;
     case LUA_TTABLE: {
-      printf("TODO: table, %llu\n", lua_rawlen(L, li));
+      int nindent = indent + 1;
+      int empty = 1;
+      int key_string = 0;
+
+      putchar('{');
 
       lua_pushnil(L);
       while (lua_next(L, li) != 0) {
-        if (lua_type(L, -2) == LUA_TSTRING) {
-          printf("[\"%s\"] = ", lua_tostring(L, -2));
-        } else if (lua_type(L, -2) == LUA_TNUMBER) {
-          printf("[%g] = ", lua_tonumber(L, -2));
-        } else {
-          printf("[%s] = ", luaL_typename(L, -2));
-        }
+        empty = 0;
 
-        print_tostring(L, lua_absindex(L, -1));
-        printf(",\n");
+        putchar('\n');
+        for (int i = 0; i < nindent; i++) printf("  ");
+
+        key_string = (lua_type(L, -2) == LUA_TSTRING) ? 1 : 0;
+
+        putchar('[');
+        if (key_string) putchar('"');
+        print_tostring(L, lua_absindex(L, -2), nindent);
+        if (key_string) putchar('"');
+        printf("] = ");
+
+        print_tostring(L, lua_absindex(L, -1), nindent);
+        putchar(',');
 
         lua_pop(L, 1);
       }
+
+      if (empty == 0) {
+        putchar('\n');
+        for (int i = 0; i < indent; i++) printf("  ");
+      }
+      putchar('}');
 
       break;
     }
@@ -94,7 +109,7 @@ static int print_tostring(lua_State* L, int li) {
 
 // TODO: table and userdata printing
 static int util_writenl(lua_State* L) {
-  if (lua_gettop(L) != 0) print_tostring(L, 1);
+  if (lua_gettop(L) != 0) print_tostring(L, 1, 0);
 
   putchar('\n');
 
@@ -104,7 +119,7 @@ static int util_writenl(lua_State* L) {
 static int util_write(lua_State* L) {
   if (lua_gettop(L) == 0) return 0;
 
-  print_tostring(L, 1);
+  print_tostring(L, 1, 0);
 
   return 0;
 }
