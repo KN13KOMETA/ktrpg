@@ -49,9 +49,27 @@ static int print_tostring(lua_State* L, int i) {
     case LUA_TBOOLEAN:
       printf(lua_toboolean(L, i) == 0 ? "false" : "true");
       break;
-    case LUA_TTABLE:
-      printf("TODO: table");
+    case LUA_TTABLE: {
+      printf("TODO: table, %llu\n", lua_rawlen(L, i));
+
+      lua_pushnil(L);
+      while (lua_next(L, i) != 0) {
+        if (lua_type(L, -2) == LUA_TSTRING) {
+          printf("[\"%s\"] = ", lua_tostring(L, -2));
+        } else if (lua_type(L, -2) == LUA_TNUMBER) {
+          printf("[%g] = ", lua_tonumber(L, -2));
+        } else {
+          printf("[%s] = ", luaL_typename(L, -2));
+        }
+
+        print_tostring(L, lua_absindex(L, -1));
+        printf(",\n");
+
+        lua_pop(L, 1);
+      }
+
       break;
+    }
     case LUA_TFUNCTION:
       printf("TODO: function");
       break;
