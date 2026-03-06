@@ -47,7 +47,10 @@ static int print_tostring(lua_State* L, int i) {
       printf("nil");
       break;
     case LUA_TBOOLEAN:
-      printf("%s", lua_toboolean(L, i) == 0 ? "false" : "true");
+      if (lua_toboolean(L, i) == 0)
+        printf("false");
+      else
+        printf("true");
       break;
     case LUA_TTABLE:
       printf("TODO: table");
