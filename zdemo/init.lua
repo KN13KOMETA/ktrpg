@@ -14,10 +14,10 @@ ktrpg.System:get_limit()
 --]]
 
 ---@type ktrpg
-local ktrpg = require("ktrpg")
+local ktrpg = krequire("ktrpg")
 
-local physical_damage = require("physical_damage")
-local create_player = require("create_player")
+local physical_damage = krequire("physical_damage")
+local create_player = krequire("create_player")
 
 TB = "\n:: "
 TE = " ::"
@@ -79,7 +79,7 @@ SYSTEM = {
     :set_mask(0)
     :on_run(function(entities, entity_count)
       if entity_count == 0 then
-        print("No players alive, stopping...")
+        ktrpg.Util.writenl("No players alive, stopping...")
         os.exit(0)
       end
 
@@ -111,37 +111,36 @@ SYSTEM = {
         end
 
         while true do
-          print(TB .. player.name .. " turn" .. TE)
+          ktrpg.Util.writenl(TB .. player.name .. " turn" .. TE)
 
-          print("x) exit")
-          print("s) Check status (doesn't waste turn)")
-          print("i) Idle")
-          print("l) Change location")
+          ktrpg.Util.writenl("x) exit")
+          ktrpg.Util.writenl("s) Check status (doesn't waste turn)")
+          ktrpg.Util.writenl("i) Idle")
+          ktrpg.Util.writenl("l) Change location")
 
           if enemy ~= nil then
-            print("a) Attack " .. enemy_name .. " (enemy that attacked you)")
+            ktrpg.Util.writenl("a) Attack " .. enemy_name .. " (enemy that attacked you)")
           end
 
-          io.write("Your action: ")
-          local act = io.read()
+          local act = ktrpg.Util.readchar()
           local act_list = {
             x = function()
               os.exit(0)
             end,
             s = function()
-              print(TB .. player.name .. " STATUS" .. TE)
+              ktrpg.Util.writenl(TB .. player.name .. " STATUS" .. TE)
 
               if player.location == LOCATION.player_home then
-                print("Location: " .. player.name .. " room")
+                ktrpg.Util.writenl("Location: " .. player.name .. " room")
               elseif player.location == LOCATION.forest then
-                print("Location: forest")
+                ktrpg.Util.writenl("Location: forest")
               else
-                print("Location: void (ah sht here we go again)")
+                ktrpg.Util.writenl("Location: void (ah sht here we go again)")
               end
 
-              print("Gold: " .. player.gold)
-              print("Health: " .. player.health .. "/" .. player.max_health)
-              print("Attack strength: " .. player.attack)
+              ktrpg.Util.writenl("Gold: " .. player.gold)
+              ktrpg.Util.writenl("Health: " .. player.health .. "/" .. player.max_health)
+              ktrpg.Util.writenl("Attack strength: " .. player.attack)
 
               if player.attacked_by == nil then
                 return
@@ -151,10 +150,10 @@ SYSTEM = {
                 return
               end
 
-              print("Attacked By " .. enemy_name)
+              ktrpg.Util.writenl("Attacked By " .. enemy_name)
             end,
             i = function()
-              print(player.name .. " decided to skip their turn")
+              ktrpg.Util.writenl(player.name .. " decided to skip their turn")
               return 1
             end,
             a = function()
@@ -162,7 +161,7 @@ SYSTEM = {
               return 1
             end,
             l = function()
-              print(TB .. "LOCATION SELECT" .. TE)
+              ktrpg.Util.writenl(TB .. "LOCATION SELECT" .. TE)
 
               local llist = {
                 [LOCATION.forest] = {
@@ -182,7 +181,7 @@ SYSTEM = {
                   goto continue
                 end
 
-                print(value.key .. ") go to " .. value.name)
+                ktrpg.Util.writenl(value.key .. ") go to " .. value.name)
 
                 ::continue::
               end
@@ -208,7 +207,7 @@ SYSTEM = {
           local sel = act_list[act]
 
           if sel == nil then
-            print("Unknown action")
+            ktrpg.Util.writenl("Unknown action")
             goto continue
           end
 
@@ -293,7 +292,7 @@ SYSTEM = {
             target_name = NONAME
           end
 
-          print(TB .. enemy_name .. " dealt " .. damage .. " damage to " .. target_name)
+          ktrpg.Util.writenl(TB .. enemy_name .. " dealt " .. damage .. " damage to " .. target_name)
         end
 
         attack:kill()
@@ -328,9 +327,9 @@ SYSTEM = {
         end
 
         if nh < h then
-          print(TB .. name .. " received " .. (h - nh) .. " damage")
+          ktrpg.Util.writenl(TB .. name .. " received " .. (h - nh) .. " damage")
         elseif nh > h then
-          print(TB .. name .. " healed " .. (nh - h) .. " hp")
+          ktrpg.Util.writenl(TB .. name .. " healed " .. (nh - h) .. " hp")
         end
       end
     end),
@@ -378,11 +377,13 @@ SYSTEM = {
       end
 
       if total_gold ~= nil and total_gold < attacker.gold then
-        print(TB .. attacker.name .. " killed " .. entity.name .. " and lost " .. (entity.gold * -1) .. " gold")
+        ktrpg.Util.writenl(
+          TB .. attacker.name .. " killed " .. entity.name .. " and lost " .. (entity.gold * -1) .. " gold"
+        )
       elseif total_gold ~= nil and total_gold > attacker.gold then
-        print(TB .. attacker.name .. " killed " .. entity.name .. " and got " .. entity.gold .. " gold")
+        ktrpg.Util.writenl(TB .. attacker.name .. " killed " .. entity.name .. " and got " .. entity.gold .. " gold")
       else
-        print(TB .. attacker.name .. " killed " .. entity.name)
+        ktrpg.Util.writenl(TB .. attacker.name .. " killed " .. entity.name)
       end
 
       ::continue::
@@ -453,6 +454,6 @@ local function run()
   SYSTEM.debug:run()
 end
 
-for i = 1, 22, 1 do
+for i = 1, 2, 1 do
   run()
 end
