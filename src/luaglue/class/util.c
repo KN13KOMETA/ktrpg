@@ -38,11 +38,33 @@ static int util_ask_yn(lua_State* L) {
 }
 
 static int print_tostring(lua_State* L, int i) {
-  const char* str;
-
-  str = lua_tostring(L, i);
-
-  printf("%s", str);
+  switch (lua_type(L, i)) {
+    case LUA_TNUMBER:
+    case LUA_TSTRING:
+      printf("%s", lua_tostring(L, 1));
+      break;
+    case LUA_TNIL:
+      printf("nil");
+      break;
+    case LUA_TBOOLEAN:
+      printf("%s", lua_toboolean(L, i) == 0 ? "false" : "true");
+      break;
+    case LUA_TTABLE:
+      printf("TODO: table");
+      break;
+    case LUA_TFUNCTION:
+      printf("TODO: function");
+      break;
+    case LUA_TUSERDATA:
+      printf("TODO: userdata");
+      break;
+    case LUA_TTHREAD:
+      printf("TODO: thread");
+      break;
+    case LUA_TLIGHTUSERDATA:
+      printf("TODO: lightuserdata");
+      break;
+  }
 
   return 0;
 }
