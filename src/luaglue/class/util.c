@@ -41,9 +41,9 @@ static int print_tostring(lua_State* L, int li) {
   switch (lua_type(L, li)) {
     case LUA_TNUMBER:
       if (lua_isinteger(L, li))
-        printf("%lld", lua_tointeger(L, 1));
+        printf("%lld", lua_tointeger(L, li));
       else
-        printf("%f", lua_tonumber(L, 1));
+        printf("%f", lua_tonumber(L, li));
       break;
     case LUA_TSTRING:
       printf("%s", lua_tostring(L, li));
