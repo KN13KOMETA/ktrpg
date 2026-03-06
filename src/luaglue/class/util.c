@@ -41,7 +41,7 @@ static int print_tostring(lua_State* L, int i) {
   switch (lua_type(L, i)) {
     case LUA_TNUMBER:
     case LUA_TSTRING:
-      printf("%s", lua_tostring(L, 1));
+      printf("%s", lua_tostring(L, i));
       break;
     case LUA_TNIL:
       printf("nil");
