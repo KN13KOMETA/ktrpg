@@ -37,28 +37,29 @@ static int util_ask_yn(lua_State* L) {
   return 1;
 }
 
-// TODO: table and userdata printing
-static int util_writenl(lua_State* L) {
+static int print_tostring(lua_State* L, int i) {
   const char* str;
 
-  // Print only '\n' if 0 args
-  if (lua_gettop(L) == 0) {
-    putchar('\n');
-  } else {
-    str = lua_tostring(L, 1);
-    printf("%s\n", str);
-  }
+  str = lua_tostring(L, i);
+
+  printf("%s", str);
+
+  return 0;
+}
+
+// TODO: table and userdata printing
+static int util_writenl(lua_State* L) {
+  if (lua_gettop(L) != 0) print_tostring(L, 1);
+
+  putchar('\n');
 
   return 0;
 }
 
 static int util_write(lua_State* L) {
-  const char* str = lua_tostring(L, 1);
-
-  // Don't print if 0 args
   if (lua_gettop(L) == 0) return 0;
 
-  printf("%s", str);
+  print_tostring(L, 1);
 
   return 0;
 }
