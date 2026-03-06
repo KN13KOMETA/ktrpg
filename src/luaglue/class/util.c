@@ -37,28 +37,28 @@ static int util_ask_yn(lua_State* L) {
   return 1;
 }
 
-static int print_tostring(lua_State* L, int i) {
-  switch (lua_type(L, i)) {
+static int print_tostring(lua_State* L, int li) {
+  switch (lua_type(L, li)) {
     case LUA_TNUMBER:
-      if (lua_isinteger(L, i))
+      if (lua_isinteger(L, li))
         printf("%lld", lua_tointeger(L, 1));
       else
         printf("%f", lua_tonumber(L, 1));
       break;
     case LUA_TSTRING:
-      printf("%s", lua_tostring(L, i));
+      printf("%s", lua_tostring(L, li));
       break;
     case LUA_TNIL:
       printf("nil");
       break;
     case LUA_TBOOLEAN:
-      printf(lua_toboolean(L, i) == 0 ? "false" : "true");
+      printf(lua_toboolean(L, li) == 0 ? "false" : "true");
       break;
     case LUA_TTABLE: {
-      printf("TODO: table, %llu\n", lua_rawlen(L, i));
+      printf("TODO: table, %llu\n", lua_rawlen(L, li));
 
       lua_pushnil(L);
-      while (lua_next(L, i) != 0) {
+      while (lua_next(L, li) != 0) {
         if (lua_type(L, -2) == LUA_TSTRING) {
           printf("[\"%s\"] = ", lua_tostring(L, -2));
         } else if (lua_type(L, -2) == LUA_TNUMBER) {
@@ -76,16 +76,16 @@ static int print_tostring(lua_State* L, int i) {
       break;
     }
     case LUA_TFUNCTION:
-      printf("function: %p", lua_topointer(L, i));
+      printf("function: %p", lua_topointer(L, li));
       break;
     case LUA_TUSERDATA:
-      printf("userdata: %p", lua_topointer(L, i));
+      printf("userdata: %p", lua_topointer(L, li));
       break;
     case LUA_TTHREAD:
-      printf("thread: %p", lua_topointer(L, i));
+      printf("thread: %p", lua_topointer(L, li));
       break;
     case LUA_TLIGHTUSERDATA:
-      printf("lightuserdata: %p", lua_topointer(L, i));
+      printf("lightuserdata: %p", lua_topointer(L, li));
       break;
   }
 
