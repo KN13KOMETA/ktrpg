@@ -1,10 +1,10 @@
-local ktrpg = require("ktrpg")
+local ktrpg = krequire("ktrpg")
 
 return function()
   local player = ktrpg.Entity:new()
 
-  io.write(":: Enter your nick: ")
-  player:set(COMPONENT.name, io.read())
+  ktrpg.Util.write(":: Enter your nick: ")
+  player:set(COMPONENT.name, ktrpg.Util.read(32))
   player:set(COMPONENT.location, LOCATION.player_home)
 
   player:set(COMPONENT.gold, 10)

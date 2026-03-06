@@ -1,4 +1,4 @@
-local ktrpg = require("ktrpg")
+local ktrpg = krequire("ktrpg")
 
 return function(entity, enemy)
   local attack = ktrpg.Entity:new()
