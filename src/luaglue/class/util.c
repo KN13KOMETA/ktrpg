@@ -166,13 +166,16 @@ static int util_sleep(lua_State* L) {
   return 1;
 }
 
-static luaL_Reg util_class_methods[] = {{"read", util_read},
-                                        {"readchar", util_readchar},
-                                        {"ask_yn", util_ask_yn},
-                                        {"writenl", util_writenl},
-                                        {"write", util_write},
-                                        {"sleep", util_sleep},
-                                        {NULL, NULL}};
+static int util_exit(lua_State* L) {
+  lua_pushliteral(L, LG_EXIT_SYSTEM);
+  return lua_error(L);
+}
+
+static luaL_Reg util_class_methods[] = {
+    {"read", util_read},     {"readchar", util_readchar},
+    {"ask_yn", util_ask_yn}, {"writenl", util_writenl},
+    {"write", util_write},   {"sleep", util_sleep},
+    {"exit", util_exit},     {NULL, NULL}};
 
 static int util_register_content(lua_State* L) {
   lua_newtable(L);
@@ -194,7 +197,6 @@ void lg_util_create(lua_State* L) {
 void lg_util_destroy(void) { DEBUG_LOG("LG: UTIL DESTROY"); }
 
 // TODO: random
-// TODO: safe exit
 
 // TODO: save/load system
 // I am not sure if I can do that with current ecs implementation
