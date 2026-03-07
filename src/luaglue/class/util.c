@@ -136,7 +136,6 @@ static int print_tostring(lua_State* L, int li, int indent) {
   return 0;
 }
 
-// TODO: table and userdata printing
 static int util_writenl(lua_State* L) {
   if (lua_gettop(L) != 0) print_tostring(L, 1, 0);
 
