@@ -193,6 +193,9 @@ void lg_util_create(lua_State* L) {
 }
 void lg_util_destroy(void) { DEBUG_LOG("LG: UTIL DESTROY"); }
 
+// TODO: random
+// TODO: safe exit
+
 // TODO: save/load system
 // I am not sure if I can do that with current ecs implementation
 // It doesn't have builtin serialization/deserialization
