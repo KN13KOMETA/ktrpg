@@ -37,7 +37,9 @@ static int util_ask_yn(lua_State* L) {
   return 1;
 }
 
-// TODO: fix infinite recursion
+#define PTABLE_MAX_COUNT 128
+static const void* ptables[PTABLE_MAX_COUNT];
+static int ptable_count;
 static int print_tostring(lua_State* L, int li, int indent) {
   switch (lua_type(L, li)) {
     case LUA_TNUMBER:
@@ -59,6 +61,32 @@ static int print_tostring(lua_State* L, int li, int indent) {
       int nindent = indent + 1;
       int empty = 1;
       int key_string = 0;
+      int ptable_found = 0;
+      const void* tp = lua_topointer(L, li);
+
+      // Reset ptable on root table
+      if (indent == 0) ptable_count = 0;
+
+      // Search for table in ptables
+      for (int i = 0; i < ptable_count; i++) {
+        if (ptables[i] == tp) {
+          ptable_found = 1;
+          break;
+        }
+      }
+
+      // Skip if found in ptable
+      // Or if no space left in ptables
+      if (ptable_found == 1) {
+        printf("{ recursion }");
+        break;
+      } else if (ptable_count == PTABLE_MAX_COUNT) {
+        printf("{ ... }");
+        break;
+      }
+
+      // Save table in ptables
+      ptables[ptable_count++] = tp;
 
       putchar('{');
 
