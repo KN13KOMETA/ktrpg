@@ -23,3 +23,5 @@ function Util.write(content) end
 
 ---@param seconds integer
 function Util.sleep(seconds) end
+
+function Util.exit() end
