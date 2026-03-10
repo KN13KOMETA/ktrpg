@@ -94,7 +94,7 @@
 
 ## Форматтеры
 
-- C: [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) (built in `clang`)
+- C: [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) (встроен в `clang`)
 - Lua: [StyLua](https://github.com/JohnnyMorganz/StyLua)
 - CMake: [gersemi](https://github.com/BlankSpruce/gersemi)
 
