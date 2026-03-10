@@ -185,7 +185,7 @@ Run it with:
 
 ### The `__KTRPG_DEBUG` debug system
 
-Systems with this name are assigned to c function that prints entities and their components. Note that while you can't add `on_run` to this, everything else works as expected.
+Systems with this name are assigned to C function that prints entities and their components. Note that while you can't add `on_run` to this, everything else works as expected.
 
 ## The `krequire` function
 
