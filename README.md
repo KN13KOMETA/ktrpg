@@ -98,7 +98,7 @@
 
 ## Additional notes
 
-- Build project atleast once (directory name should be `build`) for correct work of `clangd`
+- Build project at least once (directory name should be `build`) for correct work of `clangd`
 
 # RESOURCES
 
