@@ -238,7 +238,7 @@ Run command:
 - The `ktrpg` module is located in `src/luaglue`.
 - The `krequire` function is located in `src/lua_sandbox.c`.
 - The modified `base` is located in `src/lua_sandbox.c`.
-- Module systems can work with `vfile` (virtual file), this is how game loads embedded scripts.
+- Module system can work with `vfile` (virtual file), this is how game loads embedded scripts.
 
 # DEVELOPING
 
