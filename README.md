@@ -16,7 +16,7 @@
 
 1. Clone a repository:
    ```bash
-   git clone https://github.com/KN13KOMETA/c_text_rpg
+   git clone https://github.com/KN13KOMETA/ktrpg
    ```
 2. Install submodules:
    ```bash
@@ -89,13 +89,13 @@ The engine uses Lua 5.4 with a set of libraries: `ktrpg` (engine library), `tabl
 Types are written in LuaCATS format (supported by [LuaLS](https://github.com/LuaLS/lua-language-server)) and can be exported with:
 
 ```bash
-./c_text_rpg --export-types=path/to/empty/dir
+./ktrpg --export-types=path/to/empty/dir
 ```
 
 You can also export game scripts:
 
 ```bash
-./c_text_rpg --export-scripts=path/to/empty/dir
+./ktrpg --export-scripts=path/to/empty/dir
 ```
 
 ## Writing first script
@@ -169,7 +169,7 @@ end
 Run it with:
 
 ```bash
-./c_text_rpg --load=helloktrpg.lua
+./ktrpg --load=helloktrpg.lua
 ```
 
 ## The `ktrpg` module
@@ -205,7 +205,7 @@ dir
 ├── b
 │   └── b.lua
 ├── c.lua
-├── c_text_rpg
+├── ktrpg
 └── init.lua
 ```
 
@@ -228,7 +228,7 @@ local c = krequire("c")
 Run command:
 
 ```bash
-./c_text_rpg --load=init.lua
+./ktrpg --load=init.lua
 ```
 
 ## Internal structure
