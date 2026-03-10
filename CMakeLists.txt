@@ -13,8 +13,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(
   c_text_rpg
   VERSION 3.0.0
-  DESCRIPTION "Text RPG written in C"
   HOMEPAGE_URL https://github.com/KN13KOMETA/c_text_rpg
+  DESCRIPTION "Text RPG written in C (Engine) and Lua (Scripting)"
   LANGUAGES C
 )
 
