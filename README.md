@@ -87,11 +87,13 @@
 The engine uses Lua 5.4 with a set of libraries: `ktrpg` (engine library), `table`, `string`, `math`, and a limited `base`. Additionally there is `krequire` function for module/lua file loading.
 
 Types are written in LuaCATS format (supported by [LuaLS](https://github.com/LuaLS/lua-language-server)) and can be exported with:
+
 ```bash
 ./c_text_rpg --export-types=path/to/empty/dir
 ```
 
 You can also export game scripts:
+
 ```bash
 ./c_text_rpg --export-scripts=path/to/empty/dir
 ```
@@ -99,6 +101,7 @@ You can also export game scripts:
 ## Writing first script
 
 Create file `helloktrpg.lua`:
+
 ```lua
 local ktrpg = krequire("ktrpg")
 
@@ -164,20 +167,21 @@ end
 ```
 
 Run it with:
+
 ```bash
 ./c_text_rpg --load=helloktrpg.lua
 ```
 
 ## The `ktrpg` module
 
-`ktrpg` provides 3 classes for interaction with ECS (`Entity`, `Component`, `System`) and `Util` class for interaction with user and engine.  
+`ktrpg` provides 3 classes for interaction with ECS (`Entity`, `Component`, `System`) and `Util` class for interaction with user and engine.
 
 ### Component types
 
-  - `int` - Lua integer
-  - `num` - Lua number
-  - `tag` - Unsigned 8 bit integer (commonly used as a tag)
-  - `str` - String
+- `int` - Lua integer
+- `num` - Lua number
+- `tag` - Unsigned 8 bit integer (commonly used as a tag)
+- `str` - String
 
 ### The `__KTRPG_DEBUG` debug system
 
@@ -185,7 +189,7 @@ Systems with this name are assigned to c function that prints entities and their
 
 ## The `krequire` function
 
-Loads module/lua file by specified name/path. 
+Loads module/lua file by specified name/path.
 
 ### Path search
 
