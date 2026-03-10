@@ -1,4 +1,4 @@
-[README RU](README_RU.md) \* [SPOILER ALERT](SPOILER_ALERT.md) \* [BUILDING](#building) \* [DEVELOPING](#developing) \* [RESOURCES](#resources)
+[README RU](README_RU.md) \* [SPOILER ALERT](SPOILER_ALERT.md) \* [BUILDING](#building) \* [SCRIPTING](#scripting) \* [DEVELOPING](#developing) \* [RESOURCES](#resources)
 
 # PREVIEW
 
@@ -81,6 +81,160 @@
   ```bash
   cmake --build build --target warn
   ```
+
+# SCRIPTING
+
+The engine uses Lua 5.4 with a set of libraries: `ktrpg` (engine library), `table`, `string`, `math`, and a limited `base`. Additionally there is `krequire` function for module/lua file loading.
+
+Types are written in LuaCATS format (supported by [LuaLS](https://github.com/LuaLS/lua-language-server)) and can be exported with:
+```bash
+./c_text_rpg --export-types=path/to/empty/dir
+```
+
+You can also export game scripts:
+```bash
+./c_text_rpg --export-scripts=path/to/empty/dir
+```
+
+## Writing first script
+
+Create file `helloktrpg.lua`:
+```lua
+local ktrpg = krequire("ktrpg")
+
+local Entity = ktrpg.Entity
+local Component = ktrpg.Component
+local System = ktrpg.System
+local Util = ktrpg.Util
+
+local components = {
+  player = Component:new("tag", "Player"),
+  name = Component:new("str", "Name"),
+}
+
+local systems = {
+  create_player = System
+    :new("Create Player")
+    :requires(components.player)
+    :on_run(function(entities, entities_count)
+      if entities_count == 0 then
+        local e = Entity:new()
+
+        if e ~= nil then
+          Util.write("Enter your name: ")
+          local name = Util.read(16)
+
+          e:set(components.player, 0)
+          e:set(components.name, name)
+        end
+      end
+    end),
+  action = System:new("Action")
+    :requires(components.player)
+    :on_run(function(entities, entities_count)
+      if entities_count == 0 then
+        Util.writenl("No player found")
+        return
+      end
+
+      local p = entities[1]
+      local p_name = p:get(components.name)
+
+      if p_name == nil then
+        p_name = "NoName"
+      end
+
+      Util.write(p_name .. " action: ")
+
+      local char = Util.readchar()
+
+      if char == "q" then
+        Util.exit()
+      end
+    end),
+  debug = System:new("__KTRPG_DEBUG"),
+}
+
+while true do
+  systems.create_player:run()
+  systems.action:run()
+  systems.debug:run()
+  Util.sleep(1)
+end
+```
+
+Run it with:
+```bash
+./c_text_rpg --load=helloktrpg.lua
+```
+
+## The `ktrpg` module
+
+`ktrpg` provides 3 classes for interaction with ECS (`Entity`, `Component`, `System`) and `Util` class for interaction with user and engine.  
+
+### Component types
+
+  - `int` - Lua integer
+  - `num` - Lua number
+  - `tag` - Unsigned 8 bit integer (commonly used as a tag)
+  - `str` - String
+
+### The `__KTRPG_DEBUG` debug system
+
+Systems with this name are assigned to c function that prints entities and their components. Note that while you can't add `on_run` to this, everything else works as expected.
+
+## The `krequire` function
+
+Loads module/lua file by specified name/path. 
+
+### Path search
+
+Searches for relative path of the directory of the main script (the one passed with `--load`)
+
+### Example
+
+Filetree:
+
+```bash
+dir
+├── a.lua
+├── b
+│   └── b.lua
+├── c.lua
+├── c_text_rpg
+└── init.lua
+```
+
+File `dir/init.lua`:
+
+```lua
+-- Loads dir/a.lua
+local a = krequire("a")
+-- Loads dir/b/b.lua
+local b = krequire("b/b")
+```
+
+File `dir/b/b.lua`
+
+```lua
+-- Loads dir/c.lua
+local c = krequire("c")
+```
+
+Run command:
+
+```bash
+./c_text_rpg --load=init.lua
+```
+
+## Internal structure
+
+- Scripts and type definitions reside in `src/lua/` and `src/lua/types` respectively.
+- During the CMake build, they are converted to C header/source files and embedded into the executable.
+- The `ktrpg` module is located in `src/luaglue`.
+- The `krequire` function is located in `src/lua_sandbox.c`.
+- The modified `base` is located in `src/lua_sandbox.c`.
+- Module systems can work with `vfile` (virtual file), this is how game loads embedded scripts.
 
 # DEVELOPING
 
