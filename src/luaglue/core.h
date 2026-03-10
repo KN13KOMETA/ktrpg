@@ -1,0 +1,37 @@
+#pragma once
+#ifndef LUAGLUE_CORE_H
+#define LUAGLUE_CORE_H
+
+#include <lua.h>
+#include <pico_ecs.h>
+#include <stdint.h>
+
+#define LG_EXIT_USER "__LG_EXIT_USER"
+#define LG_EXIT_SYSTEM "__LG_EXIT_SYSTEM"
+
+#define ECS_IS_NULL "ecs is nil"
+#define ECS_MODIFIED "ecs already modified"
+
+#define ENTI_ESTIMATED_SIZE 8
+#define COMP_ESTIMATED_SIZE 8
+#define SYST_ESTIMATED_SIZE (8 + 88)
+
+#define ENTI_SOFT_LIMIT 1000000
+#define COMP_SOFT_LIMIT 5000
+#define SYST_SOFT_LIMIT 1000
+
+#define ENTI_DEFAULT_MAX UINT16_MAX
+#define COMP_DEFAULT_MAX UINT8_MAX
+#define SYST_DEFAULT_MAX UINT8_MAX
+
+typedef struct {
+  ecs_t* ptr;
+  uint8_t modified;
+} ptr2ecs;
+
+int lg_openlib(lua_State* L);
+
+void lg_create(lua_State* L);
+void lg_destroy(void);
+
+#endif  // !LUAGLUE_CORE_H
