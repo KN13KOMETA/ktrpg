@@ -5,6 +5,7 @@
 set(PROJECT_VERSION_PRERELEASE "beta")
 
 # Getting git short hash
+# TODO: Value is getting on cmake configuration not project build
 execute_process(
   COMMAND git rev-parse --short HEAD
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -13,13 +14,22 @@ execute_process(
 )
 
 # Combining all we have into PROJECT_FULL_VERSION
+# version[-prerelease][+b.git_short_hash][-target_triplet][-debug]
 set(PROJECT_FULL_VERSION "${PROJECT_VERSION}")
+
 if(PROJECT_VERSION_PRERELEASE)
   set(
     PROJECT_FULL_VERSION
     "${PROJECT_FULL_VERSION}-${PROJECT_VERSION_PRERELEASE}"
   )
 endif()
+
 if(GIT_SHORT_HASH)
   set(PROJECT_FULL_VERSION "${PROJECT_FULL_VERSION}+b.${GIT_SHORT_HASH}")
 endif()
+
+if(TARGET_TRIPLET)
+  set(PROJECT_FULL_VERSION "${PROJECT_FULL_VERSION}-${TARGET_TRIPLET}")
+endif()
+
+set(PROJECT_FULL_VERSION "${PROJECT_FULL_VERSION}$<$<CONFIG:DEBUG>:-debug>")
