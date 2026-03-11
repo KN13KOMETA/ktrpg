@@ -154,6 +154,3 @@ int init_game_universal(char* script_path, vfile* modules) {
 
   return code;
 }
-
-// TODO: update readme
-// write about scripting
