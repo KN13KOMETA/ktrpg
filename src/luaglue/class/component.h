@@ -2,6 +2,7 @@
 #ifndef LUAGLUE_CLASS_COMPONENT_H
 #define LUAGLUE_CLASS_COMPONENT_H
 
+#include <inttypes.h>
 #include <lua.h>
 #include <pico_ecs.h>
 
@@ -19,7 +20,7 @@ typedef struct {
 #define ID2COMP(id) \
   (ecs_comp_t) { id }
 
-#define COMP_FL "Component #%zu \"%s\" (%s)"
+#define COMP_FL "Component #%" PRIu64 " \"%s\" (%s)"
 // TODO: WTF is clangd doing
 #define COMP_FL_ARGS(c)                    \
   c->id, c->name,                          \

@@ -262,7 +262,7 @@ static int system_set_limit(lua_State* L) {
   if (limit > array_limit) {
     char str[256];
 
-    sprintf(str, "limit cannot exceed %zu", limit);
+    sprintf(str, "limit cannot exceed %" PRIu64, limit);
 
     lua_pushnil(L);
     lua_pushstring(L, str);
@@ -279,10 +279,11 @@ static int system_set_limit(lua_State* L) {
   if (limit != systems_count) {
     if (limit > SYST_SOFT_LIMIT) {
       double result;
-      char unit = human_bytes(limit * (ecs_id_t)system_estimated_size, &result);
+      char unit = human_bytes((size_t)(limit * (ecs_id_t)system_estimated_size),
+                              &result);
 
       printf(TITLE("WARNING"));
-      printf("Script requested systems limit: %zu\n", limit);
+      printf("Script requested systems limit: %" PRIu64 "\n", limit);
       printf("This exceeds the soft limit of %d.\n", SYST_SOFT_LIMIT);
       printf("Estimated memory usage: %.2f%c\n", result, unit);
 
@@ -291,7 +292,7 @@ static int system_set_limit(lua_State* L) {
         return lua_error(L);
       }
     }
-    ptr = malloc(sizeof(*systems) * limit);
+    ptr = malloc(sizeof(*systems) * (size_t)limit);
 
     if (ptr == NULL) {
       lua_pushnil(L);
@@ -303,7 +304,7 @@ static int system_set_limit(lua_State* L) {
     systems = ptr;
     systems_max = limit;
 
-    DEBUG_LOG("LG: SYSTEM ARRAY SIZE = %lu", systems_max);
+    DEBUG_LOG("LG: SYSTEM ARRAY SIZE = %" PRIu64, systems_max);
   }
 
   lua_pushinteger(L, (lua_Integer)limit);
@@ -342,13 +343,13 @@ void lg_system_create(lua_State* L) {
 
   array_limit = LUA_MAXINTEGER / sizeof(*systems);
 
-  DEBUG_LOG("LG: SYSTEM ARRAY LIMIT %lu", array_limit);
+  DEBUG_LOG("LG: SYSTEM ARRAY LIMIT %" PRIu64, array_limit);
 
   systems_max = SYST_DEFAULT_MAX;
   systems_count = 0;
-  SELFMALLOCARR(systems, systems_max);
+  SELFMALLOCARR(systems, (size_t)systems_max);
 
-  DEBUG_LOG("LG: SYSTEM ARRAY SIZE = %lu", systems_max);
+  DEBUG_LOG("LG: SYSTEM ARRAY SIZE = %" PRIu64, systems_max);
 
   system_init_metatable(L);
 
