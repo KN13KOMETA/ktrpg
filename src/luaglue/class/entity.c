@@ -249,7 +249,7 @@ static int entity_set_limit(lua_State* L) {
   if (limit > array_limit) {
     char str[256];
 
-    sprintf(str, "limit cannot exceed %zu", limit);
+    sprintf(str, "limit cannot exceed %" PRIu64, limit);
 
     lua_pushnil(L);
     lua_pushstring(L, str);
@@ -268,11 +268,11 @@ static int entity_set_limit(lua_State* L) {
   if (limit != entities_count) {
     if (limit > ENTI_SOFT_LIMIT) {
       double result;
-      char unit =
-          human_bytes(limit * (ecs_id_t)entities_estimated_size, &result);
+      char unit = human_bytes(
+          (size_t)(limit * (ecs_id_t)entities_estimated_size), &result);
 
       printf(TITLE("WARNING"));
-      printf("Script requested entities limit: %zu\n", limit);
+      printf("Script requested entities limit: %" PRIu64 "\n", limit);
       printf("This exceeds the soft limit of %d.\n", ENTI_SOFT_LIMIT);
       printf("Estimated memory usage: %.2f%c\n", result, unit);
 
@@ -282,7 +282,7 @@ static int entity_set_limit(lua_State* L) {
       }
     }
 
-    ptr = malloc(sizeof(*entities) * limit);
+    ptr = malloc(sizeof(*entities) * (size_t)limit);
 
     if (ptr == NULL) {
       lua_pushnil(L);
@@ -295,9 +295,9 @@ static int entity_set_limit(lua_State* L) {
     entities_max = limit;
 
     if (ecs->ptr != NULL) ecs_free(ecs->ptr);
-    ecs->ptr = ecs_new(limit, NULL);
+    ecs->ptr = ecs_new((size_t)limit, NULL);
 
-    DEBUG_LOG("LG: ENTITY ARRAY SIZE = %lu", entities_max);
+    DEBUG_LOG("LG: ENTITY ARRAY SIZE = %" PRIu64, entities_max);
   }
 
   lua_pushinteger(L, (lua_Integer)limit);
@@ -337,15 +337,15 @@ void lg_entity_create(lua_State* L) {
   array_limit = ((LUA_MAXINTEGER < INT_MAX) ? LUA_MAXINTEGER : INT_MAX) /
                 sizeof(*entities);
 
-  DEBUG_LOG("LG: ENTITY ARRAY LIMIT %lu", array_limit);
+  DEBUG_LOG("LG: ENTITY ARRAY LIMIT %" PRIu64, array_limit);
 
   ecs->ptr = ecs_new(ENTI_DEFAULT_MAX, NULL);
 
   entities_max = ENTI_DEFAULT_MAX;
   entities_count = 0;
-  SELFMALLOCARR(entities, entities_max);
+  SELFMALLOCARR(entities, (size_t)entities_max);
 
-  DEBUG_LOG("LG: ENTITY ARRAY SIZE = %lu", entities_max);
+  DEBUG_LOG("LG: ENTITY ARRAY SIZE = %" PRIu64, entities_max);
 
   entity_init_metatable(L);
 

@@ -119,7 +119,7 @@ static int component_set_limit(lua_State* L) {
   if (limit > array_limit) {
     char str[256];
 
-    sprintf(str, "limit cannot exceed %zu", limit);
+    sprintf(str, "limit cannot exceed %" PRIu64, limit);
 
     lua_pushnil(L);
     lua_pushstring(L, str);
@@ -136,10 +136,11 @@ static int component_set_limit(lua_State* L) {
   if (limit != comps_count) {
     if (limit > COMP_SOFT_LIMIT) {
       double result;
-      char unit = human_bytes(limit * (ecs_id_t)comp_estimated_size, &result);
+      char unit =
+          human_bytes((size_t)(limit * (ecs_id_t)comp_estimated_size), &result);
 
       printf(TITLE("WARNING"));
-      printf("Script requested components limit: %zu\n", limit);
+      printf("Script requested components limit: %" PRIu64 "\n", limit);
       printf("This exceeds the soft limit of %d.\n", COMP_SOFT_LIMIT);
       printf("Estimated memory usage: %.2f%c\n", result, unit);
 
@@ -149,7 +150,7 @@ static int component_set_limit(lua_State* L) {
       }
     }
 
-    ptr = malloc(sizeof(*comps) * limit);
+    ptr = malloc(sizeof(*comps) * (size_t)limit);
 
     if (ptr == NULL) {
       lua_pushnil(L);
@@ -161,7 +162,7 @@ static int component_set_limit(lua_State* L) {
     comps = ptr;
     comps_max = limit;
 
-    DEBUG_LOG("LG: COMPONENT ARRAY SIZE = %zu", comps_max);
+    DEBUG_LOG("LG: COMPONENT ARRAY SIZE = %" PRIu64, comps_max);
   }
 
   lua_pushinteger(L, (lua_Integer)limit);
@@ -197,13 +198,13 @@ void lg_component_create(lua_State* L) {
 
   array_limit = LUA_MAXINTEGER / sizeof(*comps);
 
-  DEBUG_LOG("LG: COMPONENT ARRAY LIMIT %lu", array_limit);
+  DEBUG_LOG("LG: COMPONENT ARRAY LIMIT %" PRIu64, array_limit);
 
   comps_max = COMP_DEFAULT_MAX;
   comps_count = 0;
-  SELFMALLOCARR(comps, comps_max);
+  SELFMALLOCARR(comps, (size_t)comps_max);
 
-  DEBUG_LOG("LG: COMPONENT ARRAY SIZE = %lu", comps_max);
+  DEBUG_LOG("LG: COMPONENT ARRAY SIZE = %" PRIu64, comps_max);
 
   component_init_metatable(L);
 
@@ -227,7 +228,7 @@ ecs_ret_t lg_component_debug_system(ecs_t* ecs, ecs_entity_t* entities,
   DEBUG_LOG("LG: DEBUG SYSTEM RUNNING");
 
   for (size_t i = 0; i < entity_count; i++) {
-    printf("LG: DEBUG SYSTEM, ENTITY %zu {\n", entities[i].id);
+    printf("LG: DEBUG SYSTEM, ENTITY %" PRIu64 " {\n", entities[i].id);
 
     for (ecs_id_t ci = 0; ci < comps_count; ci++) {
       lg_component* c = &comps[ci];
