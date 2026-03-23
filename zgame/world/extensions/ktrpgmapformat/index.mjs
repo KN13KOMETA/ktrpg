@@ -69,7 +69,7 @@ tiled.registerMapFormat("ktrpgworld", {
         skip = true;
       }
       if (dnew.location == null) {
-        const x = lmap.get(getPos(door)).value;
+        const x = lmap.get(getPos(door))?.value;
         if (x != null) {
           dnew.location = x;
         } else {
