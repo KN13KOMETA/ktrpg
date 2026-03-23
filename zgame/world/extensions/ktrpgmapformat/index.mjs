@@ -40,11 +40,11 @@ tiled.registerMapFormat("ktrpgworld", {
       let skip = false;
 
       if (lnew.value == null) {
-        tiled.error('Location Object must have "value"');
+        tiled.error(`Location Object (${location.id}) must have "value"`);
         skip = true;
       }
       if (lnew.name == null) {
-        tiled.error('Location Object must have "name"');
+        tiled.error(`Location Object (${location.id}) must have "name"`);
         skip = true;
       }
 
@@ -65,7 +65,7 @@ tiled.registerMapFormat("ktrpgworld", {
       let skip = false;
 
       if (dnew.name == null) {
-        tiled.error('Door Object must have "name"');
+        tiled.error(`Door Object (${door.id}) must have "name"`);
         skip = true;
       }
       if (dnew.location == null) {
@@ -73,12 +73,12 @@ tiled.registerMapFormat("ktrpgworld", {
         if (x != null) {
           dnew.location = x;
         } else {
-          tiled.error('Door Object must have "location"');
+          tiled.error(`Door Object (${door.id}) must have "location"`);
           skip = true;
         }
       }
       if (dnew.destination == null) {
-        tiled.error('Door Object must have "destination"');
+        tiled.error(`Door Object (${door.id}) must have "destination"`);
         skip = true;
       }
 
