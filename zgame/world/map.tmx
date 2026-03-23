@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.0" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="1" tileheight="1" infinite="0" nextlayerid="5" nextobjectid="52">
+ <editorsettings>
+  <export target="map" format="ktrpgmap"/>
+ </editorsettings>
+ <objectgroup id="3" name="LOCATION NAMES" class="LOCATION_NAME">
+  <object id="38" name="Player Room" type="Location" x="0.5" y="1.5">
+   <properties>
+    <property name="name" value="{{player.name}} Room"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="40" name="Throne Room" type="Location" x="1.5" y="0.5">
+   <properties>
+    <property name="name" value="Throne Room"/>
+    <property name="value" type="int" propertytype="LOCATION" value="1"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="41" name="Demon Lord Castle" type="Location" x="1.5" y="1.5">
+   <properties>
+    <property name="name" value="Demon Lord Castle"/>
+    <property name="value" type="int" propertytype="LOCATION" value="0"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="4" name="LOCATION DOORS">
+  <object id="42" type="Door" x="0.75" y="1.5">
+   <properties>
+    <property name="destination" type="int" propertytype="LOCATION" value="0"/>
+    <property name="name" value="d"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="45" type="Door" x="1.25" y="1.5">
+   <properties>
+    <property name="name" value="r"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="48" type="Door" x="1.5" y="0.75">
+   <properties>
+    <property name="destination" type="int" propertytype="LOCATION" value="0"/>
+    <property name="name" value="d"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="50" type="Door" x="1.5" y="1.25">
+   <properties>
+    <property name="destination" type="int" propertytype="LOCATION" value="1"/>
+    <property name="name" value="t"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
+</map>
