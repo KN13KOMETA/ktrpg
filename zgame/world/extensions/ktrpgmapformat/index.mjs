@@ -7,7 +7,14 @@ const currentFileName = __filename;
 const luaTemplatePath = currentFileName.replace(/([^/]*)$/, "template.lua");
 
 const luaTemplate = parseLuaTemplate(
-  new TextFile(luaTemplatePath, TextFile.ReadOnly).readAll(),
+  (() => {
+    const file = new TextFile(luaTemplatePath, TextFile.ReadOnly);
+    const text = file.readAll();
+
+    file.close();
+
+    return text;
+  })(),
 );
 
 tiled.registerMapFormat("ktrpgworld", {
