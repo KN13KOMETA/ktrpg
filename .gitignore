@@ -6,3 +6,9 @@
 
 # Ignore generated lua headers
 /src/luah/
+
+# Ignore tiled session
+*.tiled-session
+
+# Ignore node modules
+node_modules
