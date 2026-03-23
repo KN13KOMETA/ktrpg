@@ -1,0 +1,125 @@
+{
+    "automappingRulesFile": "",
+    "commands": [
+    ],
+    "compatibilityVersion": 1100,
+    "extensionsPath": "extensions",
+    "folders": [
+        "."
+    ],
+    "properties": [
+    ],
+    "propertyTypes": [
+        {
+            "color": "#ffaaff00",
+            "drawFill": true,
+            "id": 3,
+            "members": [
+                {
+                    "name": "destination",
+                    "propertyType": "LOCATION",
+                    "type": "int",
+                    "value": 2
+                },
+                {
+                    "name": "name",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "Door",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object",
+                "project"
+            ]
+        },
+        {
+            "color": "#ff00ff00",
+            "drawFill": true,
+            "id": 2,
+            "members": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "value",
+                    "propertyType": "LOCATION",
+                    "type": "int",
+                    "value": 2
+                }
+            ],
+            "name": "Location",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object",
+                "project"
+            ]
+        },
+        {
+            "id": 5,
+            "name": "LOCATION",
+            "storageType": "int",
+            "type": "enum",
+            "values": [
+                "DEMON_LORD_CASTLE",
+                "THRONE_ROOM",
+                "PLAYER_ROOM",
+                "PLAINS",
+                "FOREST",
+                "DEAD_FOREST",
+                "MOUNTAINS",
+                "HIGH_MOUNTAINS",
+                "HIDDEN_GARDEN",
+                "CITY",
+                "COLISEUM",
+                "BLACKSMITH",
+                "TAVERN",
+                "ADVENTURER_GUILD",
+                "BLACK_MARKET"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "color": "#ffff55ff",
+            "drawFill": true,
+            "id": 6,
+            "members": [
+                {
+                    "name": "destination",
+                    "propertyType": "LOCATION",
+                    "type": "int",
+                    "value": 2
+                },
+                {
+                    "name": "location",
+                    "propertyType": "LOCATION",
+                    "type": "int",
+                    "value": 2
+                },
+                {
+                    "name": "name",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "Teleport",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        }
+    ]
+}
