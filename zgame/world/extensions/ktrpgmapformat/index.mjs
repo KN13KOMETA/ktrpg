@@ -48,11 +48,6 @@ tiled.registerMapFormat("ktrpgworld", {
       lmap.set(getPos(location), lnew);
     }
 
-    tiled.log(lmap.size);
-    lmap.forEach((v, k) => {
-      tiled.log(k);
-    });
-
     for (let di = 0; di < fobj.doors.length; di++) {
       const door = fobj.doors[di];
       const dnew = {
@@ -86,6 +81,5 @@ tiled.registerMapFormat("ktrpgworld", {
     }
 
     tiled.log(luaTemplate(insert.locations, insert.doors));
-    tiled.log(insert.doors.length);
   },
 });
