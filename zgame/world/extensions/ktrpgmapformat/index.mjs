@@ -87,6 +87,8 @@ tiled.registerMapFormat("ktrpgworld", {
       insert.doors.push(dnew);
     }
 
-    tiled.log(luaTemplate(insert.locations, insert.doors));
+    const file = new TextFile(fileName, TextFile.WriteOnly);
+    file.write(luaTemplate(insert.locations, insert.doors));
+    file.commit();
   },
 });
