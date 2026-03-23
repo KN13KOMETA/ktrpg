@@ -10,8 +10,8 @@ const luaTemplate = parseLuaTemplate(
   new TextFile(luaTemplatePath, TextFile.ReadOnly).readAll(),
 );
 
-tiled.registerMapFormat("ktrpgmap", {
-  name: "ktrpg map",
+tiled.registerMapFormat("ktrpgworld", {
+  name: "ktrpg world",
   extension: "lua",
 
   write: (map, fileName) => {
