@@ -1,8 +1,6 @@
 import { filterObjects } from "./function/filterObjects.mjs";
 import { parseLuaTemplate } from "./function/parseLuaTemplate.mjs";
 
-const getPos = ({ x, y }) => `x${Math.floor(x)}y${Math.floor(y)}`;
-
 const currentFileName = __filename;
 const luaTemplatePath = currentFileName.replace(/([^/]*)$/, "template.lua");
 
@@ -22,6 +20,8 @@ tiled.registerMapFormat("ktrpgworld", {
   extension: "lua",
 
   write: (map, fileName) => {
+    const getPos = ({ x, y }) =>
+      `x${Math.floor(x / map.tileWidth)}y${Math.floor(y / map.tileHeight)}`;
     const fobj = filterObjects(map);
 
     const lmap = new Map();
