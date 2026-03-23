@@ -1,0 +1,13 @@
+local function init_world(f_create_location, f_create_door)
+  -- LOCATIONS
+  -- <> LOCATION TEMPLATE
+  f_create_location(TEMPLATE_LOCATION_TAG, TEMPLATE_LOCATION_NAME)
+  -- </> LOCATION TEMPLATE
+
+  -- DOORS
+  -- <> DOOR TEMPLATE
+  f_create_door(TEMPLATE_DOOR_TAG, TEMPLATE_DOOR_LOCATION, TEMPLATE_DOOR_DESTINATION)
+  -- </> DOOR TEMPLATE
+end
+
+return init_world
