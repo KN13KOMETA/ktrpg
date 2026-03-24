@@ -13,12 +13,12 @@
 #include "launch_options.h"
 #include "lua_sandbox.h"
 #include "luaglue/core.h"
-#include "luah/init.h"
-#include "luah/module.h"
-#include "luah/types/ktrpg/class/component_d.h"
-#include "luah/types/ktrpg/class/entity_d.h"
-#include "luah/types/ktrpg/class/system_d.h"
-#include "luah/types/ktrpg/ktrpg_d.h"
+#include "luah/src/lua/init.h"
+#include "luah/src/lua/module.h"
+#include "luah/src/lua/types/ktrpg/class/component_d.h"
+#include "luah/src/lua/types/ktrpg/class/entity_d.h"
+#include "luah/src/lua/types/ktrpg/class/system_d.h"
+#include "luah/src/lua/types/ktrpg/ktrpg_d.h"
 
 #define PICO_ECS_IMPLEMENTATION
 #include <pico_ecs.h>
@@ -28,13 +28,17 @@ int user_script_warning(void);
 int init_game_universal(char* script_path, vfile* modules);
 
 int main(int argc, char* argv[]) {
-  vfile vfscripts[] = {
-      {"init.lua", init_lua}, {"module.lua", module_lua}, {NULL, NULL}};
+  vfile vfscripts[] = {{"init.lua", src_lua_init_lua},
+                       {"module.lua", src_lua_module_lua},
+                       {NULL, NULL}};
   vfile vftypes[] = {
-      {"types/ktrpg/class/entity.d.lua", types_ktrpg_class_entity_d_lua},
-      {"types/ktrpg/class/component.d.lua", types_ktrpg_class_component_d_lua},
-      {"types/ktrpg/class/system.d.lua", types_ktrpg_class_system_d_lua},
-      {"types/ktrpg/ktrpg.d.lua", types_ktrpg_ktrpg_d_lua},
+      {"types/ktrpg/class/entity.d.lua",
+       src_lua_types_ktrpg_class_entity_d_lua},
+      {"types/ktrpg/class/component.d.lua",
+       src_lua_types_ktrpg_class_component_d_lua},
+      {"types/ktrpg/class/system.d.lua",
+       src_lua_types_ktrpg_class_system_d_lua},
+      {"types/ktrpg/ktrpg.d.lua", src_lua_types_ktrpg_ktrpg_d_lua},
       {NULL, NULL}};
   launch_options loptions = {0, 0, NULL, NULL, NULL};
   int code = process_launch_options(&loptions, argc, argv);
