@@ -49,6 +49,9 @@ function(generate_header_from_lua input_file)
   set(header_file "${header_file}.h")
   string(REGEX REPLACE "\\.[^.]*$" ".c" c_file ${header_file})
 
+  # set INCLUDE_FILE
+  cmake_path(GET header_file FILENAME INCLUDE_FILE)
+
   # Set HEADER_GUARD
   cmake_path(
     RELATIVE_PATH header_file
@@ -79,7 +82,7 @@ function(generate_header_from_lua input_file)
     COMMAND
       ${CMAKE_COMMAND} -DINPUT_FILE=${input_file} -DHEADER_FILE=${header_file}
       -DC_FILE=${c_file} -DHEADER_GUARD=${HEADER_GUARD}
-      -DVARIABLE_NAME=${VARIABLE_NAME} -P
+      -DINCLUDE_FILE=${INCLUDE_FILE} -DVARIABLE_NAME=${VARIABLE_NAME} -P
       ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/write_lua_header.cmake
     DEPENDS ${input_file}
     COMMENT "Generating ${header_file} from ${input_file}"
