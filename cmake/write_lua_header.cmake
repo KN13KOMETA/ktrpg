@@ -22,7 +22,7 @@ extern const char* ${VARIABLE_NAME};
 file(
   WRITE ${C_FILE}
   "\
-#include \"${HEADER_FILE}\"
+#include \"${INCLUDE_FILE}\"
 
 const char* ${VARIABLE_NAME} = \"${FILE_CONTENT}\";
 "
