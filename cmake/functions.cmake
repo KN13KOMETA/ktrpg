@@ -1,4 +1,4 @@
-cmake_path(SET LUA_SOURCE_DIR "${SOURCE_FILES_DIR}/lua")
+cmake_path(SET LUA_SOURCE_DIR "${CMAKE_SOURCE_DIR}")
 cmake_path(SET LUAH_SOURCE_DIR "${SOURCE_FILES_DIR}/luah")
 
 set_property(
