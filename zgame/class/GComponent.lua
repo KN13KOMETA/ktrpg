@@ -6,7 +6,7 @@ local ktrpg = krequire("ktrpg")
 ---@field creature      IntComponentInstance
 ---@field item          IntComponentInstance
 ---@field door          TagComponentInstance
----@field next_location TagComponentInstance
+---@field destination TagComponentInstance
 local GComponent = {}
 GComponent.__index = GComponent
 
@@ -21,7 +21,7 @@ function GComponent:new()
     creature = ktrpg.Component:new("int", "Creature Z"),
     item = ktrpg.Component:new("int", "Item Z"),
     door = ktrpg.Component:new("tag", "Door Z"),
-    next_location = ktrpg.Component:new("tag", "Next Location Z"),
+    destination = ktrpg.Component:new("tag", "Destination Z"),
   }
 
   for key, value in pairs(instance) do
