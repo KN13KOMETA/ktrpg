@@ -90,11 +90,11 @@ local syst = {
       for i = 1, entities_count, 1 do
         local e = entities[i]
 
-        t[e:get(gcomp.door)] = {
-          id = e:get(gcomp.door),
+        table.insert(t, {
+          name = e:get(gcomp.door),
           location = e:get(gcomp.location),
           destination = e:get(gcomp.destination),
-        }
+        })
       end
 
       sc.doors = t
