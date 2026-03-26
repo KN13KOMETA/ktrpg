@@ -61,7 +61,7 @@ function GCache:new(gcomponent)
   }
 
   instance.system = {
-  cache_locations = ktrpg.System:new("CACHE: Locations")
+  cache_locations = ktrpg.System:new("GCache: Cache locations")
     :requires(gcomponent.location, gcomponent.name)
     :excludes(gcomponent.creature, gcomponent.item, gcomponent.door)
     :on_run(function(entities, entities_count)
@@ -78,7 +78,7 @@ function GCache:new(gcomponent)
 
       instance.locations = t
     end),
-  cache_creatures = ktrpg.System:new("CACHE: Creatures")
+  cache_creatures = ktrpg.System:new("GCache: Cache creatures")
     :requires(gcomponent.creature)
     :excludes(gcomponent.item)
     :on_run(function(entities, entities_count)
@@ -100,7 +100,7 @@ function GCache:new(gcomponent)
       instance.creatures = t
     end),
   -- TODO: ITEMS
-  cache_doors = ktrpg.System:new("CACHE: Doors")
+  cache_doors = ktrpg.System:new("GCache: Cache doors")
     :requires(gcomponent.door, gcomponent.location, gcomponent.destination)
     :on_run(function(entities, entities_count)
       local t = {}
@@ -117,7 +117,7 @@ function GCache:new(gcomponent)
 
       instance.doors = t
     end),
-  group_data = ktrpg.System:new("CACHE: Group data"):on_run(function()
+  group_data = ktrpg.System:new("GCache: Group data"):on_run(function()
     do
       local t = {}
 
