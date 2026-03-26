@@ -15,125 +15,24 @@ local Util = ktrpg.Util
 
 -- TODO: empty numbers to nvoid
 
-local sc = {
-  locations = {},
-  creatures = {},
-  items = {},
-  doors = {},
-  group = {
-    creatures_by_location = {},
-    items_by_location = {},
-    doors_by_location = {},
-    items_by_creature = {},
-  },
-}
+---@type GCache
+local GCache = krequire("class/GCache")
+local sc = GCache:new(gcomp)
+-- local sc = {
+--   locations = {},
+--   creatures = {},
+--   items = {},
+--   doors = {},
+--   group = {
+--     creatures_by_location = {},
+--     items_by_location = {},
+--     doors_by_location = {},
+--     items_by_creature = {},
+--   },
+-- }
 
 local syst = {
   -- TODO: Fixers/validators system, like is there a player and etc
-  cache_locations = System:new("CACHE: Locations")
-    :requires(gcomp.location, gcomp.name)
-    :excludes(gcomp.creature, gcomp.item, gcomp.door)
-    :on_run(function(entities, entities_count)
-      local t = {}
-
-      for i = 1, entities_count, 1 do
-        local e = entities[i]
-
-        t[e:get(gcomp.location)] = {
-          id = e:get(gcomp.location),
-          name = e:get(gcomp.name),
-        }
-      end
-
-      sc.locations = t
-    end),
-  cache_creatures = System:new("CACHE: Creatures")
-    :requires(gcomp.creature)
-    :excludes(gcomp.item)
-    :on_run(function(entities, entities_count)
-      local t = {}
-
-      for i = 1, entities_count, 1 do
-        local e = entities[i]
-        local id = assert(e:get(gcomp.creature), "unreachable")
-
-        if t[id] == nil then
-          t[id] = {}
-        end
-
-        t[id].id = id
-        t[id].location = e:get(gcomp.location)
-        t[id].next_location = e:get(gcomp.destination)
-      end
-
-      sc.creatures = t
-    end),
-  -- TODO: ITEMS
-  cache_doors = System:new("CACHE: Doors")
-    :requires(gcomp.door, gcomp.location, gcomp.destination)
-    :on_run(function(entities, entities_count)
-      local t = {}
-
-      for i = 1, entities_count, 1 do
-        local e = entities[i]
-
-        table.insert(t, {
-          name = e:get(gcomp.door),
-          location = e:get(gcomp.location),
-          destination = e:get(gcomp.destination),
-        })
-      end
-
-      sc.doors = t
-    end),
-  cache_group_data = System:new("CACHE: Group data"):on_run(function()
-    do
-      local t = {}
-
-      for id, value in pairs(sc.creatures) do
-        local lid = value.location
-
-        if lid == nil then
-          goto continue
-        end
-
-        if t[lid] == nil then
-          t[lid] = {}
-        end
-
-        t[lid][id] = value
-
-          ::continue::
-      end
-
-      sc.group.creatures_by_location = t
-    end
-    do
-      local t = {}
-      -- TODO: ITEMS
-      sc.group.items_by_location = t
-    end
-    do
-      local t = {}
-
-      for _, value in pairs(sc.doors) do
-        local lid = value.location
-
-        if t[lid] == nil then
-          t[lid] = {}
-        end
-
-        t[lid][value.name] = value
-      end
-
-      sc.group.doors_by_location = t
-    end
-    do
-      local t = {}
-      -- TODO: ITEMS
-      sc.group.items_by_creature = t
-    end
-  end),
   move_creatures_move = System:new("MOVE: Creatures Move")
     :requires(gcomp.creature, gcomp.location)
     :on_run(function(entities, entities_count)
@@ -179,19 +78,12 @@ local syst = {
   debug = System:new("__KTRPG_DEBUG"),
 }
 
-local function run_cache()
-  syst.cache_locations:run()
-  syst.cache_creatures:run()
-  syst.cache_doors:run()
-  syst.cache_group_data:run()
-end
-
 local function run_move()
   syst.move_creatures_move:run()
 end
 
 local function run()
-  run_cache()
+  sc.system.run_all()
   run_move()
 
   syst.debug_cache:run()
