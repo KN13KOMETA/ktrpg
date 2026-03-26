@@ -20,42 +20,42 @@ local gcache = GCache:new(gcomp)
 
 local syst = {
   -- TODO: Fixers/validators system, like is there a player and etc
-  move_creatures_move = System:new("MOVE: Creatures Move")
-    :requires(gcomp.creature, gcomp.location)
+  creature_move = System:new("Move: Decide creature destination")
+    :requires(gcomp.creature, gcomp.location, gcomp.destination)
     :on_run(function(entities, entities_count)
       for i = 1, entities_count, 1 do
         local e = entities[i]
         ---@type GCacheCreature
         local creature = gcache.creatures[e:get(gcomp.creature)]
+        local creature_location = gcache.locations[creature.location]
+        local location_doors = gcache.group.doors_by_location[creature.location]
 
-        Util.writenl(creature)
-
-        -- TODO: implement other creatures moving
         if creature.id == gcomp.creature_player then
-          Util.writenl("Current location \"" .. gcache.locations[creature.location].name .. "\"")
+          Util.writenl("Player at location :" .. creature_location.name)
 
           local sorted_keys = {}
 
-          for key in pairs(gcache.group.doors_by_location[creature.location]) do
+          for key in pairs(location_doors) do
             table.insert(sorted_keys, key)
           end
 
           table.sort(sorted_keys)
 
           for _, key in ipairs(sorted_keys) do
-            local door = gcache.group.doors_by_location[creature.location][key]
+            local door = location_doors[key]
             Util.writenl(":> Door '" .. string.char(door.name) .. "': " .. gcache.locations[door.destination].name)
           end
 
-          Util.write("Select door: ")
+          Util.write("Select door (enter to stay): ")
 
-          local sel = string.byte(Util.readchar())
-          local sel_door = gcache.group.doors_by_location[creature.location][sel]
+          local select = string.byte(Util.readchar())
+          local select_door = location_doors[select]
 
-          if sel_door ~= nil then
-            e:set(gcomp.location, sel_door.destination)
+          if select_door ~= nil then
+            e:set(gcomp.location, select_door.destination)
           end
-
+        else
+          -- TODO: Non-player creature move
         end
       end
     end),
@@ -67,7 +67,7 @@ local syst = {
 }
 
 local function run_move()
-  syst.move_creatures_move:run()
+  syst.creature_move:run()
 end
 
 local function run()
