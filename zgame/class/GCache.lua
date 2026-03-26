@@ -60,8 +60,8 @@ function GCache:new(gcomponent)
     },
   }
 
-  instance.system = {
-  cache_locations = ktrpg.System:new("GCache: Cache locations")
+  instance.system.cache_locations = ktrpg.System
+    :new("GCache: Cache locations")
     :requires(gcomponent.location, gcomponent.name)
     :excludes(gcomponent.creature, gcomponent.item, gcomponent.door)
     :on_run(function(entities, entities_count)
@@ -77,8 +77,10 @@ function GCache:new(gcomponent)
       end
 
       instance.locations = t
-    end),
-  cache_creatures = ktrpg.System:new("GCache: Cache creatures")
+    end)
+
+  instance.system.cache_creatures = ktrpg.System
+    :new("GCache: Cache creatures")
     :requires(gcomponent.creature)
     :excludes(gcomponent.item)
     :on_run(function(entities, entities_count)
@@ -98,9 +100,12 @@ function GCache:new(gcomponent)
       end
 
       instance.creatures = t
-    end),
+    end)
+
   -- TODO: ITEMS
-  cache_doors = ktrpg.System:new("GCache: Cache doors")
+
+  instance.system.cache_doors = ktrpg.System
+    :new("GCache: Cache doors")
     :requires(gcomponent.door, gcomponent.location, gcomponent.destination)
     :on_run(function(entities, entities_count)
       local t = {}
@@ -116,25 +121,24 @@ function GCache:new(gcomponent)
       end
 
       instance.doors = t
-    end),
-  group_data = ktrpg.System:new("GCache: Group data"):on_run(function()
+    end)
+
+  instance.system.group_data = ktrpg.System:new("GCache: Group data"):on_run(function()
     do
       local t = {}
 
       for id, value in pairs(instance.creatures) do
         local lid = value.location
 
-        if lid == nil then
-          goto continue
+        if lid ~= nil then
+
+          if t[lid] == nil then
+            t[lid] = {}
+          end
+
+          t[lid][id] = value
+
         end
-
-        if t[lid] == nil then
-          t[lid] = {}
-        end
-
-        t[lid][id] = value
-
-          ::continue::
       end
 
       instance.group.creatures_by_location = t
@@ -164,10 +168,9 @@ function GCache:new(gcomponent)
       -- TODO: ITEMS
       instance.group.items_by_creature = t
     end
-  end),
-  }
+  end)
 
-  instance.system.run_all = function ()
+  instance.system.run_all = function()
     instance.system.cache_locations:run()
     instance.system.cache_creatures:run()
     instance.system.cache_doors:run()
