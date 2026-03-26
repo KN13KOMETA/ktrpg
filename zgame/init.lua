@@ -123,14 +123,14 @@ local syst = {
     do
       local t = {}
 
-      for id, value in pairs(sc.doors) do
+      for _, value in pairs(sc.doors) do
         local lid = value.location
 
         if t[lid] == nil then
           t[lid] = {}
         end
 
-        t[lid][id] = value
+        t[lid][value.name] = value
       end
 
       sc.group.doors_by_location = t
