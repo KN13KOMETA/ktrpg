@@ -93,11 +93,17 @@ local syst = {
       for id, value in pairs(sc.creatures) do
         local lid = value.location
 
+        if lid == nil then
+          goto continue
+        end
+
         if t[lid] == nil then
           t[lid] = {}
         end
 
         t[lid][id] = value
+
+          ::continue::
       end
 
       sc.group.creatures_by_location = t
