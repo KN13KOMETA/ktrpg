@@ -1,35 +1,22 @@
 -- TODO: template engine for strings
 
 local ktrpg = krequire("ktrpg")
-
-local init_world = krequire("game/world")
-
 ---@type GComponent
 local GComponent = krequire("class/GComponent")
-local gcomp = GComponent:new()
+---@type GCache
+local GCache = krequire("class/GCache")
+
+local init_world = krequire("game/world")
 
 local Entity = ktrpg.Entity
 local Component = ktrpg.Component
 local System = ktrpg.System
 local Util = ktrpg.Util
 
--- TODO: empty numbers to nvoid
+local gcomp = GComponent:new()
+local gcache = GCache:new(gcomp)
 
----@type GCache
-local GCache = krequire("class/GCache")
-local sc = GCache:new(gcomp)
--- local sc = {
---   locations = {},
---   creatures = {},
---   items = {},
---   doors = {},
---   group = {
---     creatures_by_location = {},
---     items_by_location = {},
---     doors_by_location = {},
---     items_by_creature = {},
---   },
--- }
+-- TODO: empty numbers to nvoid
 
 local syst = {
   -- TODO: Fixers/validators system, like is there a player and etc
@@ -38,31 +25,32 @@ local syst = {
     :on_run(function(entities, entities_count)
       for i = 1, entities_count, 1 do
         local e = entities[i]
-        local creature = sc.creatures[e:get(gcomp.creature)]
+        ---@type GCacheCreature
+        local creature = gcache.creatures[e:get(gcomp.creature)]
 
         Util.writenl(creature)
 
         -- TODO: implement other creatures moving
         if creature.id == gcomp.creature_player then
-          Util.writenl("Current location \"" .. sc.locations[creature.location].name .. "\"")
+          Util.writenl("Current location \"" .. gcache.locations[creature.location].name .. "\"")
 
           local sorted_keys = {}
 
-          for key in pairs(sc.group.doors_by_location[creature.location]) do
+          for key in pairs(gcache.group.doors_by_location[creature.location]) do
             table.insert(sorted_keys, key)
           end
 
           table.sort(sorted_keys)
 
           for _, key in ipairs(sorted_keys) do
-            local door = sc.group.doors_by_location[creature.location][key]
-            Util.writenl(":> Door '" .. string.char(door.name) .. "': " .. sc.locations[door.destination].name)
+            local door = gcache.group.doors_by_location[creature.location][key]
+            Util.writenl(":> Door '" .. string.char(door.name) .. "': " .. gcache.locations[door.destination].name)
           end
 
           Util.write("Select door: ")
 
           local sel = string.byte(Util.readchar())
-          local sel_door = sc.group.doors_by_location[creature.location][sel]
+          local sel_door = gcache.group.doors_by_location[creature.location][sel]
 
           if sel_door ~= nil then
             e:set(gcomp.location, sel_door.destination)
@@ -72,8 +60,8 @@ local syst = {
       end
     end),
   debug_cache = System:new("Debug Cache"):on_run(function(entities, entities_count)
-    Util.writenl(sc)
-    Util.writenl(sc.group)
+    Util.writenl(gcache)
+    Util.writenl(gcache.group)
   end),
   debug = System:new("__KTRPG_DEBUG"),
 }
@@ -83,7 +71,7 @@ local function run_move()
 end
 
 local function run()
-  sc.system.run_all()
+  gcache.system.run_all()
   run_move()
 
   syst.debug_cache:run()
