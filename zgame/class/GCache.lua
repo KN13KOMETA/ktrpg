@@ -58,6 +58,7 @@ function GCache:new(gcomponent)
       doors_by_location = {},
       items_by_creature = {},
     },
+    system = {},
   }
 
   instance.system.cache_locations = ktrpg.System
