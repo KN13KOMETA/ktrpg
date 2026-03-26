@@ -16,12 +16,12 @@ GComponent.creature_player = 0
 ---@return GComponent
 function GComponent:new()
   local instance = {
-    name = ktrpg.Component:new("str", "Name Z"),
-    location = ktrpg.Component:new("tag", "Location Z"),
-    creature = ktrpg.Component:new("int", "Creature Z"),
-    item = ktrpg.Component:new("int", "Item Z"),
-    door = ktrpg.Component:new("tag", "Door Z"),
-    destination = ktrpg.Component:new("tag", "Destination Z"),
+    name = ktrpg.Component:new("str", "Name"),
+    location = ktrpg.Component:new("tag", "Location"),
+    creature = ktrpg.Component:new("int", "Creature"),
+    item = ktrpg.Component:new("int", "Item"),
+    door = ktrpg.Component:new("tag", "Door"),
+    destination = ktrpg.Component:new("tag", "Destination"),
   }
 
   for key, value in pairs(instance) do
