@@ -7,6 +7,7 @@ local ktrpg = krequire("ktrpg")
 ---@class GCacheCreature
 ---@field id integer
 ---@field location? integer
+---@field destination? integer
 
 ---@class GCacheItem
 
@@ -97,7 +98,7 @@ function GCache:new(gcomponent)
 
         t[id].id = id
         t[id].location = e:get(gcomponent.location)
-        t[id].next_location = e:get(gcomponent.destination)
+        t[id].destination = e:get(gcomponent.destination)
       end
 
       instance.creatures = t
