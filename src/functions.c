@@ -42,6 +42,20 @@ uint64_t rnd64_next(uint64_t* state) {
   return z ^ (z >> 31);
 }
 
+// Mulberry32
+// Written by Tommy Ettinger (tommy.ettinger@gmail.com)
+// For license check:
+// https://gist.github.com/tommyettinger/46a874533244883189143505d203312c
+uint32_t rnd32_next(uint32_t* state) {
+  uint32_t z = (*state += 0x9E3779B9u);
+  z ^= z >> 16;
+  z *= 0x21f0aaadu;
+  z ^= z >> 15;
+  z *= 0x735a2d97u;
+  z ^= z >> 15;
+  return z;
+}
+
 int getchar_clear(char* ch) {
   int c = 0;
 
