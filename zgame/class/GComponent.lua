@@ -12,6 +12,7 @@ GComponent.__index = GComponent
 
 -- CONSTANTS
 GComponent.creature_player = 0
+GComponent.noname = "Unknown Creature"
 
 ---@return GComponent
 function GComponent:new()
