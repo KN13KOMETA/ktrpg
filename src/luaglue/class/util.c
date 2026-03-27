@@ -1,6 +1,8 @@
 #include "util.h"
 
+#include <inttypes.h>
 #include <limits.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #include "../../functions.h"
@@ -171,11 +173,44 @@ static int util_exit(lua_State* L) {
   return lua_error(L);
 }
 
-static luaL_Reg util_class_methods[] = {
-    {"read", util_read},     {"readchar", util_readchar},
-    {"ask_yn", util_ask_yn}, {"writenl", util_writenl},
-    {"write", util_write},   {"sleep", util_sleep},
-    {"exit", util_exit},     {NULL, NULL}};
+static uint32_t random_seed = 0;
+
+static int util_get_seed(lua_State* L) {
+  lua_pushinteger(L, (lua_Integer)random_seed);
+  return 1;
+}
+
+static int util_set_seed(lua_State* L) {
+  lua_Integer seed = luaL_checkinteger(L, 1);
+
+  if (seed > (lua_Integer)UINT32_MAX)
+    return luaL_argerror(L, 1,
+                         "expected integer from 0 to " EXPAND2STR(UINT32_MAX));
+
+  random_seed = (uint32_t)seed;
+
+  lua_pushinteger(L, seed);
+  return 1;
+}
+
+static int util_random(lua_State* L) {
+  uint64_t r = rnd32_next(&random_seed);
+
+  lua_pushinteger(L, (lua_Integer)r);
+  return 1;
+}
+
+static luaL_Reg util_class_methods[] = {{"read", util_read},
+                                        {"readchar", util_readchar},
+                                        {"ask_yn", util_ask_yn},
+                                        {"writenl", util_writenl},
+                                        {"write", util_write},
+                                        {"sleep", util_sleep},
+                                        {"exit", util_exit},
+                                        {"get_seed", util_get_seed},
+                                        {"set_seed", util_set_seed},
+                                        {"random", util_random},
+                                        {NULL, NULL}};
 
 static int util_register_content(lua_State* L) {
   lua_newtable(L);

@@ -25,3 +25,14 @@ function Util.write(content) end
 function Util.sleep(seconds) end
 
 function Util.exit() end
+
+---@return integer
+function Util.get_seed() end
+
+---Sets seed for random
+---@param seed integer
+---@return integer
+function Util.set_seed(seed) end
+
+---@return integer
+function Util.random() end
