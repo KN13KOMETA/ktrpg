@@ -25,6 +25,7 @@ local syst = {
     :on_run(function(entities, entities_count)
       for i = 1, entities_count, 1 do
         local e = entities[i]
+        local creature_name = e:get(gcomp.name)
         ---@type GCacheCreature
         local creature = gcache.creatures[e:get(gcomp.creature)]
         ---@type GCacheLocation
@@ -32,8 +33,12 @@ local syst = {
         ---@type GCacheDoorTable
         local location_doors = gcache.group.doors_by_location[creature.location]
 
+        if creature_name == nil then
+          creature_name = gcomp.noname
+        end
+
         if creature.id == gcomp.creature_player then
-          Util.writenl("Player at location :" .. creature_location.name)
+          Util.writenl(creature_name .. " at location :" .. creature_location.name)
 
           local sorted_keys = {}
 
@@ -68,8 +73,7 @@ local syst = {
             local rdoor = location_doors[door_keys[r]]
 
             Util.writenl(
-              "Creature "
-                .. creature.id
+              creature_name
                 .. " moved from "
                 .. creature_location.name
                 .. " to "
