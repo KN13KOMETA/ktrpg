@@ -39,6 +39,9 @@
 #define RND_RANGE(max, min) rand() % (max + 1 - min) + min
 #define RND_MAX(max) RND_RANGE(max, 0)
 
+// Generates random from state
+uint64_t rnd64_next(uint64_t* state);
+
 // Sleeps for seconds
 void sleep_s(unsigned seconds);
 
