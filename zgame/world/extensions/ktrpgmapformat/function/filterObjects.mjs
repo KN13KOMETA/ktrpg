@@ -28,13 +28,16 @@ export const filterObjects = (map) => {
           filteredObjects.locations.push(obj);
           break;
         }
+        case "Teleport":
         case "Door": {
           filteredObjects.doors.push(obj);
           break;
         }
+        case "":
+          break;
         default:
           tiled.error(
-            `Unknown Class: object (${obj.id}) at layer ${layer.name}`,
+            `Unknown Class: ${obj.className} at object (${obj.id}) at layer ${layer.name}`,
           );
       }
     }
