@@ -27,7 +27,9 @@ local syst = {
         local e = entities[i]
         ---@type GCacheCreature
         local creature = gcache.creatures[e:get(gcomp.creature)]
+        ---@type GCacheLocation
         local creature_location = gcache.locations[creature.location]
+        ---@type GCacheDoorTable
         local location_doors = gcache.group.doors_by_location[creature.location]
 
         if creature.id == gcomp.creature_player then
@@ -55,7 +57,27 @@ local syst = {
             e:set(gcomp.location, select_door.destination)
           end
         else
-          -- TODO: Non-player creature move
+          if Util.random() % 3 == 0 then
+            local door_keys = {}
+
+            for key in pairs(location_doors) do
+              table.insert(door_keys, key)
+            end
+
+            local r = (Util.random() % #door_keys) + 1
+            local rdoor = location_doors[door_keys[r]]
+
+            Util.writenl(
+              "Creature "
+                .. creature.id
+                .. " moved from "
+                .. creature_location.name
+                .. " to "
+                .. gcache.locations[rdoor.destination].name
+            )
+
+            e:set(gcomp.location, rdoor.destination)
+          end
         end
       end
     end),
