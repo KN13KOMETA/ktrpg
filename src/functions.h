@@ -42,6 +42,9 @@
 // Generates random from state
 uint64_t rnd64_next(uint64_t* state);
 
+// Generates random from state
+uint32_t rnd32_next(uint32_t* state);
+
 // Sleeps for seconds
 void sleep_s(unsigned seconds);
 
