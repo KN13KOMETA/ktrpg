@@ -59,11 +59,23 @@ function GCache:new(gcomponent)
       doors_by_location = {},
       items_by_creature = {},
     },
-    system = {},
+    system = {
+      cache_locations = ktrpg.System:new("GCache: Cache locations"),
+      cache_creatures = ktrpg.System:new("GCache: Cache creatures"),
+      cache_doors = ktrpg.System:new("GCache: Cache doors"),
+      group_data = ktrpg.System:new("GCache: Group data"),
+    },
   }
 
-  instance.system.cache_locations = ktrpg.System
-    :new("GCache: Cache locations")
+  for key, value in pairs(instance.system) do
+    if value == nil then
+      ktrpg.Util.writenl("FATAL: Failed to create system " .. key)
+      ---@diagnostic disable-next-line: return-type-mismatch
+      return ktrpg.Util.exit()
+    end
+  end
+
+  instance.system.cache_locations
     :requires(gcomponent.location, gcomponent.name)
     :excludes(gcomponent.creature, gcomponent.item, gcomponent.door)
     :on_run(function(entities, entities_count)
@@ -81,8 +93,7 @@ function GCache:new(gcomponent)
       instance.locations = t
     end)
 
-  instance.system.cache_creatures = ktrpg.System
-    :new("GCache: Cache creatures")
+  instance.system.cache_creatures
     :requires(gcomponent.creature)
     :excludes(gcomponent.item)
     :on_run(function(entities, entities_count)
@@ -106,8 +117,7 @@ function GCache:new(gcomponent)
 
   -- TODO: ITEMS
 
-  instance.system.cache_doors = ktrpg.System
-    :new("GCache: Cache doors")
+  instance.system.cache_doors
     :requires(gcomponent.door, gcomponent.location, gcomponent.destination)
     :on_run(function(entities, entities_count)
       local t = {}
@@ -125,7 +135,7 @@ function GCache:new(gcomponent)
       instance.doors = t
     end)
 
-  instance.system.group_data = ktrpg.System:new("GCache: Group data"):on_run(function()
+  instance.system.group_data:on_run(function()
     do
       local t = {}
 
