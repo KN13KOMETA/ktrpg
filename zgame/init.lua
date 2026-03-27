@@ -20,7 +20,7 @@ local gcache = GCache:new(gcomp)
 
 local syst = {
   -- TODO: Fixers/validators system, like is there a player and etc
-  creature_move = System:new("Move: Decide creature destination")
+  creature_move = System:new("Move: Creature move")
     :requires(gcomp.creature, gcomp.location, gcomp.destination)
     :on_run(function(entities, entities_count)
       for i = 1, entities_count, 1 do
