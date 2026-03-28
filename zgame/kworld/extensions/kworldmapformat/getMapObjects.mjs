@@ -14,7 +14,7 @@ export const getMapObjects = (map) => {
       } else if (layer.isGroupLayer) {
         for (const childLayer of layer.layers) layers.push(childLayer);
       } else {
-        return `Layer "${layer.name}" has unknown type`;
+        return `Layer "${layer.name}" (${layer.id}) has unknown type`;
       }
     }
   }
