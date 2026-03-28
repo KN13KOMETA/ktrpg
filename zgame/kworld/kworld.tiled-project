@@ -10,5 +10,69 @@
     "properties": [
     ],
     "propertyTypes": [
+        {
+            "id": 1,
+            "name": "COMPONENT_TYPE",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "int",
+                "num",
+                "tag",
+                "str"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 2,
+            "members": [
+                {
+                    "name": "name",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "type",
+                    "propertyType": "COMPONENT_TYPE",
+                    "type": "string",
+                    "value": "int"
+                },
+                {
+                    "name": "value",
+                    "type": "list",
+                    "value": [
+                    ]
+                }
+            ],
+            "name": "Component",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 3,
+            "members": [
+                {
+                    "name": "components",
+                    "type": "list",
+                    "value": [
+                    ]
+                }
+            ],
+            "name": "Entity",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object",
+                "project"
+            ]
+        }
     ]
 }
