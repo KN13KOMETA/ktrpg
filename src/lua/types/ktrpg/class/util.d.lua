@@ -21,6 +21,10 @@ function Util.writenl(content) end
 ---@param content any
 function Util.write(content) end
 
+---@param content any
+---@overload fun()
+function Util.debug(content) end
+
 ---@param seconds integer
 function Util.sleep(seconds) end
 

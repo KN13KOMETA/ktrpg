@@ -154,6 +154,29 @@ static int util_write(lua_State* L) {
   return 0;
 }
 
+#ifdef DEBUG
+static int util_debug(lua_State* L) {
+  lua_Debug ar;
+
+  if (lua_getstack(L, 1, &ar)) {
+    lua_getinfo(L, "Sl", &ar);
+
+    printf("%s:%d: ", ar.short_src, ar.currentline);
+  } else {
+    printf("unknown:unknown: ");
+  }
+
+  util_writenl(L);
+
+  return 0;
+}
+#else
+static int util_debug(lua_State* L) {
+  (void)L;
+  return 0;
+}
+#endif  // DEBUG
+
 static int util_sleep(lua_State* L) {
   lua_Integer seconds = luaL_checkinteger(L, 1);
 
@@ -200,17 +223,13 @@ static int util_random(lua_State* L) {
   return 1;
 }
 
-static luaL_Reg util_class_methods[] = {{"read", util_read},
-                                        {"readchar", util_readchar},
-                                        {"ask_yn", util_ask_yn},
-                                        {"writenl", util_writenl},
-                                        {"write", util_write},
-                                        {"sleep", util_sleep},
-                                        {"exit", util_exit},
-                                        {"get_seed", util_get_seed},
-                                        {"set_seed", util_set_seed},
-                                        {"random", util_random},
-                                        {NULL, NULL}};
+static luaL_Reg util_class_methods[] = {
+    {"read", util_read},         {"readchar", util_readchar},
+    {"ask_yn", util_ask_yn},     {"writenl", util_writenl},
+    {"write", util_write},       {"debug", util_debug},
+    {"sleep", util_sleep},       {"exit", util_exit},
+    {"get_seed", util_get_seed}, {"set_seed", util_set_seed},
+    {"random", util_random},     {NULL, NULL}};
 
 static int util_register_content(lua_State* L) {
   lua_newtable(L);
