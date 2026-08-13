@@ -36,7 +36,7 @@ tiled.registerMapFormat("ktrpgworld", {
       const lnew = {
         value: location.property("value")?.value,
         name: `"${location.property("name")}"`,
-        trigger: location.property("trigger")?.value,
+        trigger: location.property("trigger"),
       };
       let skip = false;
 
@@ -49,8 +49,8 @@ tiled.registerMapFormat("ktrpgworld", {
         skip = true;
       }
       if (lnew.trigger == null) {
-        tiled.warn(`Location Object (${location.id}) doesn't have "trigger"`);
-        lnew.trigger = "default";
+        tiled.error(`Location Object (${location.id}) must have "trigger"`);
+        skip = true;
       }
 
       if (skip) continue;
@@ -66,7 +66,7 @@ tiled.registerMapFormat("ktrpgworld", {
         name: door.property("name").charCodeAt(0),
         location: door.property("location")?.value,
         destination: door.property("destination")?.value,
-        trigger: door.property("trigger")?.value,
+        trigger: door.property("trigger"),
       };
       let skip = false;
 
@@ -88,8 +88,8 @@ tiled.registerMapFormat("ktrpgworld", {
         skip = true;
       }
       if (dnew.trigger == null) {
-        tiled.warn(`Door Object (${door.id}) doesn't have "trigger"`);
-        dnew.trigger = "default";
+        tiled.error(`Door Object (${door.id}) must have "trigger"`);
+        skip = true;
       }
 
       if (skip) continue;
