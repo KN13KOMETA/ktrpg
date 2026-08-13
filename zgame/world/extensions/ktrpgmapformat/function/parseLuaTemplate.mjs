@@ -61,7 +61,8 @@ export const parseLuaTemplate = (content) => {
             template.location.text
               .join("\n")
               .replace("TEMPLATE_LOCATION_TAG", locations[li].value)
-              .replace("TEMPLATE_LOCATION_NAME", locations[li].name),
+              .replace("TEMPLATE_LOCATION_NAME", locations[li].name)
+              .replace("TEMPLATE_LOCATION_TRIGGER", locations[li].trigger),
           );
         }
       }
@@ -73,7 +74,8 @@ export const parseLuaTemplate = (content) => {
               .join("\n")
               .replace("TEMPLATE_DOOR_TAG", doors[di].name)
               .replace("TEMPLATE_DOOR_LOCATION", doors[di].location)
-              .replace("TEMPLATE_DOOR_DESTINATION", doors[di].destination),
+              .replace("TEMPLATE_DOOR_DESTINATION", doors[di].destination)
+              .replace("TEMPLATE_DOOR_TRIGGER", doors[di].trigger),
           );
         }
       }
