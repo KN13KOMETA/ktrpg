@@ -110,7 +110,9 @@ static int ll_krequire(lua_State* L) {
     }
 
     if (vcontent != NULL) {
-      status = luaL_loadbuffer(L, vcontent, strlen(vcontent), name);
+      char fname[strlen(name) + 1 + 4 + 1];
+      sprintf(fname, "@%s.lua", name);
+      status = luaL_loadbuffer(L, vcontent, strlen(vcontent), fname);
     } else if (wd != NULL) {
       // Searching module in wd
       char fname[strlen(wd) + 1 + strlen(name) + 4 + 1];

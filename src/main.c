@@ -141,8 +141,16 @@ int init_game_universal(char* script_path, vfile* modules) {
   for (luaL_Reg* glib = glibs; glib->name != NULL; glib++)
     lsb_krequiref(L, glib->name, glib->func, 1);
 
-  if ((basedir == NULL) ? luaL_dostring(L, modules[0].content)
-                        : luaL_dofile(L, script_path) != LUA_OK) {
+  // Load Lua code
+  if (basedir == NULL) {
+    char fname[strlen(modules[0].path) + 1 + 1];
+    sprintf(fname, "@%s", modules[0].path);
+    luaL_loadbuffer(L, modules[0].content, strlen(modules[0].content), fname);
+  } else {
+    luaL_loadfile(L, script_path);
+  }
+
+  if (lua_pcall(L, 0, LUA_MULTRET, 0) != LUA_OK) {
     const char* err = lua_tostring(L, -1);
 
     if (strcmp(LG_EXIT_USER, err) != 0 && strcmp(LG_EXIT_SYSTEM, err) != 0) {
